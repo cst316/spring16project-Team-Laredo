@@ -19,3 +19,5 @@ Edit - Assignment says we all should make a small change to this README to test 
 Edit - Testing push to repository. /*Benjamin Paothatat*/
 
 Edit - Pushing to repository. --Adam Perry
+
+Edit - Push to repo -- Christopher Ruiter
