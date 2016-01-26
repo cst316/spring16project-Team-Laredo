@@ -76,12 +76,7 @@ public class JNCalendarCellRenderer extends javax.swing.table.DefaultTableCellRe
         }
         
 		// set foreground color
-		if (d.getCalendar().get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-            label.setForeground(new Color(255, 0, 0));
-        }
-		else { 		
-			label.setForeground(Color.BLACK);
-		}
+		label.setForeground(Color.BLACK);
 
 		// set background color
 		if (currentPanel == null)
