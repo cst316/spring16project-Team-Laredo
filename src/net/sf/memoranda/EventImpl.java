@@ -20,7 +20,7 @@ import nu.xom.Element;
  * 
  */
 /*$Id: EventImpl.java,v 1.9 2004/10/06 16:00:11 ivanrise Exp $*/
-public class EventImpl implements Event, Comparable {
+public class EventImpl implements Event {
     
     private Element _elem = null;
 
@@ -33,21 +33,29 @@ public class EventImpl implements Event, Comparable {
 
    
     /**
-     * @see net.sf.memoranda.Event#getHour()
+     * @see net.sf.memoranda.Event#getStartHour()
      */
-    public int getHour() {
-        return new Integer(_elem.getAttribute("hour").getValue()).intValue();
+    public int getStartHour() {
+        return new Integer(_elem.getAttribute("start_hour").getValue());
     }
 
     /**
-     * @see net.sf.memoranda.Event#getMinute()
+     * @see net.sf.memoranda.Event#getStartMinute()
      */
-    public int getMinute() {
-        return new Integer(_elem.getAttribute("min").getValue()).intValue();
+    public int getStartMinute() {
+        return new Integer(_elem.getAttribute("start_min").getValue());
+    }
+    
+    public int getEndHour() {
+    	return new Integer(_elem.getAttribute("end_hour").getValue());
+    }
+    
+    public int getEndMinute() {
+    	return new Integer(_elem.getAttribute("end_minute").getValue());
     }
     
     public String getTimeString() {
-        return Local.getTimeString(getHour(), getMinute());
+        return Local.getTimeString(getStartHour(), getStartMinute());
     }
         
   
@@ -91,7 +99,7 @@ public class EventImpl implements Event, Comparable {
      */
     public int getPeriod() {
         Attribute a = _elem.getAttribute("period");
-        if (a != null) return new Integer(a.getValue()).intValue();
+        if (a != null) return new Integer(a.getValue());
         return 0;
     }
     /**
@@ -107,42 +115,34 @@ public class EventImpl implements Event, Comparable {
      */
     public int getRepeat() {
         Attribute a = _elem.getAttribute("repeat-type");
-        if (a != null) return new Integer(a.getValue()).intValue();
+        if (a != null) return new Integer(a.getValue());
         return 0;
     }
     /**
      * @see net.sf.memoranda.Event#getTime()
      */
     public Date getTime() {
-    	//Deprecated methods
-		//Date d = new Date();
-		//d.setHours(getHour());
-		//d.setMinutes(getMinute());
-		//d.setSeconds(0);
-		//End deprecated methods
 
 		Date d = new Date(); //Revision to fix deprecated methods (jcscoobyrs) 12-NOV-2003 14:26:00
 		Calendar calendar = new GregorianCalendar(Local.getCurrentLocale()); //Revision to fix deprecated methods (jcscoobyrs) 12-NOV-2003 14:26:00
 		calendar.setTime(d); //Revision to fix deprecated methods (jcscoobyrs) 12-NOV-2003 14:26:00
-		calendar.set(Calendar.HOUR_OF_DAY, getHour()); //Revision to fix deprecated methods (jcscoobyrs) 12-NOV-2003 14:26:00
-		calendar.set(Calendar.MINUTE, getMinute()); //Revision to fix deprecated methods (jcscoobyrs) 12-NOV-2003 14:26:00
+		calendar.set(Calendar.HOUR_OF_DAY, getStartHour()); //Revision to fix deprecated methods (jcscoobyrs) 12-NOV-2003 14:26:00
+		calendar.set(Calendar.MINUTE, getStartMinute()); //Revision to fix deprecated methods (jcscoobyrs) 12-NOV-2003 14:26:00
 		calendar.set(Calendar.SECOND, 0); //Revision to fix deprecated methods (jcscoobyrs) 12-NOV-2003 14:26:00
 		d = calendar.getTime(); //Revision to fix deprecated methods (jcscoobyrs) 12-NOV-2003 14:26:00
         return d;
     }
 	
 	/**
-     * @see net.sf.memoranda.Event#getWorkinDays()
+     * @see net.sf.memoranda.Event#getWorkingDays()
      */
 	public boolean getWorkingDays() {
         Attribute a = _elem.getAttribute("workingDays");
-        if (a != null && a.getValue().equals("true")) return true;
-        return false;
-	}
+        return a != null && a.getValue().equals("true");
+    }
 	
-	public int compareTo(Object o) {
-		Event event = (Event) o;
-		return (getHour() * 60 + getMinute()) - (event.getHour() * 60 + event.getMinute());
+	public int compareTo(Event o) {
+        return (getStartHour() * 60 + getStartMinute()) - (o.getStartHour() * 60 + o.getStartMinute());
 	}
 
 }

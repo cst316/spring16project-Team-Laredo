@@ -16,15 +16,18 @@ import net.sf.memoranda.date.CalendarDate;
  * 
  */
 /*$Id: Event.java,v 1.4 2004/07/21 17:51:25 ivanrise Exp $*/
-public interface Event {
+public interface Event extends Comparable<Event> {
     
     String getId();
     
     //CalendarDate getDate();
     
-    int getHour();
+    int getStartHour();
     
-    int getMinute();
+    int getStartMinute();
+    
+    int getEndHour();
+    int getEndMinute();
     
     //Date getTime();
     
