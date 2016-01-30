@@ -34,7 +34,8 @@ public interface TaskList {
     
 //    public void adjustParentTasks(Task t);
     
-    public long calculateTotalEffortFromSubTasks(Task t);
+    public long calculateTotalEstimatedEffortFromSubTasks(Task t);
+    public long calculateTotalActualEffortFromSubTasks(Task t);
     public CalendarDate getLatestEndDateFromSubTasks(Task t);
     public CalendarDate getEarliestStartDateFromSubTasks(Task t);
     public long[] calculateCompletionFromSubTasks(Task t);
