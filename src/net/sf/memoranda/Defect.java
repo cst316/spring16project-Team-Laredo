@@ -1,6 +1,7 @@
 package net.sf.memoranda;
 
 import net.sf.memoranda.date.CalendarDate;
+import nu.xom.Element;
 
 public interface Defect {
 	int getDefectNumber();
@@ -19,11 +20,12 @@ public interface Defect {
     
     boolean isRemoved();
     
-    String typeOfDefect();
+    String getTypeOfDefect();
     void setTypeOfDefect(String typeOfDefect);
     
     String getDescription();
     void setDescription(String description);
     
     String toString();
+    Element getElement();
 }
