@@ -274,7 +274,7 @@ public class JNCalendarPanel extends JPanel {
 
   void dayBackB_actionPerformed(ActionEvent e) {
     Calendar cal = _date.getCalendar();
-    cal.add(Calendar.DATE, -1); cal.getTime();
+    cal.add(Calendar.MONTH, -1); cal.getTime();
     _date = new CalendarDate(cal);
     refreshView();
     notifyListeners();
@@ -288,7 +288,7 @@ public class JNCalendarPanel extends JPanel {
 
   void dayForwardB_actionPerformed(ActionEvent e) {
     Calendar cal = _date.getCalendar();
-    cal.add(Calendar.DATE, 1); cal.getTime();
+    cal.add(Calendar.MONTH, 1); cal.getTime();
     _date = new CalendarDate(cal);
     refreshView();
     notifyListeners();
