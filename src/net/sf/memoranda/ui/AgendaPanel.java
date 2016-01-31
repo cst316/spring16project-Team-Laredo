@@ -192,15 +192,25 @@ public class AgendaPanel extends JPanel {
 					}else if (d.startsWith("memoranda:exportstickerst")) {
 						 /*  You need to add the export sticker meanwhile ..*/
 						 final JFrame parent = new JFrame();
-						 String name = JOptionPane.showInputDialog(parent,Local.getString("Enter filename to export"),null);
-						 new ExportSticker(name).export("txt");
-						 //JOptionPane.showMessageDialog(null,name);
+						 String name = JOptionPane.showInputDialog(parent,Local.getString("Enter filename to export"), null);
+						 if(name == null){
+					         JOptionPane.showMessageDialog(null,Local.getString("Sticker export cancelled"));
+						 }
+						 else{
+							 new ExportSticker(name).export("txt");
+							 //JOptionPane.showMessageDialog(null,name); 
+						 }
 					}else if (d.startsWith("memoranda:exportstickersh")) {
 						 /*  You need to add the export sticker meanwhile ..*/
 						 final JFrame parent = new JFrame();
-						 String name = JOptionPane.showInputDialog(parent,Local.getString("Enter file name to export"),null);
-						 new ExportSticker(name).export("html");
-						 //JOptionPane.showMessageDialog(null,name);
+						 String name = JOptionPane.showInputDialog(parent,Local.getString("Enter filename to export"), null);
+						 if(name == null){
+					         JOptionPane.showMessageDialog(null,Local.getString("Sticker export cancelled"));
+						 }
+						 else{
+					         new ExportSticker(name).export("html");
+					         //JOptionPane.showMessageDialog(null,name);
+						 }
 					}else if (d.startsWith("memoranda:importstickers")) {
 						final JFrame parent = new JFrame();
 						String name = JOptionPane.showInputDialog(parent,Local.getString("Enter name of file to import"),null);
