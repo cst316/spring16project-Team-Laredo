@@ -29,6 +29,8 @@ public interface Event extends Comparable<Event> {
     int getEndHour();
     int getEndMinute();
     
+    int getInteruptTime();
+    
     //Date getTime();
     
     String getText();

@@ -54,6 +54,10 @@ public class EventImpl implements Event {
     	return new Integer(_elem.getAttribute("end_minute").getValue());
     }
     
+    public int getInteruptTime(){
+        	return new Integer(_elem.getAttribute("interupt_time").getValue());
+    }
+    
     public String getTimeString() {
         return Local.getTimeString(getStartHour(), getStartMinute());
     }
