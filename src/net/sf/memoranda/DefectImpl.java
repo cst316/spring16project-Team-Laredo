@@ -19,8 +19,9 @@ public class DefectImpl implements Defect {
 	
 	@Override
 	public int getDefectNumber() {
-		// TODO Auto-generated method stub
-		return 0;
+		String defectNumber = _element.getAttributeValue("defectNumber");
+		int number = Integer.parseInt(defectNumber);
+		return number;
 	}
 
 	@Override
@@ -72,7 +73,7 @@ public class DefectImpl implements Defect {
 
     @Override
 	public String getTypeOfDefect() {
-		return _element.getAttributeValue("typeOfDefect");
+		return _element.getAttribute("typeOfDefect").toString();
 	}
 
 	@Override
@@ -94,8 +95,8 @@ public class DefectImpl implements Defect {
 	@Override
 	public String toString(){
 		String result = "Defect number: " + getDefectNumber() + "\n";
-		result = result + "Defect type: "+ getTypeOfDefect() + "\n";
-		result = result + "Defect description: "+ getDescription() + "\n";
+		//result = result + "Defect type: "+ getTypeOfDefect() + "\n";
+		//result = result + "Defect description: "+ getDescription() + "\n";
 		return result;
 	}
 

@@ -8,6 +8,7 @@
  */
 package net.sf.memoranda.util;
 
+import net.sf.memoranda.DefectList;
 import net.sf.memoranda.Note;
 import net.sf.memoranda.NoteList;
 import net.sf.memoranda.Project;
@@ -24,6 +25,9 @@ public interface Storage {
     
     NoteList openNoteList(Project prj);
     void storeNoteList(NoteList nl, Project prj);
+    
+    DefectList openDefectList(Project prj);
+    void storeDefectList(DefectList d1, Project prj);
     
     void storeNote(Note note, javax.swing.text.Document doc);    
     javax.swing.text.Document openNote(Note note);
