@@ -479,6 +479,7 @@ public class TaskPanel extends JPanel {
         t.setText(dlg.tfTaskName.getText());
         t.setDescription(dlg.taDescription.getText());
         t.setPriority(dlg.cmbPriority.getSelectedIndex());
+        t.setPhase(dlg.cmbPhase.getSelectedIndex());
         t.setEstEffort(Util.getMillisFromHours(dlg.tfEffort.getText()));
         t.setProgress(((Integer)dlg.spnProgress.getValue()).intValue());
         
