@@ -67,27 +67,6 @@ public class EventImpl implements Event {
         }
     }
 
-    public int getDurationHour() {
-        int startHour = this.getStartHour();
-        int startMinute = this.getStartMinute();
-
-        int endHour = this.getEndHour();
-        int endMinute = this.getEndMinute();
-
-        // if they're both 0, then this event does not have a duration
-        if (endHour == 0 && endMinute == 0) {
-            return 0;
-        }
-
-        if (startMinute > endMinute && endHour > 0) {
-            endHour -= 1; // carry an hour over to the minute column
-        } else if (startMinute > endMinute) {
-            return 0;
-        }
-
-        return endHour - startHour;
-    }
-
     public String getDurationString() {
         int startHour = this.getStartHour();
         int startMinute = this.getStartMinute();
