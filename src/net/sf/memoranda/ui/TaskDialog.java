@@ -318,6 +318,7 @@ public class TaskDialog extends JDialog
 		panEffort.add(lblEffort);
 		
 		tfEffort = new JTextField();
+		tfEffort.setText("0.0");
 		tfEffort.setPreferredSize(new Dimension(4, 25));
 		panEffort.add(tfEffort);
 		tfEffort.setColumns(3);
@@ -339,6 +340,7 @@ public class TaskDialog extends JDialog
 		
 		cmbPriority.setMaximumRowCount(7);
 		cmbPriority.setModel(new DefaultComboBoxModel(new String[] {"Lowest", "Low", "Normal", "High", "Highest"}));
+		cmbPriority.setSelectedIndex(2);
 		cmbPriority.setPreferredSize(new Dimension(80, 25));
 		panPriority.add(cmbPriority);
 		

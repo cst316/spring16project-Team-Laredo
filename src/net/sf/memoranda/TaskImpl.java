@@ -59,12 +59,12 @@ public class TaskImpl implements Task, Comparable {
 		if (pr.getEndDate() != null)
 			return pr.getEndDate();
 		return this.getStartDate();
-        
     }
 
     public void setEndDate(CalendarDate date) {
 		if (date == null)
 			setAttr("endDate", "");
+		else
 		setAttr("endDate", date.toString());
     }
 
