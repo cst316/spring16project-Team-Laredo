@@ -39,29 +39,46 @@ public class DefectListImpl implements DefectList{
 	}
 
 	private Element getDefectElement(int defectNumber) {
+		Element result = null;
 		Element header = (Element)_doc.getChild(0); 
-		Element result = (Element)header.getChild(defectNumber - 1); 
+		if(header.getChildCount() > defectNumber - 1){
+		    result = (Element)header.getChild(defectNumber - 1); 
+		}
 		return result;
 	}
 
 	@Override
-	public void addDefect(CalendarDate dateFound, CalendarDate dateRemoved, String phaseOfInjection,
-			String removalPhase, String typeOfDefect, String description) {
+	public void addDefect(CalendarDate dateFound, CalendarDate dateRemoved, int phaseOfInjection,
+			int removalPhase, int typeOfDefect, String description) {
 		numberOfDefects++;
 		Element defect = new Element("defect");
 		defect.addAttribute(new Attribute("defectNumber", String.valueOf(numberOfDefects)));
 		defect.addAttribute(new Attribute("dateFound", dateFound.toString()));
 		defect.addAttribute(new Attribute("dateRemoved", dateRemoved.toString()));
-		defect.addAttribute(new Attribute("phaseOfInjection", phaseOfInjection));
-		defect.addAttribute(new Attribute("removalPhase", removalPhase));
-		defect.addAttribute(new Attribute("typeOfDefect", typeOfDefect));
+		defect.addAttribute(new Attribute("phaseOfInjection", String.valueOf(phaseOfInjection)));
+		defect.addAttribute(new Attribute("removalPhase", String.valueOf(removalPhase)));
+		defect.addAttribute(new Attribute("typeOfDefect", String.valueOf(typeOfDefect)));
 		defect.addAttribute(new Attribute("description", description));
 		_root.appendChild(defect);
 	}
 
 	@Override
-	public void removeDefect(Defect defect) {
-		// TODO Auto-generated method stub
+	public void removeDefect(int defectNumber) {
+		try{
+			_doc.getChild(0).getChild(defectNumber - 1);
+			
+			for(int i = defectNumber - 1; i < _doc.getChild(0).getChildCount(); i++){
+				Attribute attr = ((Element)_doc.getChild(0).getChild(i)).getAttribute("defectNumber");
+				attr.setValue(String.valueOf((i)));
+			}
+			defectNumber--;
+			
+			_doc.getChild(0).getChild(defectNumber - 1).detach();
+			
+		}
+		catch(Exception e){
+			
+		}
 		
 	}
 

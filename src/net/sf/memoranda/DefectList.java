@@ -9,10 +9,10 @@ public interface DefectList {
     Defect getDefect(int defectNumber);
     
     void addDefect(CalendarDate dateFound, CalendarDate dateRemoved,
-    		String phaseOfInjection, String removalPhase, String typeOfDefect,
+    		int phaseOfInjection, int removalPhase, int typeOfDefect,
     		String description);
     
-    void removeDefect(Defect defect);
+    void removeDefect(int defectNumber);
 
     Document getXMLContent();
 }
