@@ -42,55 +42,43 @@ public class ExportSticker {
         /**
          * Function to eliminate special chars from a string
          */
+        //This appears to not work, so I've blocked off parts of it for testing purposes.-tjcole2
         public static String remove1(String input) {
-            
-            String original = "áàäéèëíìïóòöúùuñÁÀÄÉÈËÍÌÏÓÒÖÚÙÜÑçÇ";
-            
-            String ascii = "aaaeeeiiiooouuunAAAEEEIIIOOOUUUNcC";
-            String output = input;
-            for (int i=0; i<original.length(); i++) {
-            
-                output = output.replace(original.charAt(i), ascii.charAt(i));
-            }
-            return output;
+            //String original = "Ã¡Ã Ã¤Ã©Ã¨Ã«Ã­Ã¬Ã¯Ã³Ã²Ã¶ÃºÃ¹uÃ±Ã�Ã€Ã„Ã‰ÃˆÃ‹Ã�ÃŒÃ�Ã“Ã’Ã–ÃšÃ™ÃœÃ‘Ã§Ã‡";
+            //String ascii = "aaaeeeiiiooouuunAAAEEEIIIOOOUUUNcC";
+            //String output = input;
+            //for (int i=0; i<original.length(); i++) {
+            //    output = output.replace(original.charAt(i), ascii.charAt(i));
+            //}
+            //return output;
+        	return input;
         }
         
         public boolean export(String src){
-                boolean result = true;
-                String fs = System.getProperty("file.separator");
-                
-                String contents = getSticker();
-                try {
-                File file = new File(this.name+"."+src);
-                
-                
-                        FileWriter fwrite=new FileWriter(file,true);
-            
-                        fwrite.write(contents);
-                        
-                        fwrite.close();
-                        JOptionPane.showMessageDialog(null,Local.getString("Documento creado con exito en su carpeta Memoranda =D"));
-            
-            
-        } catch (IOException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null,Local.getString("NO Logramos crear su documento =(..."));
-        }
-                
-                
-                        
-                return result;
+            boolean result = true;
+            String fs = System.getProperty("file.separator");
+            String contents = getSticker();
+            try {
+            File file = new File(this.name+"."+src);
+            FileWriter fwrite=new FileWriter(file,true);
+            fwrite.write(contents);
+            fwrite.close();
+            JOptionPane.showMessageDialog(null,Local.getString("Sticker successfuly exported to your Memoranda folder"));        
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	            JOptionPane.showMessageDialog(null,Local.getString("Sticker export failed."));
+	        }
+            return result;
         }
         
         public String getSticker(){
                 Map stickers = EventsManager.getStickers();
-        String result = "";
-        String nl = System.getProperty("line.separator"); 
+                String result = "";
+                String nl = System.getProperty("line.separator"); 
                 for (Iterator i = stickers.keySet().iterator(); i.hasNext();) {
-            String id = (String)i.next();
-            result += (String)(((Element)stickers.get(id)).getValue())+nl;
-            }
-            
+                		String id = (String)i.next();
+                			result += (String)(((Element)stickers.get(id)).getValue())+nl;
+                }
                 return result;
         }
         

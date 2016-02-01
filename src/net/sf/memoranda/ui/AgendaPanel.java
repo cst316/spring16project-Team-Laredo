@@ -43,8 +43,10 @@ public class AgendaPanel extends JPanel {
     JToolBar toolBar = new JToolBar();
     JButton historyForwardB = new JButton();
     JEditorPane viewer = new JEditorPane("text/html", "");
-    String[] priorities = {"Muy Alta", "Alta", "Media", "Baja", "Muy Baja"};
     JScrollPane scrollPane = new JScrollPane();
+	JButton export = new JButton();
+	String[] priorities = {"Very High", "High", "Medium", "Low", "Very Low"};
+
 
     DailyItemsPanel parentPanel = null;
 
@@ -185,21 +187,21 @@ public class AgendaPanel extends JPanel {
                     }
                     refresh(CurrentDate.get());
                 } else if (d.startsWith("memoranda:exportstickerst")) {
-                     /*  Falta agregar el exportar sticker mientras tanto..*/
-                    final JFrame parent1 = new JFrame();
-                    String name1 = JOptionPane.showInputDialog(parent1, Local.getString("Ingrese nombre de archivo a exportar"), null);
-                    new ExportSticker(name1).export("txt");
-                    //JOptionPane.showMessageDialog(null,name);
-                } else if (d.startsWith("memoranda:exportstickersh")) {
-                     /*  Falta agregar el exportar sticker mientras tanto..*/
-                    final JFrame parent1 = new JFrame();
-                    String name1 = JOptionPane.showInputDialog(parent1, Local.getString("Ingrese nombre de archivo a exportar"), null);
-                    new ExportSticker(name1).export("html");
-                    //JOptionPane.showMessageDialog(null,name);
-                } else if (d.startsWith("memoranda:importstickers")) {
-                    final JFrame parent1 = new JFrame();
-                    String name1 = JOptionPane.showInputDialog(parent1, Local.getString("Ingrese nombre de archivo a importar"), null);
-                    new ImportSticker(name1).import_file();
+					 //  You need to add the export sticker meanwhile ..
+					 final JFrame parent = new JFrame();
+					 String name = JOptionPane.showInputDialog(parent,Local.getString("Enter filename to export"),null);
+					 new ExportSticker(name).export("txt");
+					 //JOptionPane.showMessageDialog(null,name);
+				}else if (d.startsWith("memoranda:exportstickersh")) {
+					 //  You need to add the export sticker meanwhile ..
+					 final JFrame parent = new JFrame();
+					 String name = JOptionPane.showInputDialog(parent,Local.getString("Enter file name to export"),null);
+					 new ExportSticker(name).export("html");
+					 //JOptionPane.showMessageDialog(null,name);
+				}else if (d.startsWith("memoranda:importstickers")) {
+					final JFrame parent = new JFrame();
+					String name = JOptionPane.showInputDialog(parent,Local.getString("Enter name of file to import"),null);
+					new ImportSticker(name).import_file();
                 }
             }
         });
@@ -212,7 +214,6 @@ public class AgendaPanel extends JPanel {
         historyBackB.setMinimumSize(new Dimension(24, 24));
         historyBackB.setMaximumSize(new Dimension(24, 24));
         historyBackB.setText("");
-
         historyForwardB.setAction(History.historyForwardAction);
         historyForwardB.setBorderPainted(false);
         historyForwardB.setFocusable(false);

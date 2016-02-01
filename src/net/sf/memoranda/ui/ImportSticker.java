@@ -13,13 +13,10 @@ String name;
         }
 
         public boolean import_file(){
-                /*
-                 We are working on this =)
-                  
-                  
-                  */
+                /* We are working on this =)*/
+        		/* Translation: Error[404] Feature not found... -tjcole2*/
                 
-                JOptionPane.showMessageDialog(null,Local.getString("Aun no podemos importar su documento"));
+                JOptionPane.showMessageDialog(null,Local.getString("Document import failed."));
                 return true;
         }
         

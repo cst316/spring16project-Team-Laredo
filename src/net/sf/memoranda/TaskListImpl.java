@@ -103,15 +103,16 @@ public class TaskListImpl implements TaskList {
         return filterActiveTasks(allTasks,date);
     }
 
-    public Task createTask(CalendarDate startDate, CalendarDate endDate, String text, int priority, long effort, String description, String parentTaskId) {
+    public Task createTask(CalendarDate startDate, CalendarDate endDate, String text, int priority, int phase, long estEffort, String description, String parentTaskId) {
         Element el = new Element("task");
         el.addAttribute(new Attribute("startDate", startDate.toString()));
         el.addAttribute(new Attribute("endDate", endDate != null? endDate.toString():""));
 		String id = Util.generateId();
         el.addAttribute(new Attribute("id", id));
         el.addAttribute(new Attribute("progress", "0"));
-        el.addAttribute(new Attribute("effort", String.valueOf(effort)));
+        el.addAttribute(new Attribute("estEffort", String.valueOf(estEffort)));
         el.addAttribute(new Attribute("priority", String.valueOf(priority)));
+        el.addAttribute(new Attribute("phase", String.valueOf(phase)));
                 
         Element txt = new Element("text");
         txt.appendChild(text);
@@ -194,25 +195,48 @@ public class TaskListImpl implements TaskList {
     }
     
     /**
-     * Recursively calculate total effort based on subtasks for every node in the task tree
+     * Recursively calculate total estimated effort based on subtasks for every node in the task tree
      * The values are saved as they are calculated as well
      * 
      * @param t
      * @return
      */
-    public long calculateTotalEffortFromSubTasks(Task t) {
+    public long calculateTotalEstimatedEffortFromSubTasks(Task t) {
         long totalEffort = 0;
         if (hasSubTasks(t.getID())) {
             Collection subTasks = getAllSubTasks(t.getID());
             for (Iterator iter = subTasks.iterator(); iter.hasNext();) {
             	Task e = (Task) iter.next();
-            	totalEffort = totalEffort + calculateTotalEffortFromSubTasks(e);
+            	totalEffort = totalEffort + calculateTotalEstimatedEffortFromSubTasks(e);
             }
-            t.setEffort(totalEffort);
+            t.setEstEffort(totalEffort);
             return totalEffort;            
         }
         else {
-            return t.getEffort();
+            return t.getEstEffort();
+        }
+    }
+    
+    /**
+     * Recursively calculate total actual effort based on subtasks for every node in the task tree
+     * The values are saved as they are calculated as well
+     * 
+     * @param t
+     * @return
+     */
+    public long calculateTotalActualEffortFromSubTasks(Task t) {
+        long totalEffort = 0;
+        if (hasSubTasks(t.getID())) {
+            Collection subTasks = getAllSubTasks(t.getID());
+            for (Iterator iter = subTasks.iterator(); iter.hasNext();) {
+            	Task e = (Task) iter.next();
+            	totalEffort = totalEffort + calculateTotalActualEffortFromSubTasks(e);
+            }
+            t.setActEffort(totalEffort);
+            return totalEffort;            
+        }
+        else {
+            return t.getActEffort();
         }
     }
 
@@ -299,7 +323,7 @@ public class TaskListImpl implements TaskList {
             return res;            
         }
         else {
-            long eff = t.getEffort();
+            long eff = t.getEstEffort();
             // if effort was not filled in, it is assumed to be "1 hr" for the purpose of calculation
             if (eff == 0) {
                 eff = 1;
@@ -308,7 +332,8 @@ public class TaskListImpl implements TaskList {
             res[1] = eff;
             return res;
         }
-    }    
+    }
+    
     /*
      * private methods below this line
      */

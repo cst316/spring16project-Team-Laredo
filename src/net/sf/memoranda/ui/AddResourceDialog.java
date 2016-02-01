@@ -192,7 +192,7 @@ public class AddResourceDialog extends JDialog {
 
 	/**
 	 * set CANCELLED variable to false so we can know the user 
-	 * pressed the ok buton and close this dialog.
+	 * pressed the ok button and close this dialog.
 	 */
 	 
     void okB_actionPerformed(ActionEvent e) {
