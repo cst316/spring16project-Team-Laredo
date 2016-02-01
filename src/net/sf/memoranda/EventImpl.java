@@ -2,7 +2,7 @@
  * EventImpl.java
  * Created on 08.03.2003, 13:20:13 Alex
  * Package: net.sf.memoranda
- * 
+ *
  * @author Alex V. Alishevskikh, alex@openmechanics.net
  * Copyright (c) 2003 Memoranda Team. http://memoranda.sf.net
  */
@@ -11,17 +11,18 @@ package net.sf.memoranda;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+
 import net.sf.memoranda.date.CalendarDate;
 import net.sf.memoranda.util.Local;
 import nu.xom.Attribute;
 import nu.xom.Element;
 
 /**
- * 
+ *
  */
 /*$Id: EventImpl.java,v 1.9 2004/10/06 16:00:11 ivanrise Exp $*/
 public class EventImpl implements Event {
-    
+
     private Element _elem = null;
 
     /**
@@ -31,7 +32,7 @@ public class EventImpl implements Event {
         _elem = elem;
     }
 
-   
+
     /**
      * @see net.sf.memoranda.Event#getStartHour()
      */
@@ -45,20 +46,79 @@ public class EventImpl implements Event {
     public int getStartMinute() {
         return new Integer(_elem.getAttribute("start_min").getValue());
     }
-    
+
     public int getEndHour() {
-    	return new Integer(_elem.getAttribute("end_hour").getValue());
+        try {
+            return new Integer(_elem.getAttribute("end_hour").getValue());
+        } catch (NumberFormatException e) {
+            return 0;
+        } catch (NullPointerException npe) {
+            return 0;
+        }
     }
-    
+
     public int getEndMinute() {
-    	return new Integer(_elem.getAttribute("end_minute").getValue());
+        try {
+            return new Integer(_elem.getAttribute("end_minute").getValue());
+        } catch (NumberFormatException e) {
+            return 0;
+        } catch (NullPointerException npe) {
+            return 0;
+        }
     }
-    
+
+    public int getDurationHour() {
+        int startHour = this.getStartHour();
+        int startMinute = this.getStartMinute();
+
+        int endHour = this.getEndHour();
+        int endMinute = this.getEndMinute();
+
+        // if they're both 0, then this event does not have a duration
+        if (endHour == 0 && endMinute == 0) {
+            return 0;
+        }
+
+        if (startMinute > endMinute && endHour > 0) {
+            endHour -= 1; // carry an hour over to the minute column
+        } else if (startMinute > endMinute) {
+            return 0;
+        }
+
+        return endHour - startHour;
+    }
+
+    public String getDurationString() {
+        int startHour = this.getStartHour();
+        int startMinute = this.getStartMinute();
+
+        int endHour = this.getEndHour();
+        int endMinute = this.getEndMinute();
+
+        // if they're both 0, then this event does not have a duration
+        if (endHour == 0 && endMinute == 0) {
+            return "";
+        }
+
+        // account for carrying an hour into the minutes
+        if (startMinute > endMinute && endHour > 0) {
+            endHour -= 1;
+            endMinute += 60;
+        } else if (startMinute > endMinute) { // shouldn't happen
+            return "";
+        }
+
+        int hours = endHour - startHour;
+        int minutes = endMinute - startMinute;
+
+        return hours + ":" + minutes;
+    }
+
     public String getTimeString() {
         return Local.getTimeString(getStartHour(), getStartMinute());
     }
-        
-  
+
+
     /**
      * @see net.sf.memoranda.Event#getText()
      */
@@ -72,12 +132,14 @@ public class EventImpl implements Event {
     public Element getContent() {
         return _elem;
     }
+
     /**
      * @see net.sf.memoranda.Event#isRepeatable()
      */
     public boolean isRepeatable() {
         return getStartDate() != null;
     }
+
     /**
      * @see net.sf.memoranda.Event#getStartDate()
      */
@@ -86,6 +148,7 @@ public class EventImpl implements Event {
         if (a != null) return new CalendarDate(a.getValue());
         return null;
     }
+
     /**
      * @see net.sf.memoranda.Event#getEndDate()
      */
@@ -94,6 +157,7 @@ public class EventImpl implements Event {
         if (a != null) return new CalendarDate(a.getValue());
         return null;
     }
+
     /**
      * @see net.sf.memoranda.Event#getPeriod()
      */
@@ -102,6 +166,7 @@ public class EventImpl implements Event {
         if (a != null) return new Integer(a.getValue());
         return 0;
     }
+
     /**
      * @see net.sf.memoranda.Event#getId()
      */
@@ -110,6 +175,7 @@ public class EventImpl implements Event {
         if (a != null) return a.getValue();
         return null;
     }
+
     /**
      * @see net.sf.memoranda.Event#getRepeat()
      */
@@ -118,31 +184,32 @@ public class EventImpl implements Event {
         if (a != null) return new Integer(a.getValue());
         return 0;
     }
+
     /**
      * @see net.sf.memoranda.Event#getTime()
      */
     public Date getTime() {
 
-		Date d = new Date(); //Revision to fix deprecated methods (jcscoobyrs) 12-NOV-2003 14:26:00
-		Calendar calendar = new GregorianCalendar(Local.getCurrentLocale()); //Revision to fix deprecated methods (jcscoobyrs) 12-NOV-2003 14:26:00
-		calendar.setTime(d); //Revision to fix deprecated methods (jcscoobyrs) 12-NOV-2003 14:26:00
-		calendar.set(Calendar.HOUR_OF_DAY, getStartHour()); //Revision to fix deprecated methods (jcscoobyrs) 12-NOV-2003 14:26:00
-		calendar.set(Calendar.MINUTE, getStartMinute()); //Revision to fix deprecated methods (jcscoobyrs) 12-NOV-2003 14:26:00
-		calendar.set(Calendar.SECOND, 0); //Revision to fix deprecated methods (jcscoobyrs) 12-NOV-2003 14:26:00
-		d = calendar.getTime(); //Revision to fix deprecated methods (jcscoobyrs) 12-NOV-2003 14:26:00
+        Date d = new Date(); //Revision to fix deprecated methods (jcscoobyrs) 12-NOV-2003 14:26:00
+        Calendar calendar = new GregorianCalendar(Local.getCurrentLocale()); //Revision to fix deprecated methods (jcscoobyrs) 12-NOV-2003 14:26:00
+        calendar.setTime(d); //Revision to fix deprecated methods (jcscoobyrs) 12-NOV-2003 14:26:00
+        calendar.set(Calendar.HOUR_OF_DAY, getStartHour()); //Revision to fix deprecated methods (jcscoobyrs) 12-NOV-2003 14:26:00
+        calendar.set(Calendar.MINUTE, getStartMinute()); //Revision to fix deprecated methods (jcscoobyrs) 12-NOV-2003 14:26:00
+        calendar.set(Calendar.SECOND, 0); //Revision to fix deprecated methods (jcscoobyrs) 12-NOV-2003 14:26:00
+        d = calendar.getTime(); //Revision to fix deprecated methods (jcscoobyrs) 12-NOV-2003 14:26:00
         return d;
     }
-	
-	/**
+
+    /**
      * @see net.sf.memoranda.Event#getWorkingDays()
      */
-	public boolean getWorkingDays() {
+    public boolean getWorkingDays() {
         Attribute a = _elem.getAttribute("workingDays");
         return a != null && a.getValue().equals("true");
     }
-	
-	public int compareTo(Event o) {
+
+    public int compareTo(Event o) {
         return (getStartHour() * 60 + getStartMinute()) - (o.getStartHour() * 60 + o.getStartMinute());
-	}
+    }
 
 }
