@@ -20,8 +20,6 @@ public interface Event extends Comparable<Event> {
     
     String getId();
     
-    //CalendarDate getDate();
-    
     int getStartHour();
     int getStartMinute();
     
