@@ -59,17 +59,17 @@ public class TaskImpl implements Task, Comparable {
 		if (pr.getEndDate() != null)
 			return pr.getEndDate();
 		return this.getStartDate();
-        
     }
 
     public void setEndDate(CalendarDate date) {
 		if (date == null)
 			setAttr("endDate", "");
+		else
 		setAttr("endDate", date.toString());
     }
 
-    public long getEffort() {
-    	Attribute attr = _element.getAttribute("effort");
+    public long getEstEffort() {
+    	Attribute attr = _element.getAttribute("estEffort");
     	if (attr == null) {
     		return 0;
     	}
@@ -83,8 +83,27 @@ public class TaskImpl implements Task, Comparable {
     	}
     }
 
-    public void setEffort(long effort) {
-        setAttr("effort", String.valueOf(effort));
+    public void setEstEffort(long estEffort) {
+        setAttr("estEffort", String.valueOf(estEffort));
+    }
+    
+    public long getActEffort() {
+    	Attribute attr = _element.getAttribute("actEffort");
+    	if (attr == null) {
+    		return 0;
+    	}
+    	else {
+    		try {
+        		return Long.parseLong(attr.getValue());
+    		}
+    		catch (NumberFormatException e) {
+    			return 0;
+    		}
+    	}
+    }
+
+    public void setActEffort(long actEffort) {
+        setAttr("actEffort", String.valueOf(actEffort));
     }
 	
 	/* 
@@ -285,6 +304,22 @@ public class TaskImpl implements Task, Comparable {
     public void setPriority(int p) {
         setAttr("priority", String.valueOf(p));
     }
+    
+    /**
+     * @see net.sf.memoranda.Task#getPhase()
+     */
+	public int getPhase() {
+		 Attribute pa = _element.getAttribute("phase");
+	        if (pa == null)
+	            return Task.NO_PHASE;
+	        return new Integer(pa.getValue()).intValue();
+	}
+	/**
+     * @see net.sf.memoranda.Task#setPhase()
+     */
+	public void setPhase(int p) {
+		setAttr("phase", String.valueOf(p));
+	}
 
     private void setAttr(String a, String value) {
         Attribute attr = _element.getAttribute(a);
@@ -387,6 +422,5 @@ public class TaskImpl implements Task, Comparable {
 				return true;
 		return false;
 	}
-
 	
 }
