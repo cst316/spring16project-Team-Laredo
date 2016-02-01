@@ -55,7 +55,7 @@ public class ExportSticker {
         }
         
         public boolean export(String src){
-            boolean result = true;
+        	boolean result = true;
             String fs = System.getProperty("file.separator");
             String contents = getSticker();
             try {
@@ -63,12 +63,12 @@ public class ExportSticker {
             FileWriter fwrite=new FileWriter(file,true);
             fwrite.write(contents);
             fwrite.close();
-            JOptionPane.showMessageDialog(null,Local.getString("Sticker successfuly exported to your Memoranda folder"));        
+            JOptionPane.showMessageDialog(null,Local.getString("Sticker successfully exported to your Memoranda folder"));        
 	        } catch (IOException e) {
 	            e.printStackTrace();
 	            JOptionPane.showMessageDialog(null,Local.getString("Sticker export failed."));
 	        }
-            return result;
+        	return result;
         }
         
         public String getSticker(){

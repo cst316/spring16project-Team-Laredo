@@ -67,10 +67,9 @@ public class AgendaPanel extends JPanel {
             ex.printStackTrace();
         }
     }
-
+    
     void jbInit() throws Exception {
         expandedTasks = new ArrayList<>();
-
         toolBar.setFloatable(false);
         viewer.setEditable(false);
         viewer.setOpaque(false);
@@ -190,14 +189,25 @@ public class AgendaPanel extends JPanel {
 					 //  You need to add the export sticker meanwhile ..
 					 final JFrame parent = new JFrame();
 					 String name = JOptionPane.showInputDialog(parent,Local.getString("Enter filename to export"),null);
-					 new ExportSticker(name).export("txt");
+					 if(name == null){
+				         JOptionPane.showMessageDialog(null,Local.getString("Sticker export cancelled"));
+					 }
+					 else{
+						 new ExportSticker(name).export("txt");
+						 //JOptionPane.showMessageDialog(null,name); 
+					 }
 					 //JOptionPane.showMessageDialog(null,name);
 				}else if (d.startsWith("memoranda:exportstickersh")) {
 					 //  You need to add the export sticker meanwhile ..
 					 final JFrame parent = new JFrame();
 					 String name = JOptionPane.showInputDialog(parent,Local.getString("Enter file name to export"),null);
-					 new ExportSticker(name).export("html");
-					 //JOptionPane.showMessageDialog(null,name);
+					 if(name == null){
+				         JOptionPane.showMessageDialog(null,Local.getString("Sticker export cancelled"));
+					 }
+					 else{
+				         new ExportSticker(name).export("html");
+				         //JOptionPane.showMessageDialog(null,name);
+					 }
 				}else if (d.startsWith("memoranda:importstickers")) {
 					final JFrame parent = new JFrame();
 					String name = JOptionPane.showInputDialog(parent,Local.getString("Enter name of file to import"),null);
