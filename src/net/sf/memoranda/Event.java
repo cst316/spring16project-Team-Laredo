@@ -23,11 +23,12 @@ public interface Event extends Comparable<Event> {
     //CalendarDate getDate();
     
     int getStartHour();
-    
     int getStartMinute();
     
     int getEndHour();
     int getEndMinute();
+
+    String getDurationString();
     
     //Date getTime();
     
