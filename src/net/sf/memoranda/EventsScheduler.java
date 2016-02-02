@@ -19,8 +19,8 @@ import java.util.Vector;
 /*$Id: EventsScheduler.java,v 1.4 2004/01/30 12:17:41 alexeya Exp $*/
 public class EventsScheduler {
 
-    static Vector _timers = new Vector();
-    static Vector _listeners = new Vector();
+    static Vector<EventTimer> _timers = new Vector<>();
+    static Vector<EventNotificationListener> _listeners = new Vector<>();
 
     static Timer changeDateTimer = new Timer();
 
@@ -32,18 +32,20 @@ public class EventsScheduler {
         cancelAll();
         //changeDateTimer.cancel();
         Vector events = (Vector)EventsManager.getActiveEvents();
-        _timers = new Vector();
+        _timers = new Vector<>();
         /*DEBUG*/System.out.println("----------");
-        for (int i = 0; i < events.size(); i++) {
-            Event ev = (Event)events.get(i);
+        for (Object event : events) {
+            Event ev = (Event) event;
             Date evTime = ev.getTime();
-        /*DEBUG*/System.out.println((Calendar.getInstance()).getTime());
-          //  if (evTime.after(new Date())) {
-	      if (evTime.after((Calendar.getInstance()).getTime())) {	
+        /*DEBUG*/
+            System.out.println((Calendar.getInstance()).getTime());
+            //  if (evTime.after(new Date())) {
+            if (evTime.after((Calendar.getInstance()).getTime())) {
                 EventTimer t = new EventTimer(ev);
-                t.schedule(new NotifyTask(t), ev.getTime());                
+                t.schedule(new NotifyTask(t), ev.getTime());
                 _timers.add(t);
-                /*DEBUG*/System.out.println(ev.getTimeString());
+                /*DEBUG*/
+                System.out.println(ev.getTimeString());
             }
         }
         /*DEBUG*/System.out.println("----------");
@@ -58,24 +60,16 @@ public class EventsScheduler {
     }
 
     public static void cancelAll() {
-        for (int i = 0; i < _timers.size(); i++) {
-            EventTimer t = (EventTimer)_timers.get(i);
+        for (EventTimer t : _timers) {
             t.cancel();
         }
     }
     
-    public static Vector getScheduledEvents() {
-        Vector v = new Vector();
-        for (int i = 0; i < _timers.size(); i++) 
-            v.add(((EventTimer)_timers.get(i)).getEvent());
-        return v;
-    }
-    
     public static Event getFirstScheduledEvent() {
         if (!isEventScheduled()) return null;
-        Event e1 = ((EventTimer)_timers.get(0)).getEvent();
+        Event e1 = (_timers.get(0)).getEvent();
         for (int i = 1; i < _timers.size(); i++) { 
-            Event ev = ((EventTimer)_timers.get(i)).getEvent();
+            Event ev = (_timers.get(i)).getEvent();
             if (ev.getTime().before(e1.getTime()))
                 e1 = ev;
         }
@@ -92,13 +86,11 @@ public class EventsScheduler {
     }
         
     private static void notifyListeners(Event ev) {
-        for (int i = 0; i < _listeners.size(); i++)
-            ((EventNotificationListener)_listeners.get(i)).eventIsOccured(ev);
+        for (Object _listener : _listeners) ((EventNotificationListener) _listener).eventIsOccured(ev);
     }
 
     private static void notifyChanged() {
-        for (int i = 0; i < _listeners.size(); i++)
-            ((EventNotificationListener)_listeners.get(i)).eventsChanged();
+        for (Object _listener : _listeners) ((EventNotificationListener) _listener).eventsChanged();
     }
 
     private static Date getMidnight() {

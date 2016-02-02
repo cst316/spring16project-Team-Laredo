@@ -101,7 +101,7 @@ public class EventsManager {
 		el.addAttribute(new Attribute("start_hour", String.valueOf(start_hh)));
 		el.addAttribute(new Attribute("start_min", String.valueOf(start_mm)));
 		el.addAttribute(new Attribute("end_hour", String.valueOf(end_hh)));
-		el.addAttribute(new Attribute("end_min", String.valueOf(end_mm)));
+		el.addAttribute(new Attribute("end_minute", String.valueOf(end_mm)));
 		el.appendChild(text);
 		Day d = getDay(date);
 		if (d == null)
