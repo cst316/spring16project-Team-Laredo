@@ -74,6 +74,9 @@ public class EventImpl implements Event {
         int endHour = this.getEndHour();
         int endMinute = this.getEndMinute();
 
+        System.out.println("event with start " + startHour + " hrs and " + startMinute +
+                " mins, end " + endHour + " hrs and " + endMinute + " mins");
+
         // if they're both 0, then this event does not have a duration
         if (endHour == 0 && endMinute == 0) {
             return "";
@@ -90,7 +93,15 @@ public class EventImpl implements Event {
         int hours = endHour - startHour;
         int minutes = endMinute - startMinute;
 
-        return hours + ":" + minutes;
+        System.out.println("Event with duration " + hours + " hrs and " + minutes + " mins");
+
+        StringBuilder build = new StringBuilder();
+        build.append(hours);
+        build.append(':');
+        if (minutes < 10) build.append('0');
+        build.append(minutes);
+
+        return build.toString();
     }
 
     public String getTimeString() {
