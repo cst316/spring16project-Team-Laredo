@@ -93,6 +93,11 @@ public class EventImpl implements Event {
         int hours = endHour - startHour;
         int minutes = endMinute - startMinute;
 
+        // good catch Ben! need to handle negative hours
+        if (hours < 0 || minutes < 0) {
+            return "";
+        }
+
         System.out.println("Event with duration " + hours + " hrs and " + minutes + " mins");
 
         StringBuilder build = new StringBuilder();
