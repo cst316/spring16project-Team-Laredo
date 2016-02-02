@@ -7,8 +7,9 @@ import nu.xom.Element;
 public class DefectImpl implements Defect {
 	
 	private Element _element = null;
+	private DefectList _d1 = null;
 
-	public DefectImpl(Element element){
+	public DefectImpl(Element element, DefectList d1){
 	  _element = element;	
 	}
 	

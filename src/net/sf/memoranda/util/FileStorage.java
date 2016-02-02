@@ -20,7 +20,6 @@ import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
 import net.sf.memoranda.DefectList;
-import net.sf.memoranda.DefectListImpl;
 import net.sf.memoranda.EventsManager;
 import net.sf.memoranda.Note;
 import net.sf.memoranda.NoteList;
@@ -471,24 +470,4 @@ public class FileStorage implements Storage {
                 "");
         }
     }
-
-	@Override
-	public DefectList openDefectList(Project prj) {
-		DefectList defectList;
-	    String fn = JN_DOCPATH + prj.getID() + File.separator + ".defectlist";
-	    if (documentExists(fn)) {
-	    	Document defectlistDoc = openDocument(fn);
-	    	defectList = new DefectListImpl(defectlistDoc, prj);
-	    }
-	    else{
-	    	defectList = new DefectListImpl(prj);
-	    }
-	    return defectList;  
-	}
-
-	@Override
-	public void storeDefectList(DefectList d1, Project prj) {
-		saveDocument(d1.getXMLContent(), JN_DOCPATH + prj.getID() + File.separator + ".defectlist");
-	}
-
 }

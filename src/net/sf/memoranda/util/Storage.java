@@ -26,9 +26,6 @@ public interface Storage {
     NoteList openNoteList(Project prj);
     void storeNoteList(NoteList nl, Project prj);
     
-    DefectList openDefectList(Project prj);
-    void storeDefectList(DefectList d1, Project prj);
-    
     void storeNote(Note note, javax.swing.text.Document doc);    
     javax.swing.text.Document openNote(Note note);
     void removeNote(Note note);
