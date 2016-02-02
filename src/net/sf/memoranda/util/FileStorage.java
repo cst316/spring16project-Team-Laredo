@@ -19,6 +19,7 @@ import java.net.URL;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
+import net.sf.memoranda.DefectList;
 import net.sf.memoranda.EventsManager;
 import net.sf.memoranda.Note;
 import net.sf.memoranda.NoteList;
@@ -469,5 +470,4 @@ public class FileStorage implements Storage {
                 "");
         }
     }
-
 }
