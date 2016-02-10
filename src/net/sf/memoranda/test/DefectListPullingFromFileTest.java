@@ -45,6 +45,7 @@ public class DefectListPullingFromFileTest {
 	public static void tearDownAfterClass() throws Exception {
 		ProjectManager.removeProject("FirstTestProject");
 		ProjectManager.removeProject("SecondTestProject");
+		fileStorage.storeProjectManager();
 	}
 	
 	@Test
