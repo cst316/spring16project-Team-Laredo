@@ -21,8 +21,8 @@ import net.sf.memoranda.Event;
 import net.sf.memoranda.EventsManager;
 import net.sf.memoranda.date.CalendarDate;
 import net.sf.memoranda.date.CurrentDate;
-import net.sf.memoranda.date.DateListener;
 import net.sf.memoranda.util.Local;
+
 /**
  *
  */
@@ -33,6 +33,7 @@ public class EventsTable extends JTable {
     public static final int EVENT_ID = 101;
 
     Vector events = new Vector();
+
     /**
      * Constructor for EventsTable.
      */
@@ -41,19 +42,18 @@ public class EventsTable extends JTable {
         setModel(new EventsTableModel());
         initTable(CurrentDate.get());
         this.setShowGrid(false);
-        CurrentDate.addDateListener(new DateListener() {
-            public void dateChange(CalendarDate d) {
-                //updateUI();
-                initTable(d);
-            }
-        });
+        CurrentDate.addDateListener(this::initTable);
     }
 
     public void initTable(CalendarDate d) {
-        events = (Vector)EventsManager.getEventsForDate(d);
+        events = (Vector) EventsManager.getEventsForDate(d);
         getColumnModel().getColumn(0).setPreferredWidth(60);
         getColumnModel().getColumn(0).setMaxWidth(60);
-	clearSelection();
+
+        getColumnModel().getColumn(1).setPreferredWidth(60);
+        getColumnModel().getColumn(1).setMaxWidth(60);
+
+        clearSelection();
         updateUI();
     }
 
@@ -61,31 +61,29 @@ public class EventsTable extends JTable {
         initTable(CurrentDate.get());
     }
 
-     public TableCellRenderer getCellRenderer(int row, int column) {
+    public TableCellRenderer getCellRenderer(int row, int column) {
         return new javax.swing.table.DefaultTableCellRenderer() {
 
             public Component getTableCellRendererComponent(
-                JTable table,
-                Object value,
-                boolean isSelected,
-                boolean hasFocus,
-                int row,
-                int column) {
+                    JTable table,
+                    Object value,
+                    boolean isSelected,
+                    boolean hasFocus,
+                    int row,
+                    int column) {
                 Component comp;
                 comp = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                Event ev = (Event)getModel().getValueAt(row, EVENT);
+                Event ev = (Event) getModel().getValueAt(row, EVENT);
                 comp.setForeground(java.awt.Color.gray);
                 if (ev.isRepeatable())
                     comp.setFont(comp.getFont().deriveFont(Font.ITALIC));
                 if (CurrentDate.get().after(CalendarDate.today())) {
-                  comp.setForeground(java.awt.Color.black);
-                }                
-                else if (CurrentDate.get().equals(CalendarDate.today())) {
-                  if (ev.getTime().after(new Date())) {
                     comp.setForeground(java.awt.Color.black);
-                    //comp.setFont(new java.awt.Font("Dialog", 1, 12));
-                    comp.setFont(comp.getFont().deriveFont(Font.BOLD));
-                  }
+                } else if (CurrentDate.get().equals(CalendarDate.today())) {
+                    if (ev.getTime().after(new Date())) {
+                        comp.setForeground(java.awt.Color.black);
+                        comp.setFont(comp.getFont().deriveFont(Font.BOLD));
+                    }
                 }
                 return comp;
             }
@@ -96,8 +94,8 @@ public class EventsTable extends JTable {
     class EventsTableModel extends AbstractTableModel {
 
         String[] columnNames = {
-            //Local.getString("Task name"),
-            Local.getString("Time"),
+                Local.getString("Time"),
+                Local.getString("Duration"),
                 Local.getString("Text")
         };
 
@@ -106,30 +104,32 @@ public class EventsTable extends JTable {
         }
 
         public int getColumnCount() {
-            return 2;
+            return 3;
         }
 
         public int getRowCount() {
-			int i;
-			try {
-				i = events.size();
-			}
-			catch(NullPointerException e) {
-				i = 1;
-			}
-			return i;
+            int i;
+            try {
+                i = events.size();
+            } catch (NullPointerException e) {
+                i = 1;
+            }
+            return i;
         }
 
         public Object getValueAt(int row, int col) {
-           Event ev = (Event)events.get(row);
-           if (col == 0)
-                //return ev.getHour()+":"+ev.getMinute();
+            Event ev = (Event) events.get(row);
+            if (col == 0) {
                 return ev.getTimeString();
-           else if (col == 1)
+            } else if (col == 1) {
+                return ev.getDurationString();
+            } else if (col == 2) {
                 return ev.getText();
-           else if (col == EVENT_ID)
+            } else if (col == EVENT_ID) {
                 return ev.getId();
-           else return ev;
+            } else {
+                return ev;
+            }
         }
 
         public String getColumnName(int col) {
