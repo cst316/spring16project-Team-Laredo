@@ -8,18 +8,15 @@
  */
 package net.sf.memoranda;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-
 import net.sf.memoranda.date.CalendarDate;
 import net.sf.memoranda.util.Local;
 import nu.xom.Attribute;
 import nu.xom.Element;
 
-/**
- *
- */
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 /*$Id: EventImpl.java,v 1.9 2004/10/06 16:00:11 ivanrise Exp $*/
 public class EventImpl implements Event {
 
@@ -67,38 +64,19 @@ public class EventImpl implements Event {
         }
     }
 
+    /**
+     * Format the event duration as a String with format "HH:MM".
+     *
+     * @return Duration as a "HH:MM" String.
+     */
     public String getDurationString() {
-        int startHour = this.getStartHour();
-        int startMinute = this.getStartMinute();
+        int minutes = this.getDurationMinutes();
+        int hours = minutes / 60;
+        minutes = minutes % 60;
 
-        int endHour = this.getEndHour();
-        int endMinute = this.getEndMinute();
-
-        System.out.println("event with start " + startHour + " hrs and " + startMinute +
-                " mins, end " + endHour + " hrs and " + endMinute + " mins");
-
-        // if they're both 0, then this event does not have a duration
-        if (endHour == 0 && endMinute == 0) {
+        if (minutes <= 0 && hours <= 0) {
             return "";
         }
-
-        // account for carrying an hour into the minutes
-        if (startMinute > endMinute && endHour > 0) {
-            endHour -= 1;
-            endMinute += 60;
-        } else if (startMinute > endMinute) { // shouldn't happen
-            return "";
-        }
-
-        int hours = endHour - startHour;
-        int minutes = endMinute - startMinute;
-
-        // good catch Ben! need to handle negative hours
-        if (hours < 0 || minutes < 0) {
-            return "";
-        }
-
-        System.out.println("Event with duration " + hours + " hrs and " + minutes + " mins");
 
         StringBuilder build = new StringBuilder();
         build.append(hours);
@@ -107,6 +85,41 @@ public class EventImpl implements Event {
         build.append(minutes);
 
         return build.toString();
+    }
+
+    /**
+     * Calculate the number of minutes in an EventImpl's duration.
+     * @return Number of minutes in the duration.
+     */
+    public int getDurationMinutes() {
+        int startHour = this.getStartHour();
+        int startMinute = this.getStartMinute();
+
+        int endHour = this.getEndHour();
+        int endMinute = this.getEndMinute();
+
+        // if they're both 0, then this event does not have a duration
+        if (endHour == 0 && endMinute == 0) {
+            return 0;
+        }
+
+        // account for carrying an hour into the minutes
+        if (startMinute > endMinute && endHour > 0) {
+            endHour -= 1;
+            endMinute += 60;
+        } else if (startMinute > endMinute) { // shouldn't happen
+            return 0;
+        }
+
+        int hours = endHour - startHour;
+        int minutes = endMinute - startMinute;
+
+        // good catch Ben! need to handle negative hours
+        if (hours < 0 || minutes < 0) {
+            return 0;
+        }
+
+        return (hours * 60) + minutes;
     }
 
     public String getTimeString() {
