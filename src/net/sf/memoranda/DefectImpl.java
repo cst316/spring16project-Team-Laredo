@@ -4,25 +4,32 @@ import net.sf.memoranda.date.CalendarDate;
 import nu.xom.Attribute;
 import nu.xom.Element;
 
+/**
+ * Stores defects 
+ * 
+ * @author Benjamin Paothatat
+ * @since 2/10/2016
+ */
 public class DefectImpl implements Defect {
 	
-	private Element _element = null;
-	private DefectList _d1 = null;
+	private Element m_element = null;
+	private DefectList m_d1 = null;
 
 	public DefectImpl(Element element, DefectList d1){
-	  _element = element;	
+	    m_element = element;	
+	    m_d1 = d1;
 	}
 	
 	@Override
 	public int getDefectNumber() {
-		String defectNumber = _element.getAttributeValue("defectNumber");
+		String defectNumber = m_element.getAttributeValue("defectNumber");
 		int number = Integer.parseInt(defectNumber);
 		return number;
 	}
 
 	@Override
 	public CalendarDate getDateFound() {
-		CalendarDate dateFound = new CalendarDate(_element.getAttributeValue("dateFound"));
+		CalendarDate dateFound = new CalendarDate(m_element.getAttributeValue("dateFound"));
 		return dateFound;
 	}
 
@@ -33,7 +40,7 @@ public class DefectImpl implements Defect {
 
 	@Override
 	public CalendarDate getDateRemoved() {
-		CalendarDate dateRemoved = new CalendarDate(_element.getAttributeValue("dateRemoved"));
+		CalendarDate dateRemoved = new CalendarDate(m_element.getAttributeValue("dateRemoved"));
 		return dateRemoved;
 	}
 
@@ -45,7 +52,7 @@ public class DefectImpl implements Defect {
 	@Override
 	public int getPhaseOfInjection() {
 		int phase = Defect.NO_PHASE;
-		Attribute attr = _element.getAttribute("phaseOfInjection");
+		Attribute attr = m_element.getAttribute("phaseOfInjection");
 		if(attr != null){
 			phase = Integer.parseInt(attr.getValue());
 		}
@@ -62,7 +69,7 @@ public class DefectImpl implements Defect {
 	@Override
 	public int getPhaseOfRemoval() {
 		int phase = Defect.NO_PHASE;
-		Attribute attr = _element.getAttribute("removalPhase");
+		Attribute attr = m_element.getAttribute("removalPhase");
 		if(attr != null){
 			phase = Integer.parseInt(attr.getValue());
 		}
@@ -84,7 +91,7 @@ public class DefectImpl implements Defect {
     @Override
 	public int getTypeOfDefect() {
     	int typeOfDefect = Defect.NON_TYPE;
-		Attribute attr = _element.getAttribute("typeOfDefect");
+		Attribute attr = m_element.getAttribute("typeOfDefect");
 		if(attr != null){
 			typeOfDefect = Integer.parseInt(attr.getValue());
 		}
@@ -100,7 +107,7 @@ public class DefectImpl implements Defect {
 	
 	@Override
 	public String getDescription() {
-		String description = _element.getAttributeValue("description");
+		String description = m_element.getAttributeValue("description");
 		return description;
 	}
 
@@ -119,13 +126,13 @@ public class DefectImpl implements Defect {
 
 	@Override
 	public Element getElement() {
-		return _element;
+		return m_element;
 	}
 	
     private void setAttr(String a, String value) {
-        Attribute attr = _element.getAttribute(a);
+        Attribute attr = m_element.getAttribute(a);
         if (attr == null)
-           _element.addAttribute(new Attribute(a, value));
+           m_element.addAttribute(new Attribute(a, value));
         else
             attr.setValue(value);
     }
