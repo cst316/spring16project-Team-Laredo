@@ -24,6 +24,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
+import javax.swing.filechooser.FileSystemView;
 import javax.swing.text.html.HTMLDocument;
 
 import net.sf.memoranda.History;
@@ -37,6 +38,7 @@ import net.sf.memoranda.util.CurrentStorage;
 import net.sf.memoranda.util.HTMLFileExport;
 import net.sf.memoranda.util.HTMLFileImport;
 import net.sf.memoranda.util.Local;
+import net.sf.memoranda.util.SingleRootFileSystemView;
 import net.sf.memoranda.util.Configuration;
 
 /*$Id: EditorPanel.java,v 1.21 2006/06/28 22:58:31 alexeya Exp $*/
@@ -431,8 +433,10 @@ public class EditorPanel extends JPanel {
 		UIManager.put("FileChooser.cancelButtonToolTipText", Local
 				.getString("Cancel"));
 
-		JFileChooser chooser = new JFileChooser();
-		chooser.setFileHidingEnabled(false);
+		File root = new File(System.getProperty("user.home"));
+        FileSystemView fsv = new SingleRootFileSystemView(root);
+		JFileChooser chooser = new JFileChooser(fsv);
+		chooser.setFileHidingEnabled(true);
 		chooser.setDialogTitle(Local.getString("Export note"));
 		chooser.setAcceptAllFileFilterUsed(false);
 		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -550,8 +554,10 @@ public class EditorPanel extends JPanel {
 		UIManager.put("FileChooser.cancelButtonToolTipText", Local
 				.getString("Cancel"));
 
-		JFileChooser chooser = new JFileChooser();
-		chooser.setFileHidingEnabled(false);
+		File root = new File(System.getProperty("user.home"));
+        FileSystemView fsv = new SingleRootFileSystemView(root);
+		JFileChooser chooser = new JFileChooser(fsv);
+		chooser.setFileHidingEnabled(true);
 		chooser.setDialogTitle(Local.getString("Insert file"));
 		chooser.setAcceptAllFileFilterUsed(false);
 		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);

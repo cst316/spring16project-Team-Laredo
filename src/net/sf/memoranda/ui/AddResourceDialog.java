@@ -9,6 +9,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.io.File;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -23,8 +24,10 @@ import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.event.CaretEvent;
+import javax.swing.filechooser.FileSystemView;
 
 import net.sf.memoranda.util.Local;
+import net.sf.memoranda.util.SingleRootFileSystemView;
 
 /*$Id: AddResourceDialog.java,v 1.12 2007/03/20 06:21:46 alexeya Exp $*/
 public class AddResourceDialog extends JDialog {
@@ -262,9 +265,11 @@ public class AddResourceDialog extends JDialog {
             Local.getString("Cancel"));
         UIManager.put("FileChooser.cancelButtonToolTipText", 
             Local.getString("Cancel"));
-        
-        JFileChooser chooser = new JFileChooser();
-        chooser.setFileHidingEnabled(false);
+       
+        File root = new File(System.getProperty("user.home"));
+        FileSystemView fsv = new SingleRootFileSystemView(root);
+        JFileChooser chooser = new JFileChooser(fsv);
+        chooser.setFileHidingEnabled(true);
         chooser.setDialogTitle(Local.getString("Add resource"));
         chooser.setAcceptAllFileFilterUsed(true);
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);        

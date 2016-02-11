@@ -4,11 +4,14 @@ package net.sf.memoranda.ui;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
 
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileSystemView;
 
 import net.sf.memoranda.util.Local;
+import net.sf.memoranda.util.SingleRootFileSystemView;
 
 /**
  *
@@ -170,8 +173,10 @@ public class FileExportDialog extends javax.swing.JDialog {
     }
     
     private void browseTemplate() {
-    	JFileChooser chooser = new JFileChooser();
-        chooser.setFileHidingEnabled(false);
+    	File root = new File(System.getProperty("user.home"));
+        FileSystemView fsv = new SingleRootFileSystemView(root);
+    	JFileChooser chooser = new JFileChooser(fsv);
+        chooser.setFileHidingEnabled(true);
         chooser.setDialogTitle(Local.getString("Select file"));
         chooser.setAcceptAllFileFilterUsed(true);
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
