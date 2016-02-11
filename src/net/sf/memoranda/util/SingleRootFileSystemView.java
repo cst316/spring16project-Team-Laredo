@@ -12,7 +12,8 @@ import javax.swing.filechooser.*;
  *  The "Look In" combo box will only display the specified root.
  *
  *  The "Up One Level" button will be disable when at the root.
- *
+ *  
+ *  Obtained from https://tips4java.wordpress.com/2009/01/28/single-root-file-chooser/
  */
 public class SingleRootFileSystemView extends FileSystemView
 {
