@@ -3,7 +3,6 @@ package net.sf.memoranda.test;
 import static org.junit.Assert.*;
 
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -12,14 +11,12 @@ import net.sf.memoranda.Project;
 import net.sf.memoranda.ProjectManager;
 import net.sf.memoranda.date.CalendarDate;
 import net.sf.memoranda.util.FileStorage;
-import net.sf.memoranda.util.Util;
 
 public class DefectListPullingFromFileTest {
 	static CalendarDate today;
     static CalendarDate tomorrow;
     static CalendarDate dayAfterTomorrow;
     static FileStorage fileStorage;
-	static String JN_DOCPATH = Util.getEnvDir();
 
     static Project pulledFirstProject;
     static DefectList pulledFirstDefectList;
@@ -29,9 +26,9 @@ public class DefectListPullingFromFileTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		today = new CalendarDate().today();
-		tomorrow = new CalendarDate().tomorrow();
-		dayAfterTomorrow = new CalendarDate().tomorrow().tomorrow();
+		today = CalendarDate.today();
+		tomorrow = CalendarDate.tomorrow();
+		dayAfterTomorrow = tomorrow.tomorrow();
 		
 		fileStorage = new FileStorage();
 		pulledFirstProject = ProjectManager.getProject("FirstTestProject");

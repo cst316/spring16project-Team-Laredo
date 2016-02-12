@@ -3,24 +3,15 @@ package net.sf.memoranda.test;
 import static org.junit.Assert.*;
 
 import java.io.File;
-
-import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import net.sf.memoranda.CurrentProject;
 import net.sf.memoranda.DefectList;
 import net.sf.memoranda.DefectListImpl;
 import net.sf.memoranda.Project;
-import net.sf.memoranda.ProjectImpl;
 import net.sf.memoranda.ProjectManager;
 import net.sf.memoranda.date.CalendarDate;
-import net.sf.memoranda.util.CurrentStorage;
 import net.sf.memoranda.util.FileStorage;
 import net.sf.memoranda.util.Util;
-import nu.xom.Attribute;
-import nu.xom.Element;
 /**
  * Test defect, defect list and File storage for defects.
  * 
@@ -42,9 +33,9 @@ public class DefectListCreationTest {
    	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		today = new CalendarDate().today();
-		tomorrow = new CalendarDate().tomorrow();
-		dayAfterTomorrow = new CalendarDate().tomorrow().tomorrow();
+		today = CalendarDate.today();
+		tomorrow = CalendarDate.tomorrow();
+		dayAfterTomorrow = CalendarDate.tomorrow().tomorrow();
 		
 		ProjectManager.createProject("FirstTestProject", "FirstTestProject", today, dayAfterTomorrow);
 		firstProject = ProjectManager.getProject("FirstTestProject");
