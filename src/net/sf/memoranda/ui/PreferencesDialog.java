@@ -7,10 +7,14 @@ import net.sf.memoranda.util.Configuration;
 import net.sf.memoranda.util.CurrentStorage;
 import net.sf.memoranda.util.Local;
 import net.sf.memoranda.util.MimeTypesList;
+import net.sf.memoranda.util.SingleRootFileSystemView;
+
 import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.filechooser.FileSystemView;
+
 import java.awt.event.*;
 
 /*$Id: PreferencesDialog.java,v 1.16 2006/06/28 22:58:31 alexeya Exp $*/
@@ -813,8 +817,10 @@ public class PreferencesDialog extends JDialog {
 		UIManager.put("FileChooser.cancelButtonToolTipText", Local
 				.getString("Cancel"));
 
-		JFileChooser chooser = new JFileChooser();
-		chooser.setFileHidingEnabled(false);
+		File root = new File(System.getProperty("user.home"));
+        FileSystemView fsv = new SingleRootFileSystemView(root);
+		JFileChooser chooser = new JFileChooser(fsv);
+		chooser.setFileHidingEnabled(true);
 		chooser.setDialogTitle(Local
 				.getString("Select the web-browser executable"));
 		chooser.setAcceptAllFileFilterUsed(true);
@@ -856,8 +862,10 @@ public class PreferencesDialog extends JDialog {
 		UIManager.put("FileChooser.cancelButtonToolTipText", Local
 				.getString("Cancel"));
 
-		JFileChooser chooser = new JFileChooser();
-		chooser.setFileHidingEnabled(false);
+		File root = new File(System.getProperty("user.home"));
+        FileSystemView fsv = new SingleRootFileSystemView(root);
+		JFileChooser chooser = new JFileChooser(fsv);
+		chooser.setFileHidingEnabled(true);
 		chooser.setDialogTitle(Local.getString("Select the sound file"));
 		chooser.setAcceptAllFileFilterUsed(true);
 		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);

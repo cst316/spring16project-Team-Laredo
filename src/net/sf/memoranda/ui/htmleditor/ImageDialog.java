@@ -12,6 +12,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.File;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -24,8 +25,10 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
+import javax.swing.filechooser.FileSystemView;
 
 import net.sf.memoranda.ui.htmleditor.util.Local;
+import net.sf.memoranda.util.SingleRootFileSystemView;
 
 /**
  * <p>Title: </p>
@@ -369,8 +372,10 @@ public class ImageDialog extends JDialog implements WindowListener {
         UIManager.put("FileChooser.cancelButtonToolTipText", Local.getString(
                 "Cancel"));
 
-        JFileChooser chooser = new JFileChooser();
-        chooser.setFileHidingEnabled(false);
+        File root = new File(System.getProperty("user.home"));
+        FileSystemView fsv = new SingleRootFileSystemView(root);
+        JFileChooser chooser = new JFileChooser(fsv);
+        chooser.setFileHidingEnabled(true);
         chooser.setDialogTitle(Local.getString("Choose an image file"));
         chooser.setAcceptAllFileFilterUsed(false);
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
