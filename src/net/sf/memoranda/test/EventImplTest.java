@@ -1,5 +1,7 @@
-package net.sf.memoranda;
+package net.sf.memoranda.test;
 
+import net.sf.memoranda.Event;
+import net.sf.memoranda.EventsManager;
 import net.sf.memoranda.date.CalendarDate;
 
 import static org.junit.Assert.assertEquals;
