@@ -22,6 +22,9 @@
 	<property name="debuglevel" value="lines,vars,source"/>
 	<property name="optimize" value="off"/>
 	<property name="deprecation" value="off"/>
+	<!-- jUnit Options -->
+	<property name="junitreport.dir" value="${basedir}/junitreport"/>
+	<property name="test.dir" value="${basedir}/test"/>
 
 	<target name="init">
 		<!-- Create the time stamp -->
@@ -149,6 +152,7 @@
 	<target name="clean">
 		<!-- Delete the ${build} directory tree -->
 		<delete dir="${build.dir}"/>
+		<delete dir="${junitreport.dir}"/>
 		<!--<delete dir="${dist.dir}"/>-->
 	</target>
     
@@ -174,4 +178,39 @@
 			<classpath refid="classpath"/>
 		</java> -->
 	</target>
+	
+	
+	<!-- jUnit testing -->
+	<target name="junit" depends="package"
+                       description="Runs JUnit tests for classes starts with Test, and generates a report.">
+               <!-- First, clean the junit directory. -->
+               <delete dir="${junitreport.dir}"/>
+               <mkdir dir="${junitreport.dir}"/> 
+               <!-- Run the tests -->
+               <echo message="JUnit testing is running..."/>
+               <!-- Compile the tests -->
+               <javac srcdir="${test.dir}" destdir="${test.dir}">
+               <classpath>  
+                               <path refid="classpath"/>
+                       </classpath>
+                       </javac>
+               <junit printsummary="withOutAndErr" haltonfailure="no" fork="on">      
+                       <classpath>  
+                               <path refid="classpath"/>
+                       </classpath>
+                       <classpath location="${test.dir}" />
+                       <formatter type="plain"/>
+                       <batchtest todir="${junitreport.dir}">
+                               <fileset dir="${test.dir}">
+                                       <include name="**/*Test.java"/>
+                               </fileset>
+                       </batchtest>
+               </junit>
+               <delete>
+               	<fileset dir="${test.dir}" includes="**/*.class"/>
+               </delete>
+               
+               <echo message="JUnit results in ${junitreport.dir}"/>
+    </target>
+	
 </project>
