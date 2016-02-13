@@ -5,6 +5,7 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 
 import javax.swing.BorderFactory;
@@ -18,6 +19,7 @@ import javax.swing.border.Border;
 
 import net.sf.memoranda.util.Context;
 import net.sf.memoranda.util.Local;
+import java.awt.Font;
 
 /**
  * 
@@ -40,6 +42,7 @@ public class WorkPanel extends JPanel {
 	public JButton filesB = new JButton();
 	JButton currentB = null;
 	Border border1;
+	private final JButton btnStopwatch = new JButton();
 
 	public WorkPanel() {
 		try {
@@ -211,6 +214,30 @@ public class WorkPanel extends JPanel {
 		currentB.setOpaque(true);
 
 		toolBar.setBorder(null);
+		btnStopwatch.setIcon(new ImageIcon(WorkPanel.class.getResource("/net/sf/memoranda/ui/resources/icons/timeclock.png")));
+		btnStopwatch.setVerticalTextPosition(SwingConstants.BOTTOM);
+		btnStopwatch.setVerticalAlignment(SwingConstants.TOP);
+		btnStopwatch.setText("Stopwatch");
+		btnStopwatch.setSelected(true);
+		btnStopwatch.setPreferredSize(new Dimension(50, 50));
+		btnStopwatch.setOpaque(false);
+		btnStopwatch.setMinimumSize(new Dimension(30, 30));
+		btnStopwatch.setMaximumSize(new Dimension(60, 80));
+		btnStopwatch.setMargin(new Insets(0, 0, 0, 0));
+		btnStopwatch.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnStopwatch.setFont(new Font("Dialog", Font.BOLD, 10));
+		btnStopwatch.setFocusPainted(false);
+		btnStopwatch.setContentAreaFilled(false);
+		btnStopwatch.setBorderPainted(false);
+		btnStopwatch.setBackground(Color.WHITE);
+		btnStopwatch.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnStopwatch_actionPerformed(e);
+			}
+		});
+		
+		
+		toolBar.add(btnStopwatch);
 		panel.setBorder(null);
 		dailyItemsPanel.setBorder(null);
 		filesPanel.setBorder(null);
@@ -262,6 +289,13 @@ public class WorkPanel extends JPanel {
 		cardLayout1.show(panel, "FILES");
 		setCurrentButton(filesB);
 		Context.put("CURRENT_PANEL", "FILES");
+	}
+	public void btnStopwatch_actionPerformed(ActionEvent e) {
+		StopwatchDialog dlg = new StopwatchDialog();
+		Dimension frmSize = App.getFrame().getSize();
+        Point loc = App.getFrame().getLocation();
+        dlg.setLocation((frmSize.width - dlg.getSize().width) / 2 + loc.x, (frmSize.height - dlg.getSize().height) / 2 + loc.y);
+		dlg.setVisible(true);
 	}
 
 	void setCurrentButton(JButton cb) {
