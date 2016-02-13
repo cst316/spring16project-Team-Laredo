@@ -25,6 +25,20 @@ public interface Storage {
     
     NoteList openNoteList(Project prj);
     void storeNoteList(NoteList nl, Project prj);
+	
+    /**
+	 * Retrieves a defect list from a file.
+	 * @param project Project that defect list will be pulled from.
+	 * @return DefectList Returns a defect list from project or creates a new defect list for project.
+	 */
+    DefectList openDefectList(Project project);
+    
+    /**
+	 * Stores a defect list for a project.
+	 * @param defectList The defect list that will be sorted.
+	 * @param project The project that the defect list is associated with. 
+	 */
+    void storeDefectList(DefectList defectList, Project project);
     
     void storeNote(Note note, javax.swing.text.Document doc);    
     javax.swing.text.Document openNote(Note note);

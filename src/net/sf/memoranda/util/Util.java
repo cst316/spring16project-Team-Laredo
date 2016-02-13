@@ -17,6 +17,7 @@ import java.util.Set;
 import java.util.Iterator;
 
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileSystemView;
 
 import net.sf.memoranda.date.CalendarDate;
 import net.sf.memoranda.ui.App;
@@ -115,8 +116,10 @@ public class Util {
         if (bpath != null)
             if (new File(bpath).isFile())
                 return true;
-        JFileChooser chooser = new JFileChooser();
-        chooser.setFileHidingEnabled(false);
+        File root = new File(System.getProperty("user.home"));
+        FileSystemView fsv = new SingleRootFileSystemView(root);
+        JFileChooser chooser = new JFileChooser(fsv);
+        chooser.setFileHidingEnabled(true);
         chooser.setDialogTitle(Local.getString("Select the web-browser executable"));
         chooser.setAcceptAllFileFilterUsed(true);
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);

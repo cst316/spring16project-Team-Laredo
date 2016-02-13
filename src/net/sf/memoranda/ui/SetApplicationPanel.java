@@ -16,8 +16,10 @@ import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.CaretEvent;
+import javax.swing.filechooser.FileSystemView;
 
 import net.sf.memoranda.util.Local;
+import net.sf.memoranda.util.SingleRootFileSystemView;
 
 /*$Id: SetApplicationPanel.java,v 1.6 2004/04/05 10:05:44 alexeya Exp $*/
 public class SetApplicationPanel extends JPanel {
@@ -105,9 +107,11 @@ public class SetApplicationPanel extends JPanel {
         UIManager.put("FileChooser.cancelButtonToolTipText", Local.getString("Cancel"));
         UIManager.put("FileChooser.acceptAllFileFilterText", Local.getString("All Files") + " (*.*)");
         
-        JFileChooser chooser = new JFileChooser();
+        File root = new File(System.getProperty("user.home"));
+        FileSystemView fsv = new SingleRootFileSystemView(root);
+        JFileChooser chooser = new JFileChooser(fsv);
         chooser.setDialogTitle(Local.getString("Path to executable"));
-        chooser.setFileHidingEnabled(false);
+        chooser.setFileHidingEnabled(true);
         chooser.setAcceptAllFileFilterUsed(true);
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         if (System.getProperty("os.name").startsWith("Win")) {

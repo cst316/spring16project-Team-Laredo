@@ -21,8 +21,10 @@ import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.CaretEvent;
+import javax.swing.filechooser.FileSystemView;
 
 import net.sf.memoranda.util.Local;
+import net.sf.memoranda.util.SingleRootFileSystemView;
 
 /*$Id: EditTypeDialog.java,v 1.9 2005/07/05 08:17:24 alexeya Exp $*/
 public class EditTypeDialog extends JDialog {
@@ -232,9 +234,11 @@ public class EditTypeDialog extends JDialog {
         UIManager.put("FileChooser.cancelButtonToolTipText", Local.getString("Cancel"));
         UIManager.put("FileChooser.acceptAllFileFilterText", Local.getString("All Files") + " (*.*)");
         
-        JFileChooser chooser = new JFileChooser();
+        File root = new File(System.getProperty("user.home"));
+        FileSystemView fsv = new SingleRootFileSystemView(root);
+        JFileChooser chooser = new JFileChooser(fsv);
         chooser.setPreferredSize(new Dimension(550, 375));
-        chooser.setFileHidingEnabled(false);
+        chooser.setFileHidingEnabled(true);
         chooser.setDialogTitle(Local.getString("Choose icon file"));
         //chooser.setAcceptAllFileFilterUsed(true);
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
