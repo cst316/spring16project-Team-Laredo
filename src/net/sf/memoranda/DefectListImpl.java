@@ -80,7 +80,6 @@ public class DefectListImpl implements DefectList{
 		
 		
 		m_root.appendChild(defect);
-		
 		defectList.put(String.valueOf(m_numberOfDefects), defect);
 	}
 	
