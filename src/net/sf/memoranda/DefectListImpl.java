@@ -71,7 +71,7 @@ public class DefectListImpl implements DefectList{
 		m_numberOfDefects++;
         Element defect = new Element("defect");
         defect.addAttribute(new Attribute("dateFound", dateFound.toString()));
-        defect.addAttribute(new Attribute("dateRemoved", dateRemoved.toString()));
+        defect.addAttribute(new Attribute("dateRemoved", dateRemoved != null? dateRemoved.toString():""));
         defect.addAttribute(new Attribute("defectNumber", String.valueOf(m_numberOfDefects)));
         defect.addAttribute(new Attribute("phaseOfInjection", String.valueOf(phaseOfInjection)));
         defect.addAttribute(new Attribute("removalPhase", String.valueOf(removalPhase)));

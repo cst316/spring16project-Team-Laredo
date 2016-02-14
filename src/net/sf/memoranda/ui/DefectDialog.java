@@ -21,6 +21,8 @@ import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.SpinnerDateModel;
 import javax.swing.border.EtchedBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import net.sf.memoranda.CurrentProject;
 import net.sf.memoranda.date.CalendarDate;
@@ -41,10 +43,10 @@ public class DefectDialog extends JDialog{
   	private final String[] types = {"", "Documentation", "Syntax", "Build", "Assignment",
   			"Interface", "Checking", "Data", "Function", "System", "Enviroment"};
   	
-  	//private CalendarDate startDateMin = CurrentProject.get().getStartDate();
-  	//private CalendarDate startDateMax = CurrentProject.get().getEndDate();
-  	//private CalendarDate endDateMin = startDateMin;
-  	//private CalendarDate endDateMax = startDateMax;
+  	private CalendarDate foundDateMin = CurrentProject.get().getStartDate();
+  	private CalendarDate foundDateMax = CurrentProject.get().getEndDate();
+ 	private CalendarDate removedDateMin = foundDateMin;
+ 	private CalendarDate removedDateMax = foundDateMax;
   	
   	private final int WINDOW_WIDTH = 450;
   	private final int WINDOW_HEIGHT = 450;
@@ -59,6 +61,8 @@ public class DefectDialog extends JDialog{
     
     public boolean CANCELLED = false;
     public boolean noDateRemoved = true;
+    private boolean ignoreDateFoundChange = false;
+    private boolean ignoreDateRemovedChange = false;
   			
 	JPanel mainPanel = new JPanel();
 	
@@ -144,6 +148,33 @@ public class DefectDialog extends JDialog{
     	dateFoundSpinner.setSize(new Dimension(SPINNER_WIDTH, SPINNER_HEIGHT));
     	dateFoundSpinner.setModel(new SpinnerDateModel(new Date(), null, null, Calendar.DAY_OF_WEEK));
     	dateFoundSpinner.setEditor(new JSpinner.DateEditor(dateFoundSpinner, sdf.toPattern()));
+    	dateFoundSpinner.addChangeListener(new ChangeListener(){
+			public void stateChanged(ChangeEvent arg0) {
+				SpinnerDateModel sdm = new SpinnerDateModel((Date)dateFoundSpinner.getModel().getValue(),null,null,Calendar.DAY_OF_WEEK);
+				dateFoundSpinner.setModel(sdm);
+
+                if (ignoreDateFoundChange)
+                    return;
+                ignoreDateFoundChange = true;
+                Date sd = (Date) dateFoundSpinner.getModel().getValue();
+                Date ed = (Date) dateRemovedSpinner.getModel().getValue();
+                if (sd.after(ed) && dateRemovedCheckBox.isSelected()) {
+                	dateFoundSpinner.getModel().setValue(ed);
+                    sd = ed;
+                }
+				if ((foundDateMax != null) && sd.after(foundDateMax.getDate())) {
+					dateFoundSpinner.getModel().setValue(foundDateMax.getDate());
+                    sd = foundDateMax.getDate();
+				}
+                if ((foundDateMin != null) && sd.before(foundDateMin.getDate())) {
+                	dateFoundSpinner.getModel().setValue(foundDateMin.getDate());
+                    sd = foundDateMin.getDate();
+                }
+                dateFoundCalFrame.cal.set(new CalendarDate(sd));
+                ignoreDateFoundChange = false;	
+			}
+    	});
+    	
     	
     	dateFoundButton.setIcon(new ImageIcon(TaskDialog.class.getResource("/net/sf/memoranda/ui/resources/icons/calendar.png")));
     	dateFoundButton.addActionListener(new java.awt.event.ActionListener() {
@@ -154,6 +185,9 @@ public class DefectDialog extends JDialog{
     	
     	dateFoundCalFrame.cal.addSelectionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
+				if(ignoreDateFoundChange){
+					return;
+				}
 				dateFoundSpinner.getModel().setValue(dateFoundCalFrame.cal.get().getCalendar().getTime());
 			}
     		
@@ -172,6 +206,33 @@ public class DefectDialog extends JDialog{
     	dateRemovedSpinner.setSize(new Dimension(SPINNER_WIDTH, SPINNER_HEIGHT));
     	dateRemovedSpinner.setModel(new SpinnerDateModel(new Date(), null, null, Calendar.DAY_OF_WEEK));
     	dateRemovedSpinner.setEditor(new JSpinner.DateEditor(dateFoundSpinner, sdf.toPattern()));
+    	dateRemovedSpinner.addChangeListener(new ChangeListener(){
+			public void stateChanged(ChangeEvent arg0) {
+				SpinnerDateModel sdm = new SpinnerDateModel((Date)dateRemovedSpinner.getModel().getValue(),null,null,Calendar.DAY_OF_WEEK);
+				dateRemovedSpinner.setModel(sdm);
+            	
+                if (ignoreDateRemovedChange)
+                    return;
+                ignoreDateRemovedChange = true;
+                Date sd = (Date) dateFoundSpinner.getModel().getValue();
+                Date ed = (Date) dateRemovedSpinner.getModel().getValue();				
+				if (ed.before(sd)) {
+					dateRemovedSpinner.getModel().setValue(ed);
+                    ed = sd;
+                }
+				if ((removedDateMax != null) && ed.after(removedDateMax.getDate())) {
+					dateRemovedSpinner.getModel().setValue(removedDateMax.getDate());
+                    ed = removedDateMax.getDate();
+				}
+                if ((removedDateMin != null) && ed.before(removedDateMin.getDate())) {
+                	dateRemovedSpinner.getModel().setValue(removedDateMin.getDate());
+                    ed = removedDateMin.getDate();
+                }
+                dateRemovedCalFrame.cal.set(new CalendarDate(ed));
+                ignoreDateRemovedChange = false;
+				
+			}
+    	});
     	
     	dateRemovedButton.setEnabled(false);
     	dateRemovedButton.setIcon(new ImageIcon(TaskDialog.class.getResource("/net/sf/memoranda/ui/resources/icons/calendar.png")));
@@ -183,6 +244,9 @@ public class DefectDialog extends JDialog{
     	
     	dateRemovedCalFrame.cal.addSelectionListener(new ActionListener(){
     		public void actionPerformed(ActionEvent e){
+    			if(ignoreDateRemovedChange){
+    				return;
+    			}
     			dateRemovedSpinner.getModel().setValue(dateRemovedCalFrame.cal.get().getCalendar().getTime());
     		}
     	});
@@ -220,6 +284,13 @@ public class DefectDialog extends JDialog{
 		dateRemovedLabel.setEnabled(dateRemovedCheckBox.isSelected());
 		dateRemovedSpinner.setEnabled(dateRemovedCheckBox.isSelected());
 		dateRemovedButton.setEnabled(dateRemovedCheckBox.isSelected());
+		if(dateRemovedCheckBox.isSelected()){
+			Date currentRemovedDate = (Date) dateRemovedSpinner.getModel().getValue();
+			Date currentFoundDate = (Date) dateFoundSpinner.getModel().getValue();
+			if(currentRemovedDate.getTime() < currentFoundDate.getTime()){
+				dateRemovedSpinner.getModel().setValue(currentFoundDate);
+			}
+		}
 	}
 
 	void openDateFoundCal(ActionEvent e) {
