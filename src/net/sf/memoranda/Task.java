@@ -45,8 +45,6 @@ public interface Task {
     public static final int POSTMORTEM = 6;
     public static final int NO_PHASE = 7;
     
-    
-    
     CalendarDate getStartDate();
     void setStartDate(CalendarDate date);
 
