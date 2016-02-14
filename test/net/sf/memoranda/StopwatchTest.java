@@ -117,5 +117,19 @@ public class StopwatchTest {
 		manyWatch.removeTime(1, TimeUnit.DAYS);
 		assertTrue(manyWatch.getTime(TimeUnit.MILLISECONDS) == 356283999);
 	}
+	
+	@Test
+	public void testAddTime() {
+		zeroWatch.addTime(1, TimeUnit.HOURS);
+		assertTrue(zeroWatch.getTime(TimeUnit.MILLISECONDS) == 3600000);
+		zeroWatch.addTime(1, TimeUnit.MINUTES);
+		assertTrue(zeroWatch.getTime(TimeUnit.MILLISECONDS) == 3660000);
+		zeroWatch.addTime(1, TimeUnit.SECONDS);
+		assertTrue(zeroWatch.getTime(TimeUnit.MILLISECONDS) == 3661000);
+		zeroWatch.addTime(1, TimeUnit.MILLISECONDS);
+		assertTrue(zeroWatch.getTime(TimeUnit.MILLISECONDS) == 3661001);
+		zeroWatch.addTime(1, TimeUnit.DAYS);
+		assertTrue(zeroWatch.getTime(TimeUnit.MILLISECONDS) == 3661001);
+	}
 
 }
