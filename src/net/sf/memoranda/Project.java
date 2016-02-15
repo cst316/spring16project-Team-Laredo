@@ -17,15 +17,15 @@ import net.sf.memoranda.date.CalendarDate;
 /*$Id: Project.java,v 1.5 2004/11/22 10:02:37 alexeya Exp $*/
 public interface Project {
     
-    public static final int SCHEDULED = 0;
+    int SCHEDULED = 0;
    
-    public static final int ACTIVE = 1;
+    int ACTIVE = 1;
     
-    public static final int COMPLETED = 2;
+    int COMPLETED = 2;
     
-    public static final int FROZEN = 4;
+    int FROZEN = 4;
     
-    public static final int FAILED = 5;
+    int FAILED = 5;
     
     String getID();
        
@@ -42,14 +42,6 @@ public interface Project {
     String getDescription();
     
     int getStatus();
-            
-    //int getProgress();
-    
-    //TaskList getTaskList();
-    
-    //NoteList getNoteList();
-    
-    //ResourcesList getResourcesList();
     
     void freeze();
     void unfreeze();  

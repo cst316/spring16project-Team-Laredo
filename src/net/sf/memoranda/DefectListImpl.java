@@ -1,12 +1,13 @@
 package net.sf.memoranda;
 
-import java.util.Hashtable;
-
 import net.sf.memoranda.date.CalendarDate;
 import nu.xom.Attribute;
 import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Elements;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Stores defects 
@@ -15,12 +16,11 @@ import nu.xom.Elements;
  * @since 2/9/2016
  */
 
-public class DefectListImpl implements DefectList{
-	private int m_numberOfDefects = 0;
+public class DefectListImpl implements DefectList {
     private Project m_project = null;
     private Document m_document = null;
     private Element m_root = null;
-    private Hashtable<String, Element> defectList = new Hashtable<String, Element>();
+    private ArrayList<Defect> defectList = new ArrayList<>();
     
     /**
      * Constructor that initializes a defect list for a respective project.
@@ -32,7 +32,6 @@ public class DefectListImpl implements DefectList{
     	m_root = m_document.getRootElement();
     	m_project = project;
     	buildDefectList(m_root);
-    	m_numberOfDefects = m_root.getChildCount();
     }
     
     /**
@@ -47,12 +46,15 @@ public class DefectListImpl implements DefectList{
     }
     
 	public Defect getDefect(int defectNumber) {
-		Element element = (Element)defectList.get(String.valueOf(defectNumber));
-		return new DefectImpl(element, this);
+		return defectList.get(defectNumber);
+	}
+
+	public Collection<Defect> getAllDefects() {
+		return defectList;
 	}
     
 	public int getNumberOfDefects() {
-		return m_numberOfDefects;
+		return defectList.size();
 	}
     
 	public Project getProject() {
@@ -68,11 +70,10 @@ public class DefectListImpl implements DefectList{
 	 */
 	public void addDefect(CalendarDate dateFound, CalendarDate dateRemoved, int phaseOfInjection, int removalPhase,
 			int typeOfDefect, String description) {
-		m_numberOfDefects++;
         Element defect = new Element("defect");
         defect.addAttribute(new Attribute("dateFound", dateFound.toString()));
         defect.addAttribute(new Attribute("dateRemoved", dateRemoved.toString()));
-        defect.addAttribute(new Attribute("defectNumber", String.valueOf(m_numberOfDefects)));
+        defect.addAttribute(new Attribute("defectNumber", String.valueOf(defectList.size())));
         defect.addAttribute(new Attribute("phaseOfInjection", String.valueOf(phaseOfInjection)));
         defect.addAttribute(new Attribute("removalPhase", String.valueOf(removalPhase)));
         defect.addAttribute(new Attribute("typeOfDefect", String.valueOf(typeOfDefect)));
@@ -81,7 +82,7 @@ public class DefectListImpl implements DefectList{
 		
 		m_root.appendChild(defect);
 		
-		defectList.put(String.valueOf(m_numberOfDefects), defect);
+		defectList.add(new DefectImpl(defect));
 	}
 	
 	/**
@@ -89,16 +90,9 @@ public class DefectListImpl implements DefectList{
 	 */
 	public boolean removeDefect(int defectNumber) {
 		boolean removed = false;
-		if(defectList.containsKey(String.valueOf(defectNumber))){
-			m_numberOfDefects--;
-            for(int i = defectNumber; i < defectList.size(); i++){
-				Element defect = (Element) m_root.getChild(i);
-				Attribute defectNum = defect.getAttribute("defectNumber");
-				defectNum.setValue(String.valueOf(i));
-				defectList.put(String.valueOf(i), defect);
-			}
+		if (defectNumber >= 0 && defectNumber < defectList.size()){
             m_root.removeChild(defectNumber - 1);
-            defectList.remove(String.valueOf(defectList.size()));
+            defectList.remove(defectNumber);
             removed = true;
 		}
 	    return removed;
@@ -108,7 +102,7 @@ public class DefectListImpl implements DefectList{
 		Elements defects = parent.getChildElements("defect");
 		for(int i = 0; i < defects.size(); i++){
 			Element defect = defects.get(i);
-			defectList.put(defect.getAttributeValue("defectNumber"), defect);
+			defectList.add(new DefectImpl(defect));
 			buildDefectList(defect);
 		}
 	}

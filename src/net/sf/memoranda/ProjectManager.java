@@ -8,8 +8,6 @@
  */
 package net.sf.memoranda;
 
-import java.util.Vector;
-
 import net.sf.memoranda.date.CalendarDate;
 import net.sf.memoranda.util.CurrentStorage;
 import net.sf.memoranda.util.Local;
@@ -18,6 +16,8 @@ import nu.xom.Attribute;
 import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Elements;
+
+import java.util.Vector;
 
 /**
  *
@@ -122,7 +122,7 @@ public class ProjectManager {
         CurrentStorage.get().removeProjectStorage(prj);
         Elements prjs = _root.getChildElements("project");
         for (int i = 0; i < prjs.size(); i++) {
-            String pid = ((Element) prjs.get(i)).getAttribute("id").getValue();
+            String pid = prjs.get(i).getAttribute("id").getValue();
             if (pid.equals(id)) {
                 _root.removeChild(prjs.get(i));
                 return;
