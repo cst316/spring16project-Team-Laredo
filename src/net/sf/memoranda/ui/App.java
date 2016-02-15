@@ -137,7 +137,10 @@ public class App {
 		frame.requestFocus();
 
 	}
-
+	public static void minimizeWindow() {
+		frame.setState ( Frame.ICONIFIED );
+		
+	}
 	public static void closeWindow() {
 		if (frame == null)
 			return;
