@@ -32,6 +32,7 @@ public class StatisticsTest {
     @After
     public void tearDown() throws Exception {
         ProjectManager.removeProject(project.getID());
+        CurrentProject.reset();
 
         project = null;
         tasks = null;
