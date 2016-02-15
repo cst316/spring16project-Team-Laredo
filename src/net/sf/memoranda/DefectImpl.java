@@ -40,7 +40,18 @@ public class DefectImpl implements Defect {
 
 	@Override
 	public CalendarDate getDateRemoved() {
-		CalendarDate dateRemoved = new CalendarDate(m_element.getAttributeValue("dateRemoved"));
+		CalendarDate dateRemoved;
+		String dr = m_element.getAttributeValue("dateRemoved");
+		Project project = this.m_d1.getProject();
+		if(dr != ""){
+			dateRemoved = new CalendarDate(dr);
+		}
+		else if(project.getEndDate() != null){
+			dateRemoved = project.getEndDate();
+		}
+		else{
+			dateRemoved = this.getDateFound();
+		}
 		return dateRemoved;
 	}
 

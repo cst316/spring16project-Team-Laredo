@@ -406,7 +406,7 @@ public class TaskDialog extends JDialog
 	}
 	
     void btnOK_actionPerformed(ActionEvent e) {
-	CANCELLED = false;
+	    CANCELLED = false;
         this.dispose();
     }
 

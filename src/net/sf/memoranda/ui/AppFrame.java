@@ -36,6 +36,7 @@ import javax.swing.filechooser.FileSystemView;
 import javax.swing.text.html.HTMLDocument;
 
 import net.sf.memoranda.CurrentProject;
+import net.sf.memoranda.DefectList;
 import net.sf.memoranda.History;
 import net.sf.memoranda.Note;
 import net.sf.memoranda.NoteList;
@@ -624,7 +625,7 @@ public class AppFrame extends JFrame {
         CurrentProject.addProjectListener(new ProjectListener() {
 
             public void projectChange(Project prj, NoteList nl, TaskList tl,
-                    ResourcesList rl) {
+                    DefectList d1, ResourcesList rl) {
             }
 
             public void projectWasChanged() {
