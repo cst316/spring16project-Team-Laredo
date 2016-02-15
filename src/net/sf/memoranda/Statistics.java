@@ -1,7 +1,6 @@
 package net.sf.memoranda;
 
 import net.sf.memoranda.date.CalendarDate;
-import net.sf.memoranda.util.FileStorage;
 
 import java.util.*;
 
@@ -57,10 +56,9 @@ public class Statistics {
      * @param project The project for which the statistics are created.
      */
     public Statistics(Project project) {
-        FileStorage store = new FileStorage();
 
-        DefectList defects = store.openDefectList(project);
-        TaskList tasks = store.openTaskList(project);
+        DefectList defects = CurrentProject.getDefectList();
+        TaskList tasks = CurrentProject.getTaskList();
 
         CalendarDate projectStartDate = project.getStartDate();
         CalendarDate projectEndDate = project.getEndDate();
@@ -77,8 +75,7 @@ public class Statistics {
         }
 
         numDefects += defects.getNumberOfDefects();
-        for (int i = 0; i < defects.getNumberOfDefects(); i++) {
-            Defect defect = defects.getDefect(i);
+        for (Defect defect : defects.getAllDefects()) {
 
             switch (defect.getPhaseOfInjection()) {
                 case Defect.PLANNING: numPlanningPhaseDefectsInjected += 1; break;
@@ -116,7 +113,8 @@ public class Statistics {
 
         }
 
-        for (Task t : tasks.getAllTasks()) {
+        for (Task t : tasks.getTopLevelTasks()) {
+            System.out.println(t);
             numTasks++;
 
             totalTasksEffortActual += t.getActEffort();
@@ -125,7 +123,131 @@ public class Statistics {
 
     }
 
-    public static List<Date> getDaysBetweenDates(Date startdate, Date enddate) {
+    public int getNumEvents() {
+        return numEvents;
+    }
+
+    public int getTotalEventDurationMinutes() {
+        return totalEventDurationMinutes;
+    }
+
+    public int getNumDefects() {
+        return numDefects;
+    }
+
+    public int getNumPlanningPhaseDefectsInjected() {
+        return numPlanningPhaseDefectsInjected;
+    }
+
+    public int getNumDesignPhaseDefectsInjected() {
+        return numDesignPhaseDefectsInjected;
+    }
+
+    public int getNumCodePhaseDefectsInjected() {
+        return numCodePhaseDefectsInjected;
+    }
+
+    public int getNumReviewPhaseDefectsInjected() {
+        return numReviewPhaseDefectsInjected;
+    }
+
+    public int getNumCompilePhaseDefectsInjected() {
+        return numCompilePhaseDefectsInjected;
+    }
+
+    public int getNumTestingPhaseDefectsInjected() {
+        return numTestingPhaseDefectsInjected;
+    }
+
+    public int getNumNoPhaseDefectsInjected() {
+        return numNoPhaseDefectsInjected;
+    }
+
+    public int getNumPlanningPhaseDefectsRemoved() {
+        return numPlanningPhaseDefectsRemoved;
+    }
+
+    public int getNumDesignPhaseDefectsRemoved() {
+        return numDesignPhaseDefectsRemoved;
+    }
+
+    public int getNumCodePhaseDefectsRemoved() {
+        return numCodePhaseDefectsRemoved;
+    }
+
+    public int getNumReviewPhaseDefectsRemoved() {
+        return numReviewPhaseDefectsRemoved;
+    }
+
+    public int getNumCompilePhaseDefectsRemoved() {
+        return numCompilePhaseDefectsRemoved;
+    }
+
+    public int getNumTestingPhaseDefectsRemoved() {
+        return numTestingPhaseDefectsRemoved;
+    }
+
+    public int getNumNoPhaseDefectsRemoved() {
+        return numNoPhaseDefectsRemoved;
+    }
+
+    public int getNumDocumentationDefects() {
+        return numDocumentationDefects;
+    }
+
+    public int getNumSyntaxDefects() {
+        return numSyntaxDefects;
+    }
+
+    public int getNumBuildDefects() {
+        return numBuildDefects;
+    }
+
+    public int getNumAssignmentDefects() {
+        return numAssignmentDefects;
+    }
+
+    public int getNumInterfaceDefects() {
+        return numInterfaceDefects;
+    }
+
+    public int getNumCheckingDefects() {
+        return numCheckingDefects;
+    }
+
+    public int getNumDataDefects() {
+        return numDataDefects;
+    }
+
+    public int getNumFunctionDefects() {
+        return numFunctionDefects;
+    }
+
+    public int getNumSystemDefects() {
+        return numSystemDefects;
+    }
+
+    public int getNumEnvironmentDefects() {
+        return numEnvironmentDefects;
+    }
+
+    public int getNumMiscDefects() {
+        return numMiscDefects;
+    }
+
+    public int getNumTasks() {
+        return numTasks;
+    }
+
+    public int getTotalTasksEffortActual() {
+        return totalTasksEffortActual;
+    }
+
+    public int getTotalTasksEffortEstimated() {
+        return totalTasksEffortEstimated;
+    }
+
+    private static List<Date> getDaysBetweenDates(Date startdate, Date enddate) {
         List<Date> dates = new ArrayList<>();
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(startdate);

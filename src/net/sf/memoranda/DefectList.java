@@ -2,7 +2,8 @@ package net.sf.memoranda;
 
 import net.sf.memoranda.date.CalendarDate;
 import nu.xom.Document;
-import nu.xom.Element;
+
+import java.util.Collection;
 
 /**
  * Stores defects 
@@ -11,13 +12,14 @@ import nu.xom.Element;
  * @since 2/9/2016
  */
 public interface DefectList {
-    public Project getProject();
+    Project getProject();
     
-    public Defect getDefect(int defectNumber);
+    Defect getDefect(int defectNumber);
     
-    public Document getXMLContent();
+    Document getXMLContent();
     
-    public int getNumberOfDefects();
+    int getNumberOfDefects();
+    Collection<Defect> getAllDefects();
     
     /**
      * Adds a defect to the defect list.
@@ -28,7 +30,7 @@ public interface DefectList {
      * @param typeOfDefect Type of defect.
      * @param description Description of defect.
      */
-    public void addDefect(CalendarDate dateFound, CalendarDate dateRemoved,
+    void addDefect(CalendarDate dateFound, CalendarDate dateRemoved,
     		int phaseOfInjection, int removalPhase, int typeOfDefect,
     		String description);
     
@@ -37,5 +39,5 @@ public interface DefectList {
      * @param defectNumber Defect number that will be removed.
      * @return True, unless defect is not found, then false is returned.
      */
-    public boolean removeDefect(int defectNumber); 
+    boolean removeDefect(int defectNumber);
 }
