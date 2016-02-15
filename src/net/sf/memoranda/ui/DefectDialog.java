@@ -2,7 +2,6 @@ package net.sf.memoranda.ui;
 
 import java.awt.Dimension;
 import java.awt.Frame;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DateFormat;
@@ -26,7 +25,6 @@ import javax.swing.event.ChangeListener;
 
 import net.sf.memoranda.CurrentProject;
 import net.sf.memoranda.date.CalendarDate;
-import java.awt.FlowLayout;
 import java.awt.BorderLayout;
 import javax.swing.BoxLayout;
 import javax.swing.SwingConstants;
@@ -40,7 +38,7 @@ import java.awt.Font;
  * JDialog box that allows users to enter in information
  * about defects that are injected into a project.
  * 
- * @author Benjamin Paothatat
+ * @author Benjamin Paothatat and Tyler Cole
  * @since  12/14/2016
  */
 @SuppressWarnings("serial")
@@ -57,8 +55,6 @@ public class DefectDialog extends JDialog{
  	private CalendarDate removedDateMin = foundDateMin;
  	private CalendarDate removedDateMax = foundDateMax;
   	
-  	private final int WINDOW_WIDTH = 450;
-  	private final int WINDOW_HEIGHT = 450;
   	private final int TEXT_AREA_WIDTH = 150;
     private final int TEXT_AREA_HEIGHT = 150;
     private final int COMBO_BOX_WIDTH = 50;
@@ -98,13 +94,13 @@ public class DefectDialog extends JDialog{
 	JPanel phasesPanel = new JPanel();
 	
 	JLabel injectionPhaseLabel = new JLabel("Injection Phase:");
-	public JComboBox injectionPhaseComboBox = new JComboBox(phases);
+    JComboBox<String> injectionPhaseComboBox = new JComboBox<String> (phases);
 	
 	JLabel removalPhaseLabel = new JLabel("Removal Phase:");
-	JComboBox removalPhaseComboBox = new JComboBox(phases);
+	JComboBox<String>  removalPhaseComboBox = new JComboBox<String>(phases);
 	
 	JLabel typeLabel = new JLabel("Type of Defect:");
-	JComboBox typeOfDefect = new JComboBox(types);
+	JComboBox<String>  typeOfDefect = new JComboBox<String>(types);
 	
 	JPanel buttonPanel = new JPanel();
 	
@@ -291,10 +287,6 @@ public class DefectDialog extends JDialog{
                 ignoreDateFoundChange = false;	
 			}
     	});
-    	dateRemovedSpinner.setEnabled(false);
-    	dateRemovedSpinner.setPreferredSize(new Dimension(100, 25));
-    	    	
-    	dateRemovedSpinner.setEditor(new JSpinner.DateEditor(dateFoundSpinner, sdf.toPattern()));
     	    	
     	dateFoundInputPanel.add(dateFoundButton, gbc_dateFoundButton);    	    	
     	dateFoundButton.setIcon(new ImageIcon(TaskDialog.class.getResource("/net/sf/memoranda/ui/resources/icons/calendar.png")));
@@ -320,9 +312,12 @@ public class DefectDialog extends JDialog{
     	
     	dateRemovedLabel.setEnabled(false);
     	
+    	dateRemovedSpinner.setEnabled(false);
+    	dateRemovedSpinner.setPreferredSize(new Dimension(100, 25));
     	dateRemovedInputPanel.add(dateRemovedSpinner, gbc_dateRemovedSpinner);
     	dateRemovedSpinner.setSize(new Dimension(SPINNER_WIDTH, SPINNER_HEIGHT));
     	dateRemovedSpinner.setModel(new SpinnerDateModel(new Date(1455498633534L), null, null, Calendar.DAY_OF_WEEK));
+    	dateRemovedSpinner.setEditor(new JSpinner.DateEditor(dateRemovedSpinner, sdf.toPattern()));
     	dateRemovedSpinner.addChangeListener(new ChangeListener(){
 			public void stateChanged(ChangeEvent arg0) {
 				SpinnerDateModel sdm = new SpinnerDateModel((Date)dateRemovedSpinner.getModel().getValue(),null,null,Calendar.DAY_OF_WEEK);
@@ -333,21 +328,19 @@ public class DefectDialog extends JDialog{
                 ignoreDateRemovedChange = true;
                 Date sd = (Date) dateFoundSpinner.getModel().getValue();
                 Date ed = (Date) dateRemovedSpinner.getModel().getValue();				
-				/*if (ed.before(sd)) {
-					dateRemovedSpinner.getModel().setValue(ed);
-                    ed = sd;
+				if (ed.before(sd)) {
+					dateRemovedSpinner.getModel().setValue(sd);
                 }
 				if ((removedDateMax != null) && ed.after(removedDateMax.getDate())) {
 					dateRemovedSpinner.getModel().setValue(removedDateMax.getDate());
                     ed = removedDateMax.getDate();
 				}
-                if ((removedDateMin != null) && ed.before(removedDateMin.getDate())) {
+				if ((removedDateMin != null) && ed.before(removedDateMin.getDate())) {
                 	dateRemovedSpinner.getModel().setValue(removedDateMin.getDate());
                     ed = removedDateMin.getDate();
                 }
                 dateRemovedCalFrame.cal.set(new CalendarDate(ed));
                 ignoreDateRemovedChange = false;
-				*/
 			}
     	});
     	    	
@@ -400,7 +393,7 @@ public class DefectDialog extends JDialog{
 		if(dateRemovedCheckBox.isSelected()){
 			Date currentRemovedDate = (Date) dateRemovedSpinner.getModel().getValue();
 			Date currentFoundDate = (Date) dateFoundSpinner.getModel().getValue();
-			if(currentRemovedDate.getTime() < currentFoundDate.getTime()){
+			if(currentRemovedDate.before(currentFoundDate)){
 				dateRemovedSpinner.getModel().setValue(currentFoundDate);
 			}
 		}

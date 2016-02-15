@@ -263,13 +263,17 @@ public class AgendaPanel extends JPanel {
 				}
 				CalendarDate rd;
                 if(dd.dateRemovedCheckBox.isSelected()){
-                	rd = new CalendarDate((Date) dd.dateRemovedSpinner.getModel().getValue());
+                	if(((Date)dd.dateRemovedSpinner.getModel().getValue()).before((Date)dd.dateFoundSpinner.getModel().getValue())){
+        				rd = new CalendarDate((Date) dd.dateFoundSpinner.getModel().getValue());
+        			}
+                	else{
+                	    rd = new CalendarDate((Date) dd.dateRemovedSpinner.getModel().getValue());
+                	}
 				}
 				else{
 					rd = null;
 				}
 				CalendarDate fd = new CalendarDate((Date) dd.dateFoundSpinner.getModel().getValue());
-				
 				int injection = convertPhasesToInt((String)dd.injectionPhaseComboBox.getSelectedItem());
 				int removal = convertPhasesToInt((String)dd.removalPhaseComboBox.getSelectedItem());
 				int type = convertTypeToInt((String)dd.typeOfDefect.getSelectedItem());
