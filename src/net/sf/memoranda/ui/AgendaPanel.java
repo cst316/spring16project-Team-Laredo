@@ -4,8 +4,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
@@ -18,6 +21,8 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.JOptionPane;
 
 import net.sf.memoranda.CurrentProject;
+import net.sf.memoranda.Defect;
+import net.sf.memoranda.DefectList;
 import net.sf.memoranda.EventNotificationListener;
 import net.sf.memoranda.EventsManager;
 import net.sf.memoranda.EventsScheduler;
@@ -32,6 +37,7 @@ import net.sf.memoranda.date.CalendarDate;
 import net.sf.memoranda.date.CurrentDate;
 import net.sf.memoranda.util.AgendaGenerator;
 import net.sf.memoranda.util.CurrentStorage;
+import net.sf.memoranda.util.FileStorage;
 import net.sf.memoranda.util.Local;
 import net.sf.memoranda.util.Util;
 import nu.xom.Element;
@@ -42,6 +48,7 @@ public class AgendaPanel extends JPanel {
     JButton historyBackB = new JButton();
     JToolBar toolBar = new JToolBar();
     JButton historyForwardB = new JButton();
+    JButton defects = new JButton("defects");
     JEditorPane viewer = new JEditorPane("text/html", "");
     JScrollPane scrollPane = new JScrollPane();
 	JButton export = new JButton();
@@ -242,7 +249,41 @@ public class AgendaPanel extends JPanel {
         toolBar.add(historyBackB, null);
         toolBar.add(historyForwardB, null);
         toolBar.addSeparator(new Dimension(8, 24));
-
+        defects.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				DefectDialog dd = new DefectDialog(App.getFrame(), "New Defect");
+				Dimension frameSize = App.getFrame().getSize();
+				Point loc = App.getFrame().getLocation();
+				dd.setLocation((frameSize.width - dd.getSize().width)/2 + loc.x,
+						(frameSize.height - dd.getSize().height)/2 + loc.y);
+				dd.setVisible(true);
+				
+				if(dd.CANCELLED){
+					return;
+				}
+				CalendarDate rd;
+                if(dd.dateRemovedCheckBox.isSelected()){
+                	if(((Date)dd.dateRemovedSpinner.getModel().getValue()).before((Date)dd.dateFoundSpinner.getModel().getValue())){
+        				rd = new CalendarDate((Date) dd.dateFoundSpinner.getModel().getValue());
+        			}
+                	else{
+                	    rd = new CalendarDate((Date) dd.dateRemovedSpinner.getModel().getValue());
+                	}
+				}
+				else{
+					rd = null;
+				}
+				CalendarDate fd = new CalendarDate((Date) dd.dateFoundSpinner.getModel().getValue());
+				int injection = convertPhasesToInt((String)dd.injectionPhaseComboBox.getSelectedItem());
+				int removal = convertPhasesToInt((String)dd.removalPhaseComboBox.getSelectedItem());
+				int type = convertTypeToInt((String)dd.typeOfDefect.getSelectedItem());
+				String description = dd.descriptionTextArea.getText();
+				CurrentProject.getDefectList().addDefect(fd, rd, injection, removal, type, description);
+                CurrentStorage.get().storeDefectList(CurrentProject.getDefectList(), CurrentProject.get());
+			}
+        	
+        });
+        toolBar.add(defects);
         this.add(toolBar, BorderLayout.NORTH);
 
         CurrentDate.addDateListener(d -> {
@@ -250,13 +291,9 @@ public class AgendaPanel extends JPanel {
                 refresh(d);
         });
         CurrentProject.addProjectListener(new ProjectListener() {
-
-            public void projectChange(
-                    Project prj,
-                    NoteList nl,
-                    TaskList tl,
-                    ResourcesList rl) {
-            }
+        	public void projectChange(Project prj, NoteList nl, TaskList tl, 
+					DefectList d1, ResourcesList rl) {	
+			}
 
             public void projectWasChanged() {
                 if (isActive)
@@ -356,4 +393,39 @@ public class AgendaPanel extends JPanel {
     //		}
     //
     //    }
+	private int convertPhasesToInt(String phase){
+		int intPhase = 6;
+		if(phase.equals("Planning")){
+			intPhase = 0;
+		}else if(phase.equals("Design")){
+			intPhase = 1;
+		}else if(phase.equals("Code")){
+			intPhase = 2;
+		}else if(phase.equals("Review")){
+	        intPhase = 3;
+		}else if(phase.equals("Compile")){
+			intPhase = 4;
+		}else if(phase.equals("Testing")){
+			intPhase = 5;
+		}
+		return intPhase;
+	}
+	
+	private int convertTypeToInt(String type){
+		int intPhase = 10;
+		if(type.equals("Planning")){
+			intPhase = 0;
+		}else if(type.equals("Design")){
+			intPhase = 1;
+		}else if(type.equals("Code")){
+			intPhase = 2;
+		}else if(type.equals("Review")){
+	        intPhase = 3;
+		}else if(type.equals("Compile")){
+			intPhase = 4;
+		}else if(type.equals("Testing")){
+			intPhase = 5;
+		}
+		return intPhase;
+	}
 }
