@@ -1,4 +1,4 @@
-package net.sf.memoranda;
+package net.sf.memoranda.test;
 
 import static org.junit.Assert.*;
 
@@ -7,6 +7,8 @@ import java.util.concurrent.TimeUnit;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import net.sf.memoranda.Stopwatch;
 
 /**
  * Created by tyler on 2/12/16.
