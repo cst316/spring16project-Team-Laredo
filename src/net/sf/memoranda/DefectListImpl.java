@@ -104,7 +104,6 @@ public class DefectListImpl implements DefectList {
 		for(int i = 0; i < defects.size(); i++){
 			Element defect = defects.get(i);
 			defectList.add(new DefectImpl(defect, this));
-			buildDefectList(defect);
 		}
 	}
 }

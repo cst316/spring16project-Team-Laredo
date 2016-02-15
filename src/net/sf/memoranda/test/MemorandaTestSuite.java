@@ -1,7 +1,6 @@
 package net.sf.memoranda.test;
 
 
-import net.sf.memoranda.StatisticsTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 

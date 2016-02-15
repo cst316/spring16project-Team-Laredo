@@ -74,7 +74,7 @@ public class Statistics {
             }
         }
 
-        numDefects += defects.getNumberOfDefects();
+        numDefects = defects.getNumberOfDefects();
         for (Defect defect : defects.getAllDefects()) {
 
             switch (defect.getPhaseOfInjection()) {
