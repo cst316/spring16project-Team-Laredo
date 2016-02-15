@@ -23,23 +23,7 @@ public class PreferencesDialog extends JDialog {
 
 	GridBagConstraints gbc;
 
-	JLabel jLabel1 = new JLabel();
-
-	ButtonGroup minGroup = new ButtonGroup();
-
-	JRadioButton minTaskbarRB = new JRadioButton();
-
-	JRadioButton minHideRB = new JRadioButton();
-
-	ButtonGroup closeGroup = new ButtonGroup();
-
-	JLabel jLabel2 = new JLabel();
-
-	JRadioButton closeExitRB = new JRadioButton();
-
 	JCheckBox askConfirmChB = new JCheckBox();
-
-	JRadioButton closeHideRB = new JRadioButton();
 
 	JLabel jLabel3 = new JLabel();
 
@@ -56,8 +40,6 @@ public class PreferencesDialog extends JDialog {
 	JTextField lfClassName = new JTextField();
 
 	JLabel jLabel4 = new JLabel();
-
-	JCheckBox enSystrayChB = new JCheckBox();
 
 	JCheckBox startMinimizedChB = new JCheckBox();
 
@@ -157,8 +139,6 @@ public class PreferencesDialog extends JDialog {
 				.getString("Sound"));
 		this.setResizable(false);
 		// Build Tab1
-		jLabel1.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabel1.setText(Local.getString("Window minimize action:"));
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 0;
@@ -213,70 +193,7 @@ public class PreferencesDialog extends JDialog {
 		jPanel3.add(soundFile, BorderLayout.CENTER);
 		jPanel3.add(soundFileBrowseB, BorderLayout.EAST);
 		jPanel3.add(jLabel6, BorderLayout.WEST);
-		GeneralPanel.add(jLabel1, gbc);
-		minGroup.add(minTaskbarRB);
-		minTaskbarRB.setSelected(true);
-		minTaskbarRB.setText(Local.getString("Minimize to taskbar"));
-		minTaskbarRB.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				minTaskbarRB_actionPerformed(e);
-			}
-		});
-		gbc = new GridBagConstraints();
-		gbc.gridx = 1;
-		gbc.gridy = 0;
-		gbc.insets = new Insets(10, 0, 0, 10);
-		gbc.anchor = GridBagConstraints.WEST;
-		GeneralPanel.add(minTaskbarRB, gbc);
-		minGroup.add(minHideRB);
-		minHideRB.setText(Local.getString("Hide"));
-		minHideRB.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				minHideRB_actionPerformed(e);
-			}
-		});
-		gbc = new GridBagConstraints();
-		gbc.gridx = 1;
-		gbc.gridy = 1;
-		gbc.insets = new Insets(2, 0, 0, 10);
-		gbc.anchor = GridBagConstraints.WEST;
-		GeneralPanel.add(minHideRB, gbc);
-		jLabel2.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabel2.setText(Local.getString("Window close action:"));
-		gbc = new GridBagConstraints();
-		gbc.gridx = 0;
-		gbc.gridy = 2;
-		gbc.insets = new Insets(2, 10, 0, 15);
-		gbc.anchor = GridBagConstraints.EAST;
-		GeneralPanel.add(jLabel2, gbc);
-		closeGroup.add(closeExitRB);
-		closeExitRB.setSelected(true);
-		closeExitRB.setText(Local.getString("Close and exit"));
-		closeExitRB.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				closeExitRB_actionPerformed(e);
-			}
-		});
-		gbc = new GridBagConstraints();
-		gbc.gridx = 1;
-		gbc.gridy = 2;
-		gbc.insets = new Insets(2, 0, 0, 10);
-		gbc.anchor = GridBagConstraints.WEST;
-		GeneralPanel.add(closeExitRB, gbc);
-
-		closeGroup.add(closeHideRB);
-		closeHideRB.setText(Local.getString("Hide"));
-		closeHideRB.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				closeHideRB_actionPerformed(e);
-			}
-		});
-		gbc = new GridBagConstraints();
-		gbc.gridx = 1;
-		gbc.gridy = 3;
-		gbc.insets = new Insets(2, 0, 0, 10);
-		gbc.anchor = GridBagConstraints.WEST;
-		GeneralPanel.add(closeHideRB, gbc);
+		
 		jLabel3.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabel3.setText(Local.getString("Look and feel:"));
 		gbc = new GridBagConstraints();
@@ -286,24 +203,21 @@ public class PreferencesDialog extends JDialog {
 		gbc.anchor = GridBagConstraints.EAST;
 		GeneralPanel.add(jLabel3, gbc);
 
+
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
 		gbc.gridy = 4;
 		gbc.insets = new Insets(2, 0, 0, 10);
 		gbc.anchor = GridBagConstraints.WEST;
+		lfSystemRB.setText("System");
+		GeneralPanel.add(lfSystemRB, gbc);
 
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
 		gbc.gridy = 5;
 		gbc.insets = new Insets(2, 0, 0, 10);
 		gbc.anchor = GridBagConstraints.WEST;
-		GeneralPanel.add(lfSystemRB, gbc);
-
-		gbc = new GridBagConstraints();
-		gbc.gridx = 1;
-		gbc.gridy = 6;
-		gbc.insets = new Insets(2, 0, 0, 10);
-		gbc.anchor = GridBagConstraints.WEST;
+		lfJavaRB.setText("Java");
 		GeneralPanel.add(lfJavaRB, gbc);
 		lfGroup.add(lfCustomRB);
 		lfCustomRB.setText(Local.getString("Custom"));
@@ -314,7 +228,7 @@ public class PreferencesDialog extends JDialog {
 		});
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
-		gbc.gridy = 7;
+		gbc.gridy = 6;
 		gbc.insets = new Insets(2, 0, 0, 10);
 		gbc.anchor = GridBagConstraints.WEST;
 		GeneralPanel.add(lfCustomRB, gbc);
@@ -322,14 +236,14 @@ public class PreferencesDialog extends JDialog {
 		classNameLabel.setText(Local.getString("L&F class name:"));
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
-		gbc.gridy = 8;
+		gbc.gridy = 7;
 		gbc.insets = new Insets(2, 20, 0, 10);
 		gbc.anchor = GridBagConstraints.WEST;
 		GeneralPanel.add(classNameLabel, gbc);
 		lfClassName.setEnabled(false);
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
-		gbc.gridy = 9;
+		gbc.gridy = 8;
 		gbc.insets = new Insets(7, 20, 0, 10);
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -342,22 +256,12 @@ public class PreferencesDialog extends JDialog {
 		gbc.insets = new Insets(2, 10, 0, 15);
 		gbc.anchor = GridBagConstraints.EAST;
 		GeneralPanel.add(jLabel4, gbc);
-		enSystrayChB.setText(Local.getString("Enable system tray icon"));
-		enSystrayChB.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				enSystrayChB_actionPerformed(e);
-			}
-		});
-		gbc = new GridBagConstraints();
-		gbc.gridx = 1;
-		gbc.gridy = 10;
-		gbc.insets = new Insets(2, 0, 0, 10);
-		gbc.anchor = GridBagConstraints.WEST;
-		GeneralPanel.add(enSystrayChB, gbc);
+		
+		
 		startMinimizedChB.setText(Local.getString("Start minimized"));
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
-		gbc.gridy = 11;
+		gbc.gridy = 10;
 		gbc.insets = new Insets(2, 0, 0, 10);
 		gbc.anchor = GridBagConstraints.WEST;
 		GeneralPanel.add(startMinimizedChB, gbc);
@@ -369,7 +273,7 @@ public class PreferencesDialog extends JDialog {
 		});
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
-		gbc.gridy = 12;
+		gbc.gridy = 11;
 		gbc.insets = new Insets(2, 0, 0, 10);
 		gbc.anchor = GridBagConstraints.WEST;
 		GeneralPanel.add(enSplashChB, gbc);
@@ -381,7 +285,7 @@ public class PreferencesDialog extends JDialog {
 		});
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
-		gbc.gridy = 13;
+		gbc.gridy = 12;
 		gbc.insets = new Insets(2, 0, 0, 10);
 		gbc.anchor = GridBagConstraints.WEST;
 		GeneralPanel.add(enL10nChB, gbc);
@@ -392,7 +296,7 @@ public class PreferencesDialog extends JDialog {
 		});
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
-		gbc.gridy = 14;
+		gbc.gridy = 13;
 		gbc.insets = new Insets(2, 0, 0, 10);
 		gbc.anchor = GridBagConstraints.WEST;
 		GeneralPanel.add(firstdow, gbc);
@@ -526,8 +430,6 @@ public class PreferencesDialog extends JDialog {
 				.equalsIgnoreCase("yes"));
 		enSplashChB.setSelected(!Configuration.get("SHOW_SPLASH").toString()
 				.equalsIgnoreCase("no"));
-		enSystrayChB.setSelected(!Configuration.get("DISABLE_SYSTRAY")
-				.toString().equalsIgnoreCase("yes"));
 		startMinimizedChB.setSelected(Configuration.get("START_MINIMIZED")
 				.toString().equalsIgnoreCase("yes"));
 		firstdow.setSelected(Configuration.get("FIRST_DAY_OF_WEEK").toString()
@@ -548,17 +450,8 @@ public class PreferencesDialog extends JDialog {
 
 		askConfirmChB.setSelected(!Configuration.get("ASK_ON_EXIT").toString()
 				.equalsIgnoreCase("no"));
-		String onclose = Configuration.get("ON_CLOSE").toString();
-		if (onclose.equals("exit")) {
-			this.closeExitRB.setSelected(true);
-			// this.askConfirmChB.setEnabled(true);
-		} else {
-			this.closeHideRB.setSelected(true);
-			// this.askConfirmChB.setEnabled(false);
-		}
 
-		String onmin = Configuration.get("ON_MINIMIZE").toString();
-		this.minTaskbarRB.setSelected(true);
+
 
 		if (!System.getProperty("os.name").startsWith("Win"))
 			this.browserPath.setText(MimeTypesList.getAppList()
@@ -625,11 +518,6 @@ public class PreferencesDialog extends JDialog {
 		else
 			Configuration.put("SHOW_SPLASH", "no");
 
-		if (this.enSystrayChB.isSelected())
-			Configuration.put("DISABLE_SYSTRAY", "no");
-		else
-			Configuration.put("DISABLE_SYSTRAY", "yes");
-
 		if (this.startMinimizedChB.isSelected())
 			Configuration.put("START_MINIMIZED", "yes");
 		else
@@ -640,11 +528,7 @@ public class PreferencesDialog extends JDialog {
 		else
 			Configuration.put("ASK_ON_EXIT", "no");
 
-		if (this.closeExitRB.isSelected())
-			Configuration.put("ON_CLOSE", "exit");
-		else
-			Configuration.put("ON_CLOSE", "minimize");
-
+		
 		Configuration.put("ON_MINIMIZE", "normal");
 
 		String lf = Configuration.get("LOOK_AND_FEEL").toString();
@@ -775,10 +659,6 @@ public class PreferencesDialog extends JDialog {
 
 	void lfCustomRB_actionPerformed(ActionEvent e) {
 		this.enableCustomLF(true);
-	}
-
-	void enSystrayChB_actionPerformed(ActionEvent e) {
-
 	}
 
 	void enSplashChB_actionPerformed(ActionEvent e) {
