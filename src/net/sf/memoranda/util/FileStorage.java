@@ -416,10 +416,13 @@ public class FileStorage implements Storage {
      */
     public DefectList openDefectList(Project project) {
         String files = JN_DOCPATH + project.getID() + File.separator + ".defectlist";
-        DefectList defectList = new DefectListImpl(project);
+        DefectList defectList;
         if (documentExists(files)) {
             Document defectDocument = openDocument(files);
             defectList = new DefectListImpl(defectDocument, project);
+        }
+        else{
+        	defectList = new DefectListImpl(project);
         }
         return defectList;
     }
@@ -428,7 +431,6 @@ public class FileStorage implements Storage {
      * See storage interface.
      */
     public void storeDefectList(DefectList defectList, Project project) {
-        Document defectDocument = defectList.getXMLContent();
-        saveDocument(defectDocument, JN_DOCPATH + project.getID() + File.separator + ".defectlist");
+        saveDocument(defectList.getXMLContent(), JN_DOCPATH + project.getID() + File.separator + ".defectlist");
     }
 }

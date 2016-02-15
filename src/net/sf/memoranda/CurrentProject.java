@@ -27,7 +27,6 @@ public class CurrentProject {
     private static NoteList _notelist = null;
     private static DefectList m_defectList = null;
     private static ResourcesList _resources = null;
-    private static DefectList _defectlist = null;
     private static Vector<ProjectListener> projectListeners = new Vector<>();
 
         
@@ -57,7 +56,7 @@ public class CurrentProject {
         _tasklist = CurrentStorage.get().openTaskList(_project);
         _notelist = CurrentStorage.get().openNoteList(_project);
         _resources = CurrentStorage.get().openResourcesList(_project);
-        _defectlist = CurrentStorage.get().openDefectList(_project);
+        m_defectList = CurrentStorage.get().openDefectList(_project);
         AppFrame.addExitListener(e -> save());
     }
         
@@ -78,7 +77,7 @@ public class CurrentProject {
         return _resources;
     }
 
-    public static DefectList getDefectList() { return _defectlist; }
+    public static DefectList getDefectList() { return m_defectList; }
 
     public static void set(Project project) {
         if (project.getID().equals(_project.getID())) return;
@@ -125,7 +124,6 @@ public class CurrentProject {
         storage.storeDefectList(m_defectList, _project);
         storage.storeResourcesList(_resources, _project);
         storage.storeProjectManager();
-        storage.storeDefectList(_defectlist, _project);
     }
 
 }
