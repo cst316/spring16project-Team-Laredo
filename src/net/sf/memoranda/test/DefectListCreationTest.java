@@ -1,10 +1,5 @@
 package net.sf.memoranda.test;
 
-import static org.junit.Assert.*;
-
-import java.io.File;
-import org.junit.BeforeClass;
-import org.junit.Test;
 import net.sf.memoranda.DefectList;
 import net.sf.memoranda.DefectListImpl;
 import net.sf.memoranda.Project;
@@ -12,6 +7,13 @@ import net.sf.memoranda.ProjectManager;
 import net.sf.memoranda.date.CalendarDate;
 import net.sf.memoranda.util.FileStorage;
 import net.sf.memoranda.util.Util;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import java.io.File;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 /**
  * Test defect, defect list and File storage for defects.
  * 
@@ -35,7 +37,7 @@ public class DefectListCreationTest {
 	public static void setUpBeforeClass() throws Exception {
 		today = CalendarDate.today();
 		tomorrow = CalendarDate.tomorrow();
-		dayAfterTomorrow = CalendarDate.tomorrow().tomorrow();
+		dayAfterTomorrow = CalendarDate.tomorrow();
 		
 		ProjectManager.createProject("FirstTestProject", "FirstTestProject", today, dayAfterTomorrow);
 		firstProject = ProjectManager.getProject("FirstTestProject");
@@ -68,58 +70,51 @@ public class DefectListCreationTest {
 	
     @Test
     public void testContentOfDefectList(){
-    	assertTrue(firstDefectList.getDefect(1).getDateFound().equals(today));
-    	assertTrue(firstDefectList.getDefect(1).getDateRemoved().equals(today));
-    	assertTrue(firstDefectList.getDefect(1).getPhaseOfInjection() == 0);
-    	assertTrue(firstDefectList.getDefect(1).getPhaseOfRemoval() == 0);
-    	assertTrue(firstDefectList.getDefect(1).getTypeOfDefect() == 0);
-    	assertTrue(firstDefectList.getDefect(1).getDescription().equals("First Defect"));
+    	assertEquals(today, firstDefectList.getDefect(0).getDateFound());
+    	assertEquals(tomorrow, firstDefectList.getDefect(0).getDateRemoved());
+    	assertEquals(0, firstDefectList.getDefect(0).getPhaseOfInjection());
+    	assertEquals(0, firstDefectList.getDefect(0).getPhaseOfRemoval());
+    	assertEquals(0, firstDefectList.getDefect(0).getTypeOfDefect());
+    	assertEquals("First Defect", firstDefectList.getDefect(0).getDescription());
     	
-    	assertTrue(firstDefectList.getDefect(2).getDateFound().equals(today));
-    	assertTrue(firstDefectList.getDefect(2).getDateRemoved().equals(tomorrow));
-    	assertTrue(firstDefectList.getDefect(2).getPhaseOfInjection() == 3);
-    	assertTrue(firstDefectList.getDefect(2).getPhaseOfRemoval() == 4);
-    	assertTrue(firstDefectList.getDefect(2).getTypeOfDefect() == 5);
-    	assertTrue(firstDefectList.getDefect(2).getDescription().equals("Second Defect"));
+    	assertEquals(today, firstDefectList.getDefect(1).getDateFound());
+    	assertEquals(tomorrow, firstDefectList.getDefect(1).getDateRemoved());
+    	assertEquals(3, firstDefectList.getDefect(1).getPhaseOfInjection());
+    	assertEquals(4, firstDefectList.getDefect(1).getPhaseOfRemoval());
+    	assertEquals(5, firstDefectList.getDefect(1).getTypeOfDefect());
+    	assertEquals("Second Defect", firstDefectList.getDefect(1).getDescription());
     	
-    	assertTrue(firstDefectList.getDefect(3).getDateFound().equals(tomorrow));
-    	assertTrue(firstDefectList.getDefect(3).getDateRemoved().equals(dayAfterTomorrow));
-    	assertTrue(firstDefectList.getDefect(3).getPhaseOfInjection() == 6);
-    	assertTrue(firstDefectList.getDefect(3).getPhaseOfRemoval() == 6);
-    	assertTrue(firstDefectList.getDefect(3).getTypeOfDefect() == 10);
-    	assertTrue(firstDefectList.getDefect(3).getDescription().equals("Third Defect"));
+    	assertEquals(tomorrow, firstDefectList.getDefect(2).getDateFound());
+    	assertEquals(dayAfterTomorrow, firstDefectList.getDefect(2).getDateRemoved());
+    	assertEquals(6, firstDefectList.getDefect(2).getPhaseOfInjection());
+    	assertEquals(6, firstDefectList.getDefect(2).getPhaseOfRemoval());
+    	assertEquals(10, firstDefectList.getDefect(2).getTypeOfDefect());
+    	assertEquals("Third Defect", firstDefectList.getDefect(2).getDescription());
     	
-    	assertTrue(secondDefectList.getDefect(1).getDateFound().equals(today));
-    	assertTrue(secondDefectList.getDefect(1).getDateRemoved().equals(today));
-    	assertTrue(secondDefectList.getDefect(1).getPhaseOfInjection() == 1);
-    	assertTrue(secondDefectList.getDefect(1).getPhaseOfRemoval() == 2);
-    	assertTrue(secondDefectList.getDefect(1).getTypeOfDefect() == 3);
-    	assertTrue(secondDefectList.getDefect(1).getDescription().equals("Second Defect List: First Defect"));
+    	assertEquals(today, secondDefectList.getDefect(0).getDateFound());
+    	assertEquals(tomorrow, secondDefectList.getDefect(0).getDateRemoved());
+    	assertEquals(1, secondDefectList.getDefect(0).getPhaseOfInjection());
+    	assertEquals(2, secondDefectList.getDefect(0).getPhaseOfRemoval());
+    	assertEquals(3, secondDefectList.getDefect(0).getTypeOfDefect());
+    	assertEquals("Second Defect List: First Defect", secondDefectList.getDefect(0).getDescription());
     	
     }
 	
 	@Test
 	public void testRemovalOfDefects(){
 		firstDefectList.removeDefect(2);
-		assertTrue(firstDefectList.getNumberOfDefects() == 2);
+		assertEquals(2, firstDefectList.getNumberOfDefects());
 		fileStorage.storeDefectList(firstDefectList, firstProject);
 		
-		assertTrue(firstDefectList.getDefect(1).getDateFound().equals(today));
-    	assertTrue(firstDefectList.getDefect(1).getDateRemoved().equals(today));
-    	assertTrue(firstDefectList.getDefect(1).getPhaseOfInjection() == 0);
-    	assertTrue(firstDefectList.getDefect(1).getPhaseOfRemoval() == 0);
-    	assertTrue(firstDefectList.getDefect(1).getTypeOfDefect() == 0);
-    	assertTrue(firstDefectList.getDefect(1).getDescription().equals("First Defect"));
-    	
-    	assertTrue(firstDefectList.getDefect(2).getDateFound().equals(tomorrow));
-    	assertTrue(firstDefectList.getDefect(2).getDateRemoved().equals(dayAfterTomorrow));
-    	assertTrue(firstDefectList.getDefect(2).getPhaseOfInjection() == 6);
-    	assertTrue(firstDefectList.getDefect(2).getPhaseOfRemoval() == 6);
-    	assertTrue(firstDefectList.getDefect(2).getTypeOfDefect() == 10);
-    	assertTrue(firstDefectList.getDefect(2).getDescription().equals("Third Defect"));
+		assertEquals(today, firstDefectList.getDefect(1).getDateFound());
+    	assertEquals(tomorrow, firstDefectList.getDefect(1).getDateRemoved());
+    	assertEquals(3, firstDefectList.getDefect(1).getPhaseOfInjection());
+    	assertEquals(4, firstDefectList.getDefect(1).getPhaseOfRemoval());
+    	assertEquals(5, firstDefectList.getDefect(1).getTypeOfDefect());
+    	assertEquals("Second Defect", firstDefectList.getDefect(1).getDescription());
     	
     	secondDefectList.removeDefect(1);
-    	assertTrue(secondDefectList.getNumberOfDefects() == 0);
+    	assertEquals(1, secondDefectList.getNumberOfDefects());
 		fileStorage.storeDefectList(secondDefectList, secondProject);
 	}
 }

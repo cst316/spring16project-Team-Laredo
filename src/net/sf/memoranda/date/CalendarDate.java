@@ -8,12 +8,12 @@
  */
 package net.sf.memoranda.date;
 
+import net.sf.memoranda.util.Local;
+import net.sf.memoranda.util.Util;
+
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
-import net.sf.memoranda.util.Local;
-import net.sf.memoranda.util.Util;
 
 /**
  *
@@ -71,12 +71,6 @@ public class CalendarDate {
         return new CalendarDate();
     }
 
-    public static CalendarDate yesterday() {
-        Calendar cal = Calendar.getInstance();
-        cal.roll(Calendar.DATE, false);
-        return new CalendarDate(cal);
-    }
-
     public static CalendarDate tomorrow() {
         Calendar cal = Calendar.getInstance();
         cal.roll(Calendar.DATE, true);
@@ -121,15 +115,15 @@ public class CalendarDate {
     }
 
     public boolean equals(Object object) {
-        if (object.getClass().isInstance(CalendarDate.class)) {
+        if (object instanceof CalendarDate) {
             CalendarDate d2 = (CalendarDate) object;
             return ((d2.getDay() == getDay()) && (d2.getMonth() == getMonth()) && (d2.getYear() == getYear()));
         }
-        else if (object.getClass().isInstance(Calendar.class)) {
+        else if (object instanceof Calendar) {
             Calendar cal = (Calendar) object;
             return this.equals(new CalendarDate(cal));
         }
-        else if (object.getClass().isInstance(Date.class)) {
+        else if (object instanceof Date) {
             Date d = (Date) object;
             return this.equals(new CalendarDate(d));
         }
@@ -137,8 +131,7 @@ public class CalendarDate {
     }
 
     public boolean equals(CalendarDate date) {
-        if (date == null) return false;
-        return ((date.getDay() == getDay()) && (date.getMonth() == getMonth()) && (date.getYear() == getYear()));
+        return date != null && ((date.getDay() == getDay()) && (date.getMonth() == getMonth()) && (date.getYear() == getYear()));
     }
 
     public boolean before(CalendarDate date) {
@@ -174,6 +167,5 @@ public class CalendarDate {
     public String getShortDateString() {
         return Local.getDateString(this, DateFormat.SHORT);
     }
-    
 
 }

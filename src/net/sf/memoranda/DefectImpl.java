@@ -15,22 +15,20 @@ public class DefectImpl implements Defect {
 	private Element m_element = null;
 	private DefectList m_d1 = null;
 
-	public DefectImpl(Element element, DefectList d1){
-	    m_element = element;	
-	    m_d1 = d1;
+	public DefectImpl(Element element, DefectList defectList){
+	    m_element = element;
+		m_d1 = defectList;
 	}
 	
 	@Override
 	public int getDefectNumber() {
 		String defectNumber = m_element.getAttributeValue("defectNumber");
-		int number = Integer.parseInt(defectNumber);
-		return number;
+		return Integer.parseInt(defectNumber);
 	}
 
 	@Override
 	public CalendarDate getDateFound() {
-		CalendarDate dateFound = new CalendarDate(m_element.getAttributeValue("dateFound"));
-		return dateFound;
+		return new CalendarDate(m_element.getAttributeValue("dateFound"));
 	}
 
 	@Override
@@ -43,7 +41,7 @@ public class DefectImpl implements Defect {
 		CalendarDate dateRemoved;
 		String dr = m_element.getAttributeValue("dateRemoved");
 		Project project = this.m_d1.getProject();
-		if(dr != ""){
+		if(dr.equals("")){
 			dateRemoved = new CalendarDate(dr);
 		}
 		else if(project.getEndDate() != null){
@@ -118,8 +116,7 @@ public class DefectImpl implements Defect {
 	
 	@Override
 	public String getDescription() {
-		String description = m_element.getAttributeValue("description");
-		return description;
+		return m_element.getAttributeValue("description");
 	}
 
 	@Override

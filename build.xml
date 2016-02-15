@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Memoranda" default="package" basedir="." xmlns:jacoco="antlib:org.jacoco.ant" xmlns:cs="antlib:com.puppycrawl.tools.checkstyle.ant">
+<project name="Memoranda" default="package" basedir="." xmlns:jacoco="antlib:org.jacoco.ant">
 	<!-- Build.xml file initially created by Kenneth J. Pouncey              -->
 	<!-- on 5 september 2003.                                                -->
 	<!-- Kenneth is the project-leader of the tn5250j-project on SourceForge -->
@@ -207,7 +207,7 @@
 		    	<formatter type="xml"/>
 		    	<batchtest todir="${tests.junit.dir}">
 		    		<fileset dir="${source.dir}">
-		        		<include name="**/*Test*.java"/>
+		        		<include name="**/*TestSuite.java"/>
 		        	</fileset>
 		    	</batchtest>
 		    </junit>
