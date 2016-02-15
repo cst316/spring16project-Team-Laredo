@@ -71,7 +71,7 @@ public class DefectListCreationTest {
     @Test
     public void testContentOfDefectList(){
     	assertEquals(today, firstDefectList.getDefect(0).getDateFound());
-    	assertEquals(today, firstDefectList.getDefect(0).getDateRemoved());
+    	assertEquals(tomorrow, firstDefectList.getDefect(0).getDateRemoved());
     	assertEquals(0, firstDefectList.getDefect(0).getPhaseOfInjection());
     	assertEquals(0, firstDefectList.getDefect(0).getPhaseOfRemoval());
     	assertEquals(0, firstDefectList.getDefect(0).getTypeOfDefect());
@@ -92,7 +92,7 @@ public class DefectListCreationTest {
     	assertEquals("Third Defect", firstDefectList.getDefect(2).getDescription());
     	
     	assertEquals(today, secondDefectList.getDefect(0).getDateFound());
-    	assertEquals(today, secondDefectList.getDefect(0).getDateRemoved());
+    	assertEquals(tomorrow, secondDefectList.getDefect(0).getDateRemoved());
     	assertEquals(1, secondDefectList.getDefect(0).getPhaseOfInjection());
     	assertEquals(2, secondDefectList.getDefect(0).getPhaseOfRemoval());
     	assertEquals(3, secondDefectList.getDefect(0).getTypeOfDefect());

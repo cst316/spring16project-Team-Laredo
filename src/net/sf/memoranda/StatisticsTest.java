@@ -41,7 +41,7 @@ public class StatisticsTest {
 
     @Test
     public void testDefects() throws Exception {
-        assertEquals(2, statistics.getNumDefects());
+        assertEquals(3, statistics.getNumDefects());
     }
 
     @Test
