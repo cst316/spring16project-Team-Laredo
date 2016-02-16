@@ -413,19 +413,28 @@ public class AgendaPanel extends JPanel {
 	
 	private int convertTypeToInt(String type){
 		int intPhase = 10;
-		if(type.equals("Planning")){
+		if(type.equals("Documentation")){
 			intPhase = 0;
-		}else if(type.equals("Design")){
+		}else if(type.equals("Syntax")){
 			intPhase = 1;
-		}else if(type.equals("Code")){
+		}else if(type.equals("Build")){
 			intPhase = 2;
-		}else if(type.equals("Review")){
+		}else if(type.equals("Assignment")){
 	        intPhase = 3;
-		}else if(type.equals("Compile")){
+		}else if(type.equals("Interface")){
 			intPhase = 4;
-		}else if(type.equals("Testing")){
+		}else if(type.equals("Checking")){
 			intPhase = 5;
+		}else if(type.equals("Data")){
+			intPhase = 6;
+		}else if(type.equals("Function")){
+			intPhase = 7;
+		}else if(type.equals("System")){
+			intPhase = 8;
+		}else if(type.equals("Enviroment")){
+			intPhase = 9;
 		}
+	
 		return intPhase;
 	}
 }
