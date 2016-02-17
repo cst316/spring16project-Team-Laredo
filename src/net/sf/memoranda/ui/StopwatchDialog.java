@@ -6,65 +6,47 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Frame;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
-import javax.swing.BorderFactory;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSpinner;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.SpinnerDateModel;
-import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.Timer;
-//import javax.swing.border.BevelBorder;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.EtchedBorder;
-import javax.swing.border.TitledBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.JCheckBox;
 
 import net.sf.memoranda.CurrentProject;
 import net.sf.memoranda.Stopwatch;
-import net.sf.memoranda.date.CalendarDate;
-import net.sf.memoranda.util.Local;
+import net.sf.memoranda.Task;
+import net.sf.memoranda.util.CurrentStorage;
+
 import java.awt.Panel;
 import java.awt.Point;
-import java.awt.Component;
-import javax.swing.Box;
 import javax.swing.border.BevelBorder;
-import javax.swing.BoxLayout;
-import java.awt.CardLayout;
 
+@SuppressWarnings("serial")
 public class StopwatchDialog extends JDialog 
 {
-	public Stopwatch stopwatch = new Stopwatch();
+	private Collection<Task> tasks;
+	private Task currentTask;
+	public Stopwatch stopwatch;
 	public boolean isRunning = false;
 	JPanel mainPanel = new JPanel();
 	Panel txtPanel = new Panel();
 	JTextField txtTime = new JTextField();
 	Panel comboPanel = new Panel();
-	JComboBox comboBox = new JComboBox();
+	JComboBox<String> comboBox;
 	Panel buttonPanel = new Panel();
 	JButton btnRestart = new JButton("");
 	JButton btnStartStop = new JButton("");
@@ -78,6 +60,12 @@ public class StopwatchDialog extends JDialog
 		setMinimumSize(new Dimension(315, 155));
 		setSize(new Dimension(315, 155));
 		setResizable(false);
+		addWindowListener(new WindowAdapter(){
+	        @Override
+	        public void windowClosing(WindowEvent e){
+	        	updateTasksAcutualTime(stopwatch.getTime(TimeUnit.MILLISECONDS));
+	        }
+		});
 		
 		mainPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(mainPanel, BorderLayout.NORTH);
@@ -93,16 +81,27 @@ public class StopwatchDialog extends JDialog
 		txtTime.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		txtTime.setHorizontalAlignment(SwingConstants.CENTER);
 		txtTime.setFont(new Font("Tahoma", Font.PLAIN, 30));
-		txtTime.setText(stopwatch.getTimeString());
+	
 		txtTime.setColumns(10);
 		
 		mainPanel.add(comboPanel, BorderLayout.CENTER);
 		comboPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Event1 - Task1", "Event1 - Task2", "Event2 - Task1", "Event3 - Task1", "Event3 - Task2", "Event3 - Task3", "Event3 - Task4"}));
+		tasks = CurrentProject.getTaskList().getAllTasks();
+		String[] listOfTasks = new String[tasks.size()];
+		int counter = 0;
+		for(Task t: tasks){
+			listOfTasks[counter] = t.getText();
+			counter++;
+		}
+		currentTask = (Task)tasks.toArray()[0];
+		stopwatch = new Stopwatch(currentTask.getActEffort(), TimeUnit.MILLISECONDS);
+		txtTime.setText(stopwatch.getTimeString());
+		comboBox = new JComboBox<String>(listOfTasks);
 		comboBox.setPreferredSize(new Dimension(200, 20));
 		comboBox.setMaximumSize(new Dimension(200, 20));
 		comboBox.setMinimumSize(new Dimension(200, 20));
+		comboBox.addItemListener(new ItemChangeListener());
 		comboPanel.add(comboBox);
 		comboBox.setBorder(null);
 		
@@ -184,6 +183,7 @@ public class StopwatchDialog extends JDialog
 			stopwatch.stopStopwatch();
 			btnStartStop.setToolTipText("Start");
 			btnStartStop.setIcon(new ImageIcon(StopwatchDialog.class.getResource("/net/sf/memoranda/ui/resources/icons/play.png")));
+			updateTasksAcutualTime(stopwatch.getTime(TimeUnit.MILLISECONDS));
 			isRunning = false;
 			updater.restart();
 		}
@@ -217,18 +217,7 @@ public class StopwatchDialog extends JDialog
 			public void actionPerformed(ActionEvent e) {
 				if(!dlg.txtValue.getText().equals("")) {
 					int time = Integer.parseInt(dlg.txtValue.getText());
-					TimeUnit u = TimeUnit.SECONDS;
-					switch(dlg.comboBox.getSelectedIndex()) {
-					case 0:
-						u = TimeUnit.SECONDS;
-						break;
-					case 1:
-						u = TimeUnit.MINUTES;
-						break;
-					case 2:
-						u = TimeUnit.HOURS;
-						break;
-					}
+					TimeUnit u = selectedTimeUnit(dlg.comboBox.getSelectedIndex());
 					stopwatch.addTime(time, u);
 					dlg.dispose();
 					txtTime.setText(stopwatch.getTimeString());
@@ -247,23 +236,42 @@ public class StopwatchDialog extends JDialog
 			public void actionPerformed(ActionEvent e) {
 				if(!dlg.txtValue.getText().equals("")) {
 					int time = Integer.parseInt(dlg.txtValue.getText());
-					TimeUnit u = TimeUnit.SECONDS;
-					switch(dlg.comboBox.getSelectedIndex()) {
-					case 0:
-						u = TimeUnit.SECONDS;
-						break;
-					case 1:
-						u = TimeUnit.MINUTES;
-						break;
-					case 2:
-						u = TimeUnit.HOURS;
-						break;
-					}
+					TimeUnit u = selectedTimeUnit(dlg.comboBox.getSelectedIndex());
 					stopwatch.removeTime(time, u);
 					dlg.dispose();
 					txtTime.setText(stopwatch.getTimeString());
 				}
 			}
 		});
+	}
+	
+	class ItemChangeListener implements ItemListener{
+		@Override
+		public void itemStateChanged(ItemEvent e) {
+			updateTasksAcutualTime(stopwatch.getTime(TimeUnit.MILLISECONDS));
+			currentTask = (Task) tasks.toArray()[comboBox.getSelectedIndex()];
+			stopwatch = new Stopwatch(currentTask.getActEffort(), TimeUnit.MILLISECONDS);
+		}	
+	}
+	
+	private void updateTasksAcutualTime(long actualTime){
+		currentTask.setActEffort(actualTime);
+		CurrentStorage.get().storeTaskList(CurrentProject.getTaskList(), CurrentProject.get());
+	}
+	
+	private TimeUnit selectedTimeUnit(int selectedIndex){
+		TimeUnit u = TimeUnit.SECONDS;
+		switch(selectedIndex) {
+		case 0:
+			u = TimeUnit.SECONDS;
+			break;
+		case 1:
+			u = TimeUnit.MINUTES;
+			break;
+		case 2:
+			u = TimeUnit.HOURS;
+			break;
+		}
+		return u;
 	}
 }
