@@ -169,6 +169,7 @@ public class StopwatchDialog extends JDialog
 		panDialogTitle.setBackground(Color.WHITE);
 		getContentPane().add(panDialogTitle, BorderLayout.NORTH);
 		panDialogTitle.setLayout(new BorderLayout(0, 0));
+		//updater.start();
 	}
 
 	
@@ -181,27 +182,27 @@ public class StopwatchDialog extends JDialog
 	void btnStartStop_actionPerformed(ActionEvent e) {
 		if(isRunning) {
 			stopwatch.stopStopwatch();
+			updater.stop();
 			btnStartStop.setToolTipText("Start");
 			btnStartStop.setIcon(new ImageIcon(StopwatchDialog.class.getResource("/net/sf/memoranda/ui/resources/icons/play.png")));
 			updateTasksAcutualTime(stopwatch.getTime(TimeUnit.MILLISECONDS));
 			isRunning = false;
-			updater.restart();
 		}
 		else {
 			stopwatch.startStopwatch();
+			updater.start();
 			btnStartStop.setToolTipText("Stop");
 			btnStartStop.setIcon(new ImageIcon(StopwatchDialog.class.getResource("/net/sf/memoranda/ui/resources/icons/pause.png")));
 			isRunning = true;
-			updater.start();
 		}
 	}
 	
 	void btnRestart_actionPerformed(ActionEvent e) {
 		if(isRunning) {
+			updater.stop();
 			btnStartStop.setToolTipText("Start");
 			btnStartStop.setIcon(new ImageIcon(StopwatchDialog.class.getResource("/net/sf/memoranda/ui/resources/icons/play.png")));
 			isRunning = false;
-			updater.restart();
 		}
 		stopwatch = new Stopwatch();
 		txtTime.setText(stopwatch.getTimeString());
@@ -248,9 +249,17 @@ public class StopwatchDialog extends JDialog
 	class ItemChangeListener implements ItemListener{
 		@Override
 		public void itemStateChanged(ItemEvent e) {
+			if(isRunning) {
+				stopwatch.stopStopwatch();
+				btnStartStop.setToolTipText("Start");
+				btnStartStop.setIcon(new ImageIcon(StopwatchDialog.class.getResource("/net/sf/memoranda/ui/resources/icons/play.png")));
+				isRunning = false;
+				updater.stop();
+			}
 			updateTasksAcutualTime(stopwatch.getTime(TimeUnit.MILLISECONDS));
 			currentTask = (Task) tasks.toArray()[comboBox.getSelectedIndex()];
 			stopwatch = new Stopwatch(currentTask.getActEffort(), TimeUnit.MILLISECONDS);
+			txtTime.setText(stopwatch.getTimeString());
 		}	
 	}
 	
@@ -270,6 +279,8 @@ public class StopwatchDialog extends JDialog
 			break;
 		case 2:
 			u = TimeUnit.HOURS;
+			break;
+		default:
 			break;
 		}
 		return u;
