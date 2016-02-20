@@ -11,12 +11,14 @@ import java.awt.event.ActionEvent;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 
+import net.sf.memoranda.CurrentProject;
 import net.sf.memoranda.util.Context;
 import net.sf.memoranda.util.Local;
 import java.awt.Font;
@@ -291,6 +293,9 @@ public class WorkPanel extends JPanel {
 		Context.put("CURRENT_PANEL", "FILES");
 	}
 	public void btnStopwatch_actionPerformed(ActionEvent e) {
+		if(CurrentProject.getTaskList().getAllTasks().isEmpty()) {
+			JOptionPane.showMessageDialog(null, "No tasks that need timing exist in project.", "Error", JOptionPane.ERROR_MESSAGE);
+		}
 		StopwatchDialog dlg = new StopwatchDialog();
 		Dimension frmSize = App.getFrame().getSize();
         Point loc = App.getFrame().getLocation();
