@@ -258,7 +258,7 @@ public class DefectDialog extends JDialog{
     	dateFoundInputPanel.add(dateFoundSpinner, gbc_dateFoundSpinner);
     	    	
     	dateFoundSpinner.setSize(new Dimension(100, 25));
-    	dateFoundSpinner.setModel(new SpinnerDateModel(new Date(1455498893453L), null, null, Calendar.DAY_OF_WEEK));
+    	dateFoundSpinner.setModel(new SpinnerDateModel(new Date(), null, null, Calendar.DAY_OF_WEEK));
     	dateFoundSpinner.setEditor(new JSpinner.DateEditor(dateFoundSpinner, sdf.toPattern()));
     	dateFoundSpinner.addChangeListener(new ChangeListener(){
 			public void stateChanged(ChangeEvent arg0) {
@@ -316,7 +316,7 @@ public class DefectDialog extends JDialog{
     	dateRemovedSpinner.setPreferredSize(new Dimension(100, 25));
     	dateRemovedInputPanel.add(dateRemovedSpinner, gbc_dateRemovedSpinner);
     	dateRemovedSpinner.setSize(new Dimension(SPINNER_WIDTH, SPINNER_HEIGHT));
-    	dateRemovedSpinner.setModel(new SpinnerDateModel(new Date(1455498633534L), null, null, Calendar.DAY_OF_WEEK));
+    	dateRemovedSpinner.setModel(new SpinnerDateModel(new Date(), null, null, Calendar.DAY_OF_WEEK));
     	dateRemovedSpinner.setEditor(new JSpinner.DateEditor(dateRemovedSpinner, sdf.toPattern()));
     	dateRemovedSpinner.addChangeListener(new ChangeListener(){
 			public void stateChanged(ChangeEvent arg0) {

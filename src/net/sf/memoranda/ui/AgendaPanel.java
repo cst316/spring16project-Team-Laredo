@@ -48,7 +48,6 @@ public class AgendaPanel extends JPanel {
     JButton historyBackB = new JButton();
     JToolBar toolBar = new JToolBar();
     JButton historyForwardB = new JButton();
-    JButton defects = new JButton("defects");
     JEditorPane viewer = new JEditorPane("text/html", "");
     JScrollPane scrollPane = new JScrollPane();
 	JButton export = new JButton();
@@ -249,41 +248,7 @@ public class AgendaPanel extends JPanel {
         toolBar.add(historyBackB, null);
         toolBar.add(historyForwardB, null);
         toolBar.addSeparator(new Dimension(8, 24));
-        defects.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent arg0) {
-				DefectDialog dd = new DefectDialog(App.getFrame(), "New Defect");
-				Dimension frameSize = App.getFrame().getSize();
-				Point loc = App.getFrame().getLocation();
-				dd.setLocation((frameSize.width - dd.getSize().width)/2 + loc.x,
-						(frameSize.height - dd.getSize().height)/2 + loc.y);
-				dd.setVisible(true);
-				
-				if(dd.CANCELLED){
-					return;
-				}
-				CalendarDate rd;
-                if(dd.dateRemovedCheckBox.isSelected()){
-                	if(((Date)dd.dateRemovedSpinner.getModel().getValue()).before((Date)dd.dateFoundSpinner.getModel().getValue())){
-        				rd = new CalendarDate((Date) dd.dateFoundSpinner.getModel().getValue());
-        			}
-                	else{
-                	    rd = new CalendarDate((Date) dd.dateRemovedSpinner.getModel().getValue());
-                	}
-				}
-				else{
-					rd = null;
-				}
-				CalendarDate fd = new CalendarDate((Date) dd.dateFoundSpinner.getModel().getValue());
-				int injection = convertPhasesToInt((String)dd.injectionPhaseComboBox.getSelectedItem());
-				int removal = convertPhasesToInt((String)dd.removalPhaseComboBox.getSelectedItem());
-				int type = convertTypeToInt((String)dd.typeOfDefect.getSelectedItem());
-				String description = dd.descriptionTextArea.getText();
-				CurrentProject.getDefectList().addDefect(fd, rd, injection, removal, type, description);
-                CurrentStorage.get().storeDefectList(CurrentProject.getDefectList(), CurrentProject.get());
-			}
-        	
-        });
-        toolBar.add(defects);
+   
         this.add(toolBar, BorderLayout.NORTH);
 
         CurrentDate.addDateListener(d -> {
@@ -393,48 +358,4 @@ public class AgendaPanel extends JPanel {
     //		}
     //
     //    }
-	private int convertPhasesToInt(String phase){
-		int intPhase = 6;
-		if(phase.equals("Planning")){
-			intPhase = 0;
-		}else if(phase.equals("Design")){
-			intPhase = 1;
-		}else if(phase.equals("Code")){
-			intPhase = 2;
-		}else if(phase.equals("Review")){
-	        intPhase = 3;
-		}else if(phase.equals("Compile")){
-			intPhase = 4;
-		}else if(phase.equals("Testing")){
-			intPhase = 5;
-		}
-		return intPhase;
-	}
-	
-	private int convertTypeToInt(String type){
-		int intPhase = 10;
-		if(type.equals("Documentation")){
-			intPhase = 0;
-		}else if(type.equals("Syntax")){
-			intPhase = 1;
-		}else if(type.equals("Build")){
-			intPhase = 2;
-		}else if(type.equals("Assignment")){
-	        intPhase = 3;
-		}else if(type.equals("Interface")){
-			intPhase = 4;
-		}else if(type.equals("Checking")){
-			intPhase = 5;
-		}else if(type.equals("Data")){
-			intPhase = 6;
-		}else if(type.equals("Function")){
-			intPhase = 7;
-		}else if(type.equals("System")){
-			intPhase = 8;
-		}else if(type.equals("Enviroment")){
-			intPhase = 9;
-		}
-	
-		return intPhase;
-	}
 }

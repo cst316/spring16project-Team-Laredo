@@ -46,12 +46,12 @@ public class DefectListPullingFromFileTest {
 	
 	@Test
 	public void testPullingFromFile() {
-		assertEquals(tomorrow, pulledFirstDefectList.getDefect(1).getDateFound());
+		assertEquals(today, pulledFirstDefectList.getDefect(1).getDateFound());
 		assertEquals(tomorrow, pulledFirstDefectList.getDefect(1).getDateRemoved());
-    	assertEquals(6, pulledFirstDefectList.getDefect(1).getPhaseOfInjection());
-    	assertEquals(6, pulledFirstDefectList.getDefect(1).getPhaseOfRemoval());
-    	assertEquals(10, pulledFirstDefectList.getDefect(1).getTypeOfDefect());
-    	assertEquals("Third Defect", pulledFirstDefectList.getDefect(1).getDescription());
+    	assertEquals(3, pulledFirstDefectList.getDefect(1).getPhaseOfInjection());
+    	assertEquals(4, pulledFirstDefectList.getDefect(1).getPhaseOfRemoval());
+    	assertEquals(5, pulledFirstDefectList.getDefect(1).getTypeOfDefect());
+    	assertEquals("Second Defect", pulledFirstDefectList.getDefect(1).getDescription());
     	assertEquals(1, pulledSecondDefectList.getNumberOfDefects());
 	}
 
