@@ -239,6 +239,11 @@ public class WorkPanel extends JPanel {
 		});
 		toolBar.add(btnStopwatch, null);
 		
+		//Image created by Tyler Cole
+		//Instantiates defect button and defect button layout
+		defectsButton.setIcon(new ImageIcon(WorkPanel.class.getResource("/net/sf/memoranda/ui/resources/icons/defects.png")));
+		defectsButton.setVerticalTextPosition(SwingConstants.BOTTOM);
+		defectsButton.setVerticalAlignment(SwingConstants.TOP);
 		defectsButton.setText("Defects");
 		defectsButton.setSelected(true);
 		defectsButton.setPreferredSize(new Dimension(50,50));

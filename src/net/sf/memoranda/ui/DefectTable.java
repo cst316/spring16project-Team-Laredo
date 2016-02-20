@@ -5,12 +5,27 @@ import java.util.Collection;
 
 import javax.swing.JLabel;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import net.sf.memoranda.CurrentProject;
 import net.sf.memoranda.Defect;
+import net.sf.memoranda.DefectList;
+import net.sf.memoranda.NoteList;
+import net.sf.memoranda.Project;
+import net.sf.memoranda.ProjectListener;
+import net.sf.memoranda.ResourcesList;
+import net.sf.memoranda.TaskList;
 
+/**
+ * Defect table shows defects for the current project
+ * in a JTable.JTable automatically formats the information, 
+ * so that it is readable in the table.
+ * 
+ * @author Benjamin Paothatat
+ * @since 2/19/2016
+ */
 @SuppressWarnings("serial")
 public class DefectTable extends JTable {
 	String[] columnNames = {"Defect Number", "Date Found", "Date Removed",
@@ -29,12 +44,24 @@ public class DefectTable extends JTable {
 	
 	public DefectTable(){
 		init();
+		CurrentProject.addProjectListener(new ProjectListener() {
+			@Override
+			public void projectChange(Project prj, NoteList nl, TaskList tl, DefectList d1, ResourcesList rl) {
+
+			}
+			@Override
+			public void projectWasChanged() {
+				defectList = CurrentProject.getDefectList().getAllDefects();
+				update();
+			}
+		});
 	}
 	
 	void init(){
 		model.setColumnIdentifiers(columnNames);
 		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 		this.setModel(model);
+		this.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		for(int i = 0; i < columnNames.length - 1; i++){
 		    this.getColumnModel().getColumn(i).setPreferredWidth(125);

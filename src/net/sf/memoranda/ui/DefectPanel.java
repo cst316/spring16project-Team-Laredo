@@ -5,17 +5,14 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
-import javax.swing.SpinnerDateModel;
 
 import net.sf.memoranda.CurrentProject;
 import net.sf.memoranda.Defect;
@@ -23,6 +20,15 @@ import net.sf.memoranda.date.CalendarDate;
 import net.sf.memoranda.util.CurrentStorage;
 import net.sf.memoranda.util.Local;
 
+/**
+ * Defect panel that allows creation and editing of defects.
+ * Uses defect table to display current defects. In order to 
+ * edit or remove a defect, the row that the defect is listed
+ * in needs to be selected. Can only select one row at a time.
+ * 
+ * @author Benjamin Paothatat
+ * @since 2/19/2016
+ */
 @SuppressWarnings("serial")
 public class DefectPanel extends JPanel{
 	DailyItemsPanel parentPanel = null;
@@ -37,8 +43,6 @@ public class DefectPanel extends JPanel{
 	JScrollPane scrollPane = null;
 	DefectTable defectTable = new DefectTable();
 	
-	//JCheckBoxMenuItem showActiveDefectsCheckBox = new JCheckBoxMenuItem();
-	
     public DefectPanel(DailyItemsPanel _parentPanel){
     	try{
     		parentPanel = _parentPanel;
@@ -50,7 +54,10 @@ public class DefectPanel extends JPanel{
     }
     
     void init() throws Exception{
-    	newDefectButton.setText("N");
+    	//Button image created by Tyler Cole
+    	newDefectButton.setIcon(new ImageIcon(AppFrame.class.getResource
+    			("resources/icons/adddefect.png")));
+    	newDefectButton.setToolTipText("Create new defect");
     	newDefectButton.setEnabled(true);
     	newDefectButton.setFocusable(false);
     	newDefectButton.setRequestFocusEnabled(false);
@@ -66,11 +73,13 @@ public class DefectPanel extends JPanel{
     		
     	});
     	
-    	removeDefectButton.setText("R");
+    	//Button image created by Tyler Cole
+    	removeDefectButton.setIcon(new ImageIcon(AppFrame.class.getResource
+    			("resources/icons/removedefect.png")));
+    	removeDefectButton.setToolTipText("Remove defect");
     	removeDefectButton.setEnabled(true);
     	removeDefectButton.setFocusable(false);
     	removeDefectButton.setRequestFocusEnabled(false);
-    	removeDefectButton.setToolTipText("Create new defect");
     	removeDefectButton.setPreferredSize(buttonDimension);
     	removeDefectButton.setMinimumSize(buttonDimension);
     	removeDefectButton.setMaximumSize(buttonDimension);
@@ -82,7 +91,10 @@ public class DefectPanel extends JPanel{
     		
     	});
     	
-    	editDefectButton.setText("E");
+    	//Button image created by Tyler Cole
+    	editDefectButton.setIcon(new ImageIcon(AppFrame.class.getResource
+    			("resources/icons/editdefect.png")));
+    	editDefectButton.setToolTipText("Edit defect");
     	editDefectButton.setEnabled(true);
     	editDefectButton.setFocusable(false);
     	editDefectButton.setRequestFocusEnabled(false);
@@ -138,7 +150,7 @@ public class DefectPanel extends JPanel{
 			return;
 		}
 		else{
-            CurrentProject.getDefectList().removeDefect(Integer.parseInt(defectId));
+            CurrentProject.getDefectList().removeDefect(Integer.parseInt(defectId) - 1);
 		}
 		CurrentStorage.get().storeDefectList(CurrentProject.getDefectList(), CurrentProject.get());
 		defectTable.update();
@@ -160,7 +172,7 @@ public class DefectPanel extends JPanel{
 	}
 	
 	private int convertPhasesToInt(String phase){
-		int intPhase = 6;
+		int intPhase = 0;
 		if(phase.equals("Planning")){
 			intPhase = 1;
 		}else if(phase.equals("Design")){
@@ -178,7 +190,7 @@ public class DefectPanel extends JPanel{
 	}
 	
 	private int convertTypeToInt(String type){
-		int intType = 10;
+		int intType = 0;
 		if(type.equals("Documentation")){
 			intType = 1;
 		}else if(type.equals("Syntax")){
