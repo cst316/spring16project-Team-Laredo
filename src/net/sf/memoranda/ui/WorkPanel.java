@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -43,6 +44,7 @@ public class WorkPanel extends JPanel {
 	JButton currentB = null;
 	Border border1;
 	private final JButton btnStopwatch = new JButton();
+	JButton defectsButton = new JButton();
 
 	public WorkPanel() {
 		try {
@@ -235,9 +237,34 @@ public class WorkPanel extends JPanel {
 				btnStopwatch_actionPerformed(e);
 			}
 		});
+		toolBar.add(btnStopwatch, null);
+		
+		//Image created by Tyler Cole
+		//Instantiates defect button and defect button layout
+		defectsButton.setIcon(new ImageIcon(WorkPanel.class.getResource("/net/sf/memoranda/ui/resources/icons/defects.png")));
+		defectsButton.setVerticalTextPosition(SwingConstants.BOTTOM);
+		defectsButton.setVerticalAlignment(SwingConstants.TOP);
+		defectsButton.setText("Defects");
+		defectsButton.setSelected(true);
+		defectsButton.setPreferredSize(new Dimension(50,50));
+		defectsButton.setMaximumSize(new Dimension(60, 80));
+		defectsButton.setMinimumSize(new Dimension(30, 30));
+		defectsButton.setMargin(new Insets(0, 0, 0, 0));
+		defectsButton.setHorizontalTextPosition(SwingConstants.CENTER);
+		defectsButton.setFont(new Font("Dialog", Font.BOLD, 10));
+		defectsButton.setFocusPainted(false);
+		defectsButton.setContentAreaFilled(false);
+		defectsButton.setBorderPainted(false);
+		defectsButton.setBackground(Color.WHITE);
+		defectsButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				btnDefect_actionPerform(e);
+			}
+		});
+		toolBar.add(defectsButton, null);
 		
 		
-		toolBar.add(btnStopwatch);
 		panel.setBorder(null);
 		dailyItemsPanel.setBorder(null);
 		filesPanel.setBorder(null);
@@ -254,7 +281,17 @@ public class WorkPanel extends JPanel {
 				eventsB_actionPerformed(null);
 			else if (pan.equals("FILES"))
 				filesB_actionPerformed(null);
+			else if (pan.equals("DEFECTS")){
+				btnDefect_actionPerform(null);
+			}
 		}
+	}
+	
+	public void btnDefect_actionPerform(ActionEvent e) {
+		cardLayout1.show(panel, "DAILYITEMS");
+		setCurrentButton(defectsButton);
+		dailyItemsPanel.selectPanel("DEFECTS");
+		Context.put("CURRENT_PANEL", "DEFECTS");
 	}
 
 	public void agendaB_actionPerformed(ActionEvent e) {
@@ -291,6 +328,7 @@ public class WorkPanel extends JPanel {
 		Context.put("CURRENT_PANEL", "FILES");
 	}
 	public void btnStopwatch_actionPerformed(ActionEvent e) {
+		setCurrentButton(btnStopwatch);
 		StopwatchDialog dlg = new StopwatchDialog();
 		Dimension frmSize = App.getFrame().getSize();
         Point loc = App.getFrame().getLocation();
