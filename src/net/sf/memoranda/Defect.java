@@ -6,28 +6,29 @@ import nu.xom.Element;
 public interface Defect {
 	
 	//PSP Phases
-    public static final int PLANNING = 0;
-    public static final int DESIGN = 1;
-    public static final int CODE = 2;
-    public static final int REVIEW = 3;
-    public static final int COMPILE = 4;
-    public static final int TESTING = 5;
-    public static final int NO_PHASE = 6;
+    public static final int PLANNING = 1;
+    public static final int DESIGN = 2;
+    public static final int CODE = 3;
+    public static final int REVIEW = 4;
+    public static final int COMPILE = 5;
+    public static final int TESTING = 6;
+    public static final int NO_PHASE = 0;
     
     //Defect Types
-    public static final int DOCUMENTATION = 0;
-    public static final int SYNTAX = 1;
-    public static final int BUILD = 2;
-    public static final int ASSIGNMENT = 3;
-    public static final int INTERFACE = 4;
-    public static final int CHECKING = 5;
-    public static final int DATA = 6;
-    public static final int FUNCTION = 7;
-    public static final int SYSTEM = 8;
-    public static final int ENVIROMENT = 9;
-    public static final int NON_TYPE = 10;
+    public static final int DOCUMENTATION = 1;
+    public static final int SYNTAX = 2;
+    public static final int BUILD = 3;
+    public static final int ASSIGNMENT = 4;
+    public static final int INTERFACE = 5;
+    public static final int CHECKING = 6;
+    public static final int DATA = 7;
+    public static final int FUNCTION = 8;
+    public static final int SYSTEM = 9;
+    public static final int ENVIROMENT = 10;
+    public static final int NON_TYPE = 0;
 		 
 	int getDefectNumber();
+	void setDefectNumber(int i);
     
     CalendarDate getDateFound();
     void setDateFound(CalendarDate dateFound);
@@ -51,4 +52,6 @@ public interface Defect {
     
     String toString();
     Element getElement();
+
+
 }

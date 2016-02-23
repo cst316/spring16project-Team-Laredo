@@ -92,8 +92,9 @@ public class DefectListImpl implements DefectList {
 	public boolean removeDefect(int defectNumber) {
 		boolean removed = false;
 		if (defectNumber >= 0 && defectNumber < defectList.size()){
-            m_root.removeChild(defectNumber - 1);
+			m_root.removeChild(defectNumber);
             defectList.remove(defectNumber);
+            updateDefectNumber(defectNumber);
             removed = true;
 		}
 	    return removed;
@@ -104,6 +105,13 @@ public class DefectListImpl implements DefectList {
 		for(int i = 0; i < defects.size(); i++){
 			Element defect = defects.get(i);
 			defectList.add(new DefectImpl(defect, this));
+		}
+	}
+	
+	private void updateDefectNumber(int defectNumber){
+		for(int i = defectNumber; i < defectList.size(); i++){
+			Defect defect = (Defect) defectList.toArray()[i];
+			defect.setDefectNumber(i);
 		}
 	}
 }

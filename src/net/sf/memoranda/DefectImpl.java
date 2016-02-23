@@ -25,6 +25,10 @@ public class DefectImpl implements Defect {
 		String defectNumber = m_element.getAttributeValue("defectNumber");
 		return Integer.parseInt(defectNumber);
 	}
+	
+	public void setDefectNumber(int defectNumber){
+		setAttr("defectNumber", String.valueOf(defectNumber));
+	}
 
 	@Override
 	public CalendarDate getDateFound() {
@@ -41,7 +45,7 @@ public class DefectImpl implements Defect {
 		CalendarDate dateRemoved;
 		String dr = m_element.getAttributeValue("dateRemoved");
 		Project project = this.m_d1.getProject();
-		if(dr.equals("")){
+		if(!(dr.equals(""))){
 			dateRemoved = new CalendarDate(dr);
 		}
 		else if(project.getEndDate() != null){
