@@ -21,8 +21,6 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 import net.sf.memoranda.CurrentProject;
 import net.sf.memoranda.DefectList;
@@ -35,7 +33,6 @@ import net.sf.memoranda.Task;
 import net.sf.memoranda.TaskList;
 import net.sf.memoranda.date.CalendarDate;
 import net.sf.memoranda.date.CurrentDate;
-import net.sf.memoranda.date.DateListener;
 import net.sf.memoranda.util.Context;
 import net.sf.memoranda.util.CurrentStorage;
 import net.sf.memoranda.util.Local;
@@ -222,11 +219,8 @@ public class TaskPanel extends JPanel {
 
 
 
-        CurrentDate.addDateListener(new DateListener() {
-            public void dateChange(CalendarDate d) {
-                newTaskB.setEnabled(d.inPeriod(CurrentProject.get().getStartDate(), CurrentProject.get().getEndDate()));
-            }
-        });
+        CurrentDate.addDateListener(d -> newTaskB.setEnabled(d.inPeriod(CurrentProject.get().getStartDate(),
+        		CurrentProject.get().getEndDate())));
         
         CurrentProject.addProjectListener(new ProjectListener() {
             public void projectChange(Project p, NoteList nl, TaskList tl, DefectList d1, ResourcesList rl) {
@@ -236,8 +230,7 @@ public class TaskPanel extends JPanel {
             public void projectWasChanged() {}
         });
         
-        taskTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            public void valueChanged(ListSelectionEvent e) {
+        taskTable.getSelectionModel().addListSelectionListener(e -> {
                 boolean enbl = (taskTable.getRowCount() > 0)&&(taskTable.getSelectedRow() > -1);
                 editTaskB.setEnabled(enbl);ppEditTask.setEnabled(enbl);
                 removeTaskB.setEnabled(enbl);ppRemoveTask.setEnabled(enbl);
@@ -259,7 +252,6 @@ public class TaskPanel extends JPanel {
                     parentPanel.calendar.jnCalendar.renderer.setTask(null);
                     parentPanel.calendar.jnCalendar.updateUI();
                 }
-            }
         });
 
         editTaskB.setEnabled(false);
@@ -377,35 +369,40 @@ public class TaskPanel extends JPanel {
 
     void addSubTask_actionPerformed(ActionEvent e) {
         TaskDialog dlg = createTaskDialog(Local.getString("New Task"));
-        String parentTaskId = taskTable.getModel().getValueAt(taskTable.getSelectedRow(), TaskTable.TASK_ID).toString();   
-		Task parent = CurrentProject.getTaskList().getTask(parentTaskId);
-		CalendarDate todayD = CurrentDate.get();
-		if (todayD.after(parent.getStartDate()))
-			dlg.setStartDate(todayD);
-		else
-			dlg.setStartDate(parent.getStartDate());
-		if (parent.getEndDate() != null) 
-			dlg.setEndDate(parent.getEndDate());
-		else 
-			dlg.setEndDate(CurrentProject.get().getEndDate());
-		dlg.setStartDateLimit(parent.getStartDate(), parent.getEndDate());
-		dlg.setEndDateLimit(parent.getStartDate(), parent.getEndDate());
-        dlg.setVisible(true);
-        if (dlg.CANCELLED)
-            return;
-        CalendarDate sd = new CalendarDate((Date) dlg.spnStartDate.getModel().getValue());
-        CalendarDate ed;
- 		if(dlg.chkEndDate.isSelected())
- 			ed = new CalendarDate((Date) dlg.spnEndDate.getModel().getValue());
- 		else
- 			ed = null;
-        long effort = Util.getMillisFromHours(dlg.tfEffort.getText());
-		Task newTask = CurrentProject.getTaskList().createTask(sd, ed, dlg.tfTaskName.getText(), dlg.cmbPriority.getSelectedIndex(), dlg.cmbPhase.getSelectedIndex(), effort, dlg.taDescription.getText(),parentTaskId);
-		newTask.setProgress(((Integer)dlg.spnProgress.getValue()).intValue());
+        try{
+            String parentTaskId = taskTable.getModel().getValueAt(taskTable.getSelectedRow(), TaskTable.TASK_ID).toString();
+            Task parent = CurrentProject.getTaskList().getTask(parentTaskId);
+    		CalendarDate todayD = CurrentDate.get();
+    		if (todayD.after(parent.getStartDate()))
+    			dlg.setStartDate(todayD);
+    		else
+    			dlg.setStartDate(parent.getStartDate());
+    		if (parent.getEndDate() != null) 
+    			dlg.setEndDate(parent.getEndDate());
+    		else 
+    			dlg.setEndDate(CurrentProject.get().getEndDate());
+    		dlg.setStartDateLimit(parent.getStartDate(), parent.getEndDate());
+    		dlg.setEndDateLimit(parent.getStartDate(), parent.getEndDate());
+            dlg.setVisible(true);
+            if (dlg.CANCELLED)
+                return;
+            CalendarDate sd = new CalendarDate((Date) dlg.spnStartDate.getModel().getValue());
+            CalendarDate ed;
+     		if(dlg.chkEndDate.isSelected())
+     			ed = new CalendarDate((Date) dlg.spnEndDate.getModel().getValue());
+     		else
+     			ed = null;
+            long effort = Util.getMillisFromHours(dlg.tfEffort.getText());
+    		Task newTask = CurrentProject.getTaskList().createTask(sd, ed, dlg.tfTaskName.getText(), dlg.cmbPriority.getSelectedIndex(), dlg.cmbPhase.getSelectedIndex(), effort, dlg.taDescription.getText(),parentTaskId);
+    		newTask.setProgress(((Integer)dlg.spnProgress.getValue()).intValue());
 
-		CurrentStorage.get().storeTaskList(CurrentProject.getTaskList(), CurrentProject.get());
-        taskTable.tableChanged();
-        parentPanel.updateIndicators();
+    		CurrentStorage.get().storeTaskList(CurrentProject.getTaskList(), CurrentProject.get());
+            taskTable.tableChanged();
+            parentPanel.updateIndicators();
+        }
+        catch(NullPointerException exception){
+        	return;
+        }
     }
 
     void calcTask_actionPerformed(ActionEvent e) {
