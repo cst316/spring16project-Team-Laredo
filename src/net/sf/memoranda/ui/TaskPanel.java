@@ -335,11 +335,9 @@ public class TaskPanel extends JPanel {
 
 
 
-        CurrentDate.addDateListener(new DateListener() {
-            public void dateChange(CalendarDate d) {
-                newTaskB.setEnabled(d.inPeriod(CurrentProject.get().getStartDate(), CurrentProject.get().getEndDate()));
-            }
-        });
+        CurrentDate.addDateListener(d -> newTaskB.setEnabled(d.inPeriod(CurrentProject.get().getStartDate(),
+                CurrentProject.get().getEndDate())));
+
         CurrentProject.addProjectListener(new ProjectListener() {
             public void projectChange(Project p, NoteList nl, TaskList tl, DefectList d1, ResourcesList rl) {
                 newTaskB.setEnabled(
@@ -349,39 +347,28 @@ public class TaskPanel extends JPanel {
             	//taskTable.setCurrentRootTask(null); //XXX
             }
         });
-        taskTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            public void valueChanged(ListSelectionEvent e) {
-                boolean enbl = (taskTable.getRowCount() > 0)&&(taskTable.getSelectedRow() > -1);
-                editTaskB.setEnabled(enbl);ppEditTask.setEnabled(enbl);
-                removeTaskB.setEnabled(enbl);ppRemoveTask.setEnabled(enbl);
-				
-				ppCompleteTask.setEnabled(enbl);
-				completeTaskB.setEnabled(enbl);
-				ppAddSubTask.setEnabled(enbl);
-				//ppSubTasks.setEnabled(enbl); // default value to be over-written later depending on whether it has sub tasks
-				ppCalcTask.setEnabled(enbl); // default value to be over-written later depending on whether it has sub tasks
-				
-				/*if (taskTable.getCurrentRootTask() == null) {
-					ppParentTask.setEnabled(false);
-				}
-				else {
-					ppParentTask.setEnabled(true);
-				}XXX*/
-				
-                if (enbl) {   
-    				String thisTaskId = taskTable.getModel().getValueAt(taskTable.getSelectedRow(), TaskTable.TASK_ID).toString();
-    				
-    				boolean hasSubTasks = CurrentProject.getTaskList().hasSubTasks(thisTaskId);
-    				//ppSubTasks.setEnabled(hasSubTasks);
-    				ppCalcTask.setEnabled(hasSubTasks);
-    				Task t = CurrentProject.getTaskList().getTask(thisTaskId);
-                    parentPanel.calendar.jnCalendar.renderer.setTask(t);
-                    parentPanel.calendar.jnCalendar.updateUI();
-                }    
-                else {
-                    parentPanel.calendar.jnCalendar.renderer.setTask(null);
-                    parentPanel.calendar.jnCalendar.updateUI();
-                }
+        taskTable.getSelectionModel().addListSelectionListener(e -> {
+            boolean enbl = (taskTable.getRowCount() > 0)&&(taskTable.getSelectedRow() > -1);
+            editTaskB.setEnabled(enbl);ppEditTask.setEnabled(enbl);
+            removeTaskB.setEnabled(enbl);ppRemoveTask.setEnabled(enbl);
+
+            ppCompleteTask.setEnabled(enbl);
+            completeTaskB.setEnabled(enbl);
+            ppAddSubTask.setEnabled(enbl);
+            ppCalcTask.setEnabled(enbl); // default value to be over-written later depending on whether it has sub tasks
+
+            if (enbl) {
+                String thisTaskId = taskTable.getModel().getValueAt(taskTable.getSelectedRow(), TaskTable.TASK_ID).toString();
+
+                boolean hasSubTasks = CurrentProject.getTaskList().hasSubTasks(thisTaskId);
+                ppCalcTask.setEnabled(hasSubTasks);
+                Task t = CurrentProject.getTaskList().getTask(thisTaskId);
+                parentPanel.calendar.jnCalendar.renderer.setTask(t);
+                parentPanel.calendar.jnCalendar.updateUI();
+            }
+            else {
+                parentPanel.calendar.jnCalendar.renderer.setTask(null);
+                parentPanel.calendar.jnCalendar.updateUI();
             }
         });
         editTaskB.setEnabled(false);

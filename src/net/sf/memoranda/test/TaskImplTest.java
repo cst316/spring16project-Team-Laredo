@@ -1,0 +1,70 @@
+package net.sf.memoranda.test;
+
+import net.sf.memoranda.Project;
+import net.sf.memoranda.ProjectManager;
+import net.sf.memoranda.Task;
+import net.sf.memoranda.TaskList;
+import net.sf.memoranda.date.CalendarDate;
+import net.sf.memoranda.util.CurrentStorage;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
+public class TaskImplTest {
+
+    public static final String TEST_PROJECT_TITLE = "testProjectAAAAAAAAAAAAAAAAAA";
+    public static Project project = null;
+    public static TaskList tasks = null;
+
+    @Before
+    public void setUp() throws Exception {
+        ProjectManager.removeProject(TEST_PROJECT_TITLE);
+        project = ProjectManager.createProject(TEST_PROJECT_TITLE, new CalendarDate(), new CalendarDate());
+        tasks = CurrentStorage.get().openTaskList(project);
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        tasks = null;
+        ProjectManager.removeProject(TEST_PROJECT_TITLE);
+        project = null;
+    }
+
+    @Test
+    public void testLocStorage() throws Exception {
+        Task task = tasks.createTask(new CalendarDate(), new CalendarDate(), "", 1, 1, 1, "", null);
+        assertEquals(0, task.getLocBase());
+        task.setLocBase(10);
+        assertEquals(10, task.getLocBase());
+
+        assertEquals(0, task.getLocAdded());
+        task.setLocAdded(10);
+        assertEquals(10, task.getLocAdded());
+
+        assertEquals(0, task.getLocModified());
+        task.setLocModified(10);
+        assertEquals(10, task.getLocModified());
+
+        assertEquals(0, task.getLocDeleted());
+        task.setLocDeleted(10);
+        assertEquals(10, task.getLocDeleted());
+
+        assertEquals(0, task.getLocNewAndChanged());
+        task.setLocNewAndChanged(10);
+        assertEquals(10, task.getLocNewAndChanged());
+
+        assertEquals(0, task.getLocReused());
+        task.setLocReused(10);
+        assertEquals(10, task.getLocReused());
+
+        assertEquals(0, task.getLocNewReuse());
+        task.setLocNewReuse(10);
+        assertEquals(10, task.getLocNewReuse());
+
+        assertEquals(0, task.getLocTotal());
+        task.setLocTotal(10);
+        assertEquals(10, task.getLocTotal());
+    }
+}

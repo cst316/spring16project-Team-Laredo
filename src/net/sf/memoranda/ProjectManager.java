@@ -24,7 +24,6 @@ import java.util.Vector;
  */
 /*$Id: ProjectManager.java,v 1.9 2005/12/01 08:12:26 alexeya Exp $*/
 public class ProjectManager {
-//    public static final String NS_JNPROJECT = "http://www.openmechanics.org/2003/jnotes-projects-file";
 
     public static Document _doc = null;
     static Element _root = null;
@@ -37,8 +36,6 @@ public class ProjectManager {
         CurrentStorage.get().openProjectManager();
         if (_doc == null) {
             _root = new Element("projects-list");
-//            _root.addNamespaceDeclaration("jnotes", NS_JNPROJECT);
-//            _root.appendChild(new Comment("This is JNotes 2 data file. Do not modify."));
             _doc = new Document(_root);
             createProject("__default", Local.getString("Default project"), CalendarDate.today(), null);
         }

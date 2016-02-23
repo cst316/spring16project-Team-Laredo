@@ -6,7 +6,12 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        EventImplTest.class, DefectListCreationTest.class, DefectListPullingFromFileTest.class, StatisticsTest.class, StopwatchTest.class
+        EventImplTest.class,
+        DefectListCreationTest.class,
+        DefectListPullingFromFileTest.class,
+        StatisticsTest.class,
+        StopwatchTest.class,
+        TaskImplTest.class
 })
 public class MemorandaTestSuite {
 }
