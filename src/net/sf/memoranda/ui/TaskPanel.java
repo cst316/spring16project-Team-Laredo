@@ -161,28 +161,28 @@ public class TaskPanel extends JPanel {
 		menuItemInitialization(ppEditTask, Local.getString("Edit task")+ "...", editTaskImage); 
         ppEditTask.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(ActionEvent e) {
-                ppEditTask_actionPerformed(e);
+        	    editTaskB_actionPerformed(e);
             }
         });
         
         menuItemInitialization(ppRemoveTask, Local.getString("Remove task"), removeTaskImage);
         ppRemoveTask.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ppRemoveTask_actionPerformed(e);
+            	removeTaskB_actionPerformed(e);
             }
         });
 
         menuItemInitialization(ppNewTask, Local.getString("New task")+ "...", newTaskImage);
         ppNewTask.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ppNewTask_actionPerformed(e);
+            	newTaskB_actionPerformed(e);
             }
         });
         
         menuItemInitialization(ppAddSubTask, Local.getString("Add subtask"), newSubTaskImage);
         ppAddSubTask.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ppAddSubTask_actionPerformed(e);
+            	addSubTask_actionPerformed(e);
             }
         });
 
@@ -291,14 +291,14 @@ public class TaskPanel extends JPanel {
 			public void keyPressed(KeyEvent e){
 				if(taskTable.getSelectedRows().length>0 
 					&& e.getKeyCode()==KeyEvent.VK_DELETE)
-					ppRemoveTask_actionPerformed(null);
+					removeTaskB_actionPerformed(null);
 				
 				else if(e.getKeyCode()==KeyEvent.VK_INSERT) {
 					if(taskTable.getSelectedRows().length>0) {
-						ppAddSubTask_actionPerformed(null);
+						addSubTask_actionPerformed(null);
 					}
 					else {
-						ppNewTask_actionPerformed(null);						
+						newTaskB_actionPerformed(null);						
 					}
 				}
 				
@@ -445,9 +445,6 @@ public class TaskPanel extends JPanel {
 		taskTable.tableChanged();
     }
 
-    void parentTask_actionPerformed(ActionEvent e) {
-    }
-
     void removeTaskB_actionPerformed(ActionEvent e) {
         String msg;
         String thisTaskId = taskTable.getModel().getValueAt(taskTable.getSelectedRow(), TaskTable.TASK_ID).toString();
@@ -535,30 +532,6 @@ public class TaskPanel extends JPanel {
                 taskPPMenu.show(e.getComponent(), e.getX(), e.getY());
             }
         }
-    }
-
-    void ppEditTask_actionPerformed(ActionEvent e) {
-        editTaskB_actionPerformed(e);
-    }
-    
-    void ppRemoveTask_actionPerformed(ActionEvent e) {
-        removeTaskB_actionPerformed(e);
-    }
-  
-    void ppNewTask_actionPerformed(ActionEvent e) {
-        newTaskB_actionPerformed(e);
-    }
-
-    void ppAddSubTask_actionPerformed(ActionEvent e) {
-        addSubTask_actionPerformed(e);
-    }
-
-    void ppListSubTasks_actionPerformed(ActionEvent e) {
-        listSubTasks_actionPerformed(e);
-    }
-
-    void ppParentTask_actionPerformed(ActionEvent e) {
-        parentTask_actionPerformed(e);
     }
 
     void ppCalcTask_actionPerformed(ActionEvent e) {
