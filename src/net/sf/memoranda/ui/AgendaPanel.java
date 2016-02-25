@@ -192,6 +192,7 @@ public class AgendaPanel extends JPanel {
                     }
                     refresh(CurrentDate.get());
                 } else if (d.startsWith("memoranda:exportstickerst")) {
+                	//TODO REFACTOR SAVE DIALOG
 					 //  You need to add the export sticker meanwhile ..
 					 final JFrame parent = new JFrame();
 					 String name = JOptionPane.showInputDialog(parent,Local.getString("Enter filename to export"),null);

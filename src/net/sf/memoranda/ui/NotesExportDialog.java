@@ -14,7 +14,6 @@ public class NotesExportDialog extends JDialog {
 
   BorderLayout borderLayout1 = new BorderLayout();
   JPanel jPanel2 = new JPanel();
-  public JFileChooser fileChooser = null;
   BorderLayout borderLayout3 = new BorderLayout();
   JPanel jPanel3 = new JPanel();
   JButton okB = new JButton();
@@ -33,10 +32,9 @@ public class NotesExportDialog extends JDialog {
   JCheckBox splitChB = new JCheckBox();
   JCheckBox titlesAsHeadersChB = new JCheckBox();
 
-  public NotesExportDialog(Frame frame, String title, JFileChooser chooser) {
+  public NotesExportDialog(Frame frame, String title) {
     super(frame, title, true);
     try {
-      fileChooser = chooser;
       jbInit();
       pack();
     }
@@ -51,8 +49,6 @@ public class NotesExportDialog extends JDialog {
 
     border1 = BorderFactory.createEmptyBorder(10,10,0,10);
     border2 = BorderFactory.createEmptyBorder(5,10,5,5);
-    fileChooser.setBorder(null);
-    fileChooser.setControlButtonsAreShown(false);
     jPanel2.setLayout(borderLayout3);
     okB.setMaximumSize(new Dimension(100, 26));
     okB.setPreferredSize(new Dimension(100, 26));
@@ -60,14 +56,7 @@ public class NotesExportDialog extends JDialog {
     okB.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(ActionEvent e) {
         okB_actionPerformed(e);
-		if (fileChooser.getUI() instanceof BasicFileChooserUI) //Added to fix problem with export note
-		//jcscoobyrs 17-Nov-2003 at 08:36:14 AM
-		{//Added to fix problem with export note jcscoobyrs 17-Nov-2003 at 08:36:14 AM
-			BasicFileChooserUI ui = (BasicFileChooserUI)fileChooser.getUI();//Added to fix problem with export note
-			//jcscoobyrs 17-Nov-2003 at 08:36:14 AM
-			ui.getApproveSelectionAction().actionPerformed(e);//Added to fix problem with export note
-			//jcscoobyrs 17-Nov-2003 at 08:36:14 AM
-		}//Added to fix problem with export note jcscoobyrs 17-Nov-2003 at 08:36:14 AM
+		
       }
     });
     this.getRootPane().setDefaultButton(okB);
@@ -100,7 +89,7 @@ public class NotesExportDialog extends JDialog {
     jPanel1.add(encCB, BorderLayout.CENTER);
     jPanel1.add(jLabel1, BorderLayout.WEST);
     jPanel4.add(splitChB, null);
-    jPanel2.add(fileChooser, BorderLayout.NORTH);
+
     this.getContentPane().add(jPanel3,  BorderLayout.SOUTH);
     jPanel3.add(okB, null);
     jPanel3.add(cancelB, null);

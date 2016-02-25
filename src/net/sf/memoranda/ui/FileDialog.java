@@ -13,8 +13,8 @@ import java.io.*;
 
 class FileDialog {
 
-	public static File getSaveFile(String frameTitle, AllFilesFilter filters,
-			String lastFile, Component compRef, boolean save)
+	public static File getFile(String frameTitle, AllFilesFilter filters,
+			String lastFile, Component compRef, boolean save, int fileSelectionMode)
 
 	{
 
@@ -48,7 +48,7 @@ class FileDialog {
 		chooser.setDialogTitle(Local.getString(frameTitle));
 		chooser.setAcceptAllFileFilterUsed(false);
 
-		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		chooser.setFileSelectionMode(fileSelectionMode);
 
 		chooser.addChoosableFileFilter(filters);
 
