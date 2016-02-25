@@ -10,7 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /*$Id: ProjectExportDialog.java,v 1.3 2004/04/05 10:05:44 alexeya Exp $*/
-public class ProjectExportDialog extends JDialog {
+public class NotesExportDialog extends JDialog {
 
   BorderLayout borderLayout1 = new BorderLayout();
   JPanel jPanel2 = new JPanel();
@@ -33,7 +33,7 @@ public class ProjectExportDialog extends JDialog {
   JCheckBox splitChB = new JCheckBox();
   JCheckBox titlesAsHeadersChB = new JCheckBox();
 
-  public ProjectExportDialog(Frame frame, String title, JFileChooser chooser) {
+  public NotesExportDialog(Frame frame, String title, JFileChooser chooser) {
     super(frame, title, true);
     try {
       fileChooser = chooser;

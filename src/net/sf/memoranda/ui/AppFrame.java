@@ -2,6 +2,7 @@ package net.sf.memoranda.ui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Point;
@@ -720,119 +721,20 @@ public class AppFrame extends JFrame {
     }
 
     public void doPrjPack() {
-        // Fix until Sun's JVM supports more locales...
-        UIManager.put("FileChooser.saveInLabelText", Local
-                .getString("Save in:"));
-        UIManager.put("FileChooser.upFolderToolTipText", Local.getString(
-                "Up One Level"));
-        UIManager.put("FileChooser.newFolderToolTipText", Local.getString(
-                "Create New Folder"));
-        UIManager.put("FileChooser.listViewButtonToolTipText", Local
-                .getString("List"));
-        UIManager.put("FileChooser.detailsViewButtonToolTipText", Local
-                .getString("Details"));
-        UIManager.put("FileChooser.fileNameLabelText", Local.getString(
-                "File Name:"));
-        UIManager.put("FileChooser.filesOfTypeLabelText", Local.getString(
-                "Files of Type:"));
-        UIManager.put("FileChooser.saveButtonText", Local.getString("Save"));
-        UIManager.put("FileChooser.saveButtonToolTipText", Local.getString(
-                "Save selected file"));
-        UIManager
-                .put("FileChooser.cancelButtonText", Local.getString("Cancel"));
-        UIManager.put("FileChooser.cancelButtonToolTipText", Local.getString(
-                "Cancel"));
-
-        File root = new File(System.getProperty("user.home"));
-        FileSystemView fsv = new SingleRootFileSystemView(root);
-        JFileChooser chooser = new JFileChooser(fsv);
-        chooser.setFileHidingEnabled(true);
-        chooser.setDialogTitle(Local.getString("Pack project"));
-        chooser.setAcceptAllFileFilterUsed(false);
-        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        //chooser.addChoosableFileFilter(new AllFilesFilter(AllFilesFilter.RTF));
-        chooser.addChoosableFileFilter(new AllFilesFilter(AllFilesFilter.ZIP));
-        // fixes XP style look cosmetical problems JVM 1.4.2 and 1.4.2_01
-        chooser.setPreferredSize(new Dimension(550, 375));
-
-        //Added to fix the problem with packing a file then deleting that file.
-        //(jcscoobyrs) 17-Nov-2003 at 14:57:06 PM
-        //---------------------------------------------------------------------
-        File lastSel = null;
-
-        try {
-            lastSel = (java.io.File) Context.get("LAST_SELECTED_PACK_FILE");
+        java.io.File f = FileDialog.getSaveFile(Local.getString("Pack project"), new AllFilesFilter(AllFilesFilter.ZIP),
+    			"LAST_SELECTED_PACK_FILE", this, true);
+        if(f != null){
+        	ProjectPackager.pack(CurrentProject.get(), f);
         }
-        catch (ClassCastException cce) {
-            lastSel = new File(System.getProperty("user.dir") + File.separator);
-        }
-        //---------------------------------------------------------------------
-
-        if (lastSel != null)
-            chooser.setCurrentDirectory(lastSel);
-        if (chooser.showSaveDialog(this) != JFileChooser.APPROVE_OPTION)
-            return;
-        Context.put("LAST_SELECTED_PACK_FILE", chooser.getSelectedFile());        
-        java.io.File f = chooser.getSelectedFile();
-        ProjectPackager.pack(CurrentProject.get(), f);
+        	
     }
 
     public void doPrjUnPack() {
-        // Fix until Sun's JVM supports more locales...
-        UIManager.put("FileChooser.lookInLabelText", Local
-                .getString("Look in:"));
-        UIManager.put("FileChooser.upFolderToolTipText", Local.getString(
-                "Up One Level"));
-        UIManager.put("FileChooser.newFolderToolTipText", Local.getString(
-                "Create New Folder"));
-        UIManager.put("FileChooser.listViewButtonToolTipText", Local
-                .getString("List"));
-        UIManager.put("FileChooser.detailsViewButtonToolTipText", Local
-                .getString("Details"));
-        UIManager.put("FileChooser.fileNameLabelText", Local.getString(
-                "File Name:"));
-        UIManager.put("FileChooser.filesOfTypeLabelText", Local.getString(
-                "Files of Type:"));
-        UIManager.put("FileChooser.openButtonText", Local.getString("Open"));
-        UIManager.put("FileChooser.openButtonToolTipText", Local.getString(
-                "Open selected file"));
-        UIManager
-                .put("FileChooser.cancelButtonText", Local.getString("Cancel"));
-        UIManager.put("FileChooser.cancelButtonToolTipText", Local.getString(
-                "Cancel"));
-
-        File root = new File(System.getProperty("user.home"));
-        FileSystemView fsv = new SingleRootFileSystemView(root);
-        JFileChooser chooser = new JFileChooser(fsv);
-        chooser.setFileHidingEnabled(true);
-        chooser.setDialogTitle(Local.getString("Unpack project"));
-        chooser.setAcceptAllFileFilterUsed(false);
-        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        chooser.addChoosableFileFilter(new AllFilesFilter(AllFilesFilter.ZIP));
-        //chooser.addChoosableFileFilter(new AllFilesFilter(AllFilesFilter.RTF));
-        // fixes XP style look cosmetical problems JVM 1.4.2 and 1.4.2_01
-        chooser.setPreferredSize(new Dimension(550, 375));
-
-        //Added to fix the problem with packing a file then deleting that file.
-        //(jcscoobyrs) 17-Nov-2003 at 14:57:06 PM
-        //---------------------------------------------------------------------
-        File lastSel = null;
-
-        try {
-            lastSel = (java.io.File) Context.get("LAST_SELECTED_PACK_FILE");
-        }
-        catch (ClassCastException cce) {
-            lastSel = new File(System.getProperty("user.dir") + File.separator);
-        }
-        //---------------------------------------------------------------------
-
-        if (lastSel != null)
-            chooser.setCurrentDirectory(lastSel);
-        if (chooser.showOpenDialog(this) != JFileChooser.APPROVE_OPTION)
-            return;
-        Context.put("LAST_SELECTED_PACK_FILE", chooser.getSelectedFile());        
-        java.io.File f = chooser.getSelectedFile();
-        ProjectPackager.unpack(f);
+    	java.io.File f = FileDialog.getSaveFile(Local.getString("Unpack project"), new AllFilesFilter(AllFilesFilter.ZIP),
+    			"LAST_SELECTED_PACK_FILE", this, false);
+    	if(f != null){
+    		ProjectPackager.unpack(f);
+    	}
         projectsPanel.prjTablePanel.updateUI();
     }
 
@@ -892,8 +794,8 @@ public class AppFrame extends JFrame {
                 if (lastSel != null)
                         chooser.setCurrentDirectory(new File(lastSel));
 
-                ProjectExportDialog dlg =
-                        new ProjectExportDialog(
+                NotesExportDialog dlg =
+                        new NotesExportDialog(
                                 App.getFrame(),
                                 Local.getString("Export notes"),
                                 chooser);

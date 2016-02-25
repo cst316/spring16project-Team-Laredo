@@ -10,3 +10,4 @@ classes
 dist
 *.iml
 *.exec
+/bin1/
