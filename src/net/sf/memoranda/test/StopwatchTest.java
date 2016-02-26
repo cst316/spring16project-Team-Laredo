@@ -24,8 +24,12 @@ public class StopwatchTest {
     @Before
 	public void Setup() {
     	emptyWatch = new Stopwatch();
-    	negativeWatch = new Stopwatch(-5, TimeUnit.HOURS);
-    	zeroWatch = new Stopwatch(0, TimeUnit.HOURS);
+    	try {
+    		negativeWatch = new Stopwatch(-5, TimeUnit.HOURS);
+    	} catch (NumberFormatException ex) {
+    		negativeWatch = new Stopwatch();
+    	}
+    	zeroWatch = new Stopwatch();
     	oneWatch = new Stopwatch(1, TimeUnit.MINUTES);
     	manyWatch = new Stopwatch(359945000, TimeUnit.MILLISECONDS); //Time == 99:59:05
     	dayWatch = new Stopwatch (1, TimeUnit.DAYS);
@@ -101,9 +105,26 @@ public class StopwatchTest {
 		assertTrue(Stopwatch.parseTime("1:0:0") == 3600000);
 		assertTrue(Stopwatch.parseTime("0:1:0") == 60000);
 		assertTrue(Stopwatch.parseTime("0:0:1") == 1000);
-		assertTrue(Stopwatch.parseTime("Pineapple") == 0);
-		assertTrue(Stopwatch.parseTime("0:0:a") == 0);
-		assertTrue(Stopwatch.parseTime("1:1:1:1") == 0);
+		try {
+			Stopwatch.parseTime("Pineapple");
+		} catch (NumberFormatException ex) {
+			assertTrue(true);
+		}
+		try {
+			Stopwatch.parseTime("7826135478623154:12:1");
+		} catch (NumberFormatException ex) {
+			assertTrue(true);
+		}
+		try {
+			assertTrue(Stopwatch.parseTime("0:0:a") == 0);
+		} catch (NumberFormatException ex) {
+			assertTrue(true);
+		}
+		try {
+			assertTrue(Stopwatch.parseTime("1:1:1:1") == 0);
+		} catch (NumberFormatException ex) {
+			assertTrue(true);
+		}
 	}
 	
 	@Test
@@ -118,6 +139,11 @@ public class StopwatchTest {
 		assertTrue(manyWatch.getTime(TimeUnit.MILLISECONDS) == 356283999);
 		manyWatch.removeTime(1, TimeUnit.DAYS);
 		assertTrue(manyWatch.getTime(TimeUnit.MILLISECONDS) == 356283999);
+		try {
+			zeroWatch.removeTime(1713476125, TimeUnit.HOURS);
+		} catch (NumberFormatException ex) {
+			assertTrue(true);
+		}
 	}
 	
 	@Test
@@ -132,6 +158,11 @@ public class StopwatchTest {
 		assertTrue(zeroWatch.getTime(TimeUnit.MILLISECONDS) == 3661001);
 		zeroWatch.addTime(1, TimeUnit.DAYS);
 		assertTrue(zeroWatch.getTime(TimeUnit.MILLISECONDS) == 3661001);
+		try {
+			zeroWatch.addTime(1713476125, TimeUnit.HOURS);
+		} catch (NumberFormatException ex) {
+			assertTrue(true);
+		}
 	}
 
 }

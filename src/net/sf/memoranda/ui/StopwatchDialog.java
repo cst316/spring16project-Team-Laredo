@@ -20,6 +20,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -217,11 +218,15 @@ public class StopwatchDialog extends JDialog
 		dlg.btnConfirm.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(!dlg.txtValue.getText().equals("")) {
-					int time = Integer.parseInt(dlg.txtValue.getText());
-					TimeUnit u = selectedTimeUnit(dlg.comboBox.getSelectedIndex());
-					stopwatch.addTime(time, u);
-					dlg.dispose();
-					txtTime.setText(stopwatch.getTimeString());
+					try {
+						long time = Long.parseLong(dlg.txtValue.getText());
+						TimeUnit u = selectedTimeUnit(dlg.comboBox.getSelectedIndex());
+						stopwatch.addTime(time, u);
+						dlg.dispose();
+						txtTime.setText(stopwatch.getTimeString());
+					} catch (NumberFormatException ex){
+						JOptionPane.showMessageDialog(null, "Input is invalid.", "Error", JOptionPane.ERROR_MESSAGE);
+					}
 				}
 			}
 		});
@@ -236,11 +241,15 @@ public class StopwatchDialog extends JDialog
 		dlg.btnConfirm.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(!dlg.txtValue.getText().equals("")) {
-					int time = Integer.parseInt(dlg.txtValue.getText());
-					TimeUnit u = selectedTimeUnit(dlg.comboBox.getSelectedIndex());
-					stopwatch.removeTime(time, u);
-					dlg.dispose();
-					txtTime.setText(stopwatch.getTimeString());
+					try {
+						long time = Long.parseLong(dlg.txtValue.getText());
+						TimeUnit u = selectedTimeUnit(dlg.comboBox.getSelectedIndex());
+						stopwatch.removeTime(time, u);
+						dlg.dispose();
+						txtTime.setText(stopwatch.getTimeString());
+					} catch (NumberFormatException ex){
+						JOptionPane.showMessageDialog(null, "Input is invalid.", "Error", JOptionPane.ERROR_MESSAGE);
+					}
 				}
 			}
 		});
