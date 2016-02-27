@@ -10,13 +10,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class TaskImplTest {
 
-    public static final String TEST_PROJECT_TITLE = "testProjectAAAAAAAAAAAAAAAAAA";
-    public static Project project = null;
-    public static TaskList tasks = null;
+    private static final String TEST_PROJECT_TITLE = "testProjectAAAAAAAAAAAAAAAAAA";
+    private static Project project = null;
+    private static TaskList tasks = null;
 
     @Before
     public void setUp() throws Exception {

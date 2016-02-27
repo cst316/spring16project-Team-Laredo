@@ -8,31 +8,29 @@
  */
 package net.sf.memoranda.ui;
 
-import java.awt.Component;
-import java.awt.Font;
-import java.util.Date;
-import java.util.Vector;
-
-import javax.swing.JTable;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableCellRenderer;
-
 import net.sf.memoranda.Event;
 import net.sf.memoranda.EventsManager;
 import net.sf.memoranda.date.CalendarDate;
 import net.sf.memoranda.date.CurrentDate;
 import net.sf.memoranda.util.Local;
 
+import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellRenderer;
+import java.awt.*;
+import java.util.Date;
+import java.util.Vector;
+
 /**
  *
  */
 /*$Id: EventsTable.java,v 1.6 2004/10/11 08:48:20 alexeya Exp $*/
-public class EventsTable extends JTable {
+class EventsTable extends JTable {
 
     public static final int EVENT = 100;
-    public static final int EVENT_ID = 101;
+    private static final int EVENT_ID = 101;
 
-    Vector events = new Vector();
+    private Vector events = new Vector();
 
     /**
      * Constructor for EventsTable.
@@ -93,7 +91,7 @@ public class EventsTable extends JTable {
 
     class EventsTableModel extends AbstractTableModel {
 
-        String[] columnNames = {
+        final String[] columnNames = {
                 Local.getString("Time"),
                 Local.getString("Duration"),
                 Local.getString("Text")

@@ -11,10 +11,10 @@ import static org.junit.Assert.assertEquals;
 
 public class StatisticsTest {
 
-    public static Project project = null;
-    public static TaskList tasks = null;
-    public static DefectList defects = null;
-    public static Statistics statistics = null;
+    private static Project project = null;
+    private static TaskList tasks = null;
+    private static DefectList defects = null;
+    private static Statistics statistics = null;
 
     @Before
     public void setUp() throws Exception {

@@ -8,16 +8,16 @@
  */
 package net.sf.memoranda;
 
-import java.util.Collection;
-import java.util.Vector;
-import java.util.Calendar;
-
 import net.sf.memoranda.date.CalendarDate;
 import net.sf.memoranda.date.CurrentDate;
 import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Elements;
 import nu.xom.Node;
+
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Vector;
 
 /**
  *
@@ -69,43 +69,13 @@ public class TaskImpl implements Task, Comparable {
     }
 
     @Override
-    public int getLocAdded() {
-        return getAttributeValueInt(LOC_ADDED_ATTR);
-    }
-
-    @Override
-    public int getLocModified() {
-        return getAttributeValueInt(LOC_MODIFIED_ATTR);
-    }
-
-    @Override
-    public int getLocDeleted() {
-        return getAttributeValueInt(LOC_DELETED_ATTR);
-    }
-
-    @Override
-    public int getLocNewAndChanged() {
-        return getAttributeValueInt(LOC_NEW_AND_CHANGED_ATTR);
-    }
-
-    @Override
-    public int getLocReused() {
-        return getAttributeValueInt(LOC_REUSED_ATTR);
-    }
-
-    @Override
-    public int getLocNewReuse() {
-        return getAttributeValueInt(LOC_NEW_REUSE_ATTR);
-    }
-
-    @Override
-    public int getLocTotal() {
-        return getAttributeValueInt(LOC_TOTAL_ATTR);
-    }
-
-    @Override
     public void setLocBase(int loc) {
         setAttribute(LOC_BASE_ATTR, Integer.toString(loc));
+    }
+
+    @Override
+    public int getLocAdded() {
+        return getAttributeValueInt(LOC_ADDED_ATTR);
     }
 
     @Override
@@ -114,8 +84,18 @@ public class TaskImpl implements Task, Comparable {
     }
 
     @Override
+    public int getLocModified() {
+        return getAttributeValueInt(LOC_MODIFIED_ATTR);
+    }
+
+    @Override
     public void setLocModified(int loc) {
         setAttribute(LOC_MODIFIED_ATTR, Integer.toString(loc));
+    }
+
+    @Override
+    public int getLocDeleted() {
+        return getAttributeValueInt(LOC_DELETED_ATTR);
     }
 
     @Override
@@ -124,8 +104,18 @@ public class TaskImpl implements Task, Comparable {
     }
 
     @Override
+    public int getLocNewAndChanged() {
+        return getAttributeValueInt(LOC_NEW_AND_CHANGED_ATTR);
+    }
+
+    @Override
     public void setLocNewAndChanged(int loc) {
         setAttribute(LOC_NEW_AND_CHANGED_ATTR, Integer.toString(loc));
+    }
+
+    @Override
+    public int getLocReused() {
+        return getAttributeValueInt(LOC_REUSED_ATTR);
     }
 
     @Override
@@ -134,8 +124,18 @@ public class TaskImpl implements Task, Comparable {
     }
 
     @Override
+    public int getLocNewReuse() {
+        return getAttributeValueInt(LOC_NEW_REUSE_ATTR);
+    }
+
+    @Override
     public void setLocNewReuse(int loc) {
         setAttribute(LOC_NEW_REUSE_ATTR, Integer.toString(loc));
+    }
+
+    @Override
+    public int getLocTotal() {
+        return getAttributeValueInt(LOC_TOTAL_ATTR);
     }
 
     @Override
@@ -280,13 +280,13 @@ public class TaskImpl implements Task, Comparable {
         return _element.getFirstChildElement(TEXT_CHILD).getValue();
     }
 
-    public String toString() {
-        return getText();
-    }
-
     public void setText(String s) {
         _element.getFirstChildElement(TEXT_CHILD).removeChildren();
         _element.getFirstChildElement(TEXT_CHILD).appendChild(s);
+    }
+
+    public String toString() {
+        return getText();
     }
 
     /**
@@ -401,9 +401,9 @@ public class TaskImpl implements Task, Comparable {
         int endDateRaw = endDateCal.get(Calendar.YEAR) * 365 + endDateCal.get(Calendar.DAY_OF_YEAR);
         int startDateRaw = dateCal.get(Calendar.YEAR) * 365 + dateCal.get(Calendar.DAY_OF_YEAR);
         int numOfDays = endDateRaw - startDateRaw;
-        
+
         if (numOfDays < 0) return -1;
-        
+
         return (100 - getProgress()) / (numOfDays + 1) * (getPriority() + 1);
     }
 
@@ -429,7 +429,7 @@ public class TaskImpl implements Task, Comparable {
         return ((o instanceof Task) && (((Task) o).getID().equals(this.getID())));
     }
 
-    /** 
+    /**
      * @see net.sf.memoranda.Task#getSubTasks()
      */
     public Collection getSubTasks() {

@@ -7,27 +7,29 @@
  * Copyright (c) 2003 Memoranda Team. http://memoranda.sf.net
  */
 package net.sf.memoranda.util;
-import java.util.Vector;
 
 import nu.xom.Attribute;
 import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Elements;
+
+import java.util.Vector;
+
 /**
  *
  */
 /*$Id: MimeTypesList.java,v 1.3 2004/01/30 12:17:42 alexeya Exp $*/
 public class MimeTypesList {
     public static Document _doc = null;
-    static Element _root = null;
+    private static Element _root = null;
 
     static {
         CurrentStorage.get().openMimeTypesList();
         _root = _doc.getRootElement();
     }
 
-    public static Vector getAllMimeTypes() {
-        Vector v = new Vector();
+    public static Vector<MimeType> getAllMimeTypes() {
+        Vector<MimeType> v = new Vector<>();
         Elements els = _root.getChildElements("mime-type");
         for (int i = 0; i < els.size(); i++)
             v.add(new MimeType(els.get(i)));
@@ -38,15 +40,7 @@ public class MimeTypesList {
         return getMimeTypeByExt(getExtension(path));
     }
 
-    public static MimeType getMimeType(String mimeId) {
-        Elements els = _root.getChildElements("mime-type");
-        for (int i = 0; i < els.size(); i++)
-            if (els.get(i).getAttribute("id").getValue().equals(mimeId))
-                return new MimeType(els.get(i));
-        return new MimeType();
-    }
-
-    public static MimeType getMimeTypeByExt(String ext) {
+    private static MimeType getMimeTypeByExt(String ext) {
         Elements els = _root.getChildElements("mime-type");
         for (int i = 0; i < els.size(); i++) {
             Element el = els.get(i);
@@ -81,8 +75,8 @@ public class MimeTypesList {
     public static String getExtension(String s) {
         String ext = null;
         int i = s.lastIndexOf('.');
-        if (i > 0 &&  i < s.length() - 1) {
-            ext = s.substring(i+1).toLowerCase();
+        if (i > 0 && i < s.length() - 1) {
+            ext = s.substring(i + 1).toLowerCase();
         }
         return ext;
     }

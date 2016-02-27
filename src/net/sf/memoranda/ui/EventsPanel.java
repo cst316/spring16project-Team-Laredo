@@ -1,24 +1,5 @@
 package net.sf.memoranda.ui;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.JToolBar;
-
 import net.sf.memoranda.EventsManager;
 import net.sf.memoranda.EventsScheduler;
 import net.sf.memoranda.History;
@@ -29,22 +10,29 @@ import net.sf.memoranda.util.CurrentStorage;
 import net.sf.memoranda.util.Local;
 import net.sf.memoranda.util.Util;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 /*$Id: EventsPanel.java,v 1.25 2005/02/19 10:06:25 rawsushi Exp $*/
-public class EventsPanel extends JPanel {
-    BorderLayout borderLayout1 = new BorderLayout();
-    JButton historyBackB = new JButton();
-    JToolBar eventsToolBar = new JToolBar();
-    JButton historyForwardB = new JButton();
-    JButton newEventB = new JButton();
-    JButton editEventB = new JButton();
-    JButton removeEventB = new JButton();
-    JScrollPane scrollPane = new JScrollPane();
-    EventsTable eventsTable = new EventsTable();
-    JPopupMenu eventPPMenu = new JPopupMenu();
-    JMenuItem ppEditEvent = new JMenuItem();
-    JMenuItem ppRemoveEvent = new JMenuItem();
-    JMenuItem ppNewEvent = new JMenuItem();
-    DailyItemsPanel parentPanel = null;
+class EventsPanel extends JPanel {
+    private final BorderLayout borderLayout1 = new BorderLayout();
+    private final JButton historyBackB = new JButton();
+    private final JToolBar eventsToolBar = new JToolBar();
+    private final JButton historyForwardB = new JButton();
+    private final JButton newEventB = new JButton();
+    private final JButton editEventB = new JButton();
+    private final JButton removeEventB = new JButton();
+    private final JScrollPane scrollPane = new JScrollPane();
+    private final EventsTable eventsTable = new EventsTable();
+    private final JPopupMenu eventPPMenu = new JPopupMenu();
+    private final JMenuItem ppEditEvent = new JMenuItem();
+    private final JMenuItem ppRemoveEvent = new JMenuItem();
+    private final JMenuItem ppNewEvent = new JMenuItem();
+    private DailyItemsPanel parentPanel = null;
 
     public EventsPanel(DailyItemsPanel _parentPanel) {
         try {
@@ -55,7 +43,7 @@ public class EventsPanel extends JPanel {
         }
     }
 
-    void jbInit() throws Exception {
+    private void jbInit() {
         eventsToolBar.setFloatable(false);
 
         historyBackB.setAction(History.historyBackAction);
@@ -87,12 +75,11 @@ public class EventsPanel extends JPanel {
         newEventB.setRequestFocusEnabled(false);
         newEventB.setPreferredSize(new Dimension(24, 24));
         newEventB.setFocusable(false);
-        newEventB.addActionListener(this::newEventB_actionPerformed);
         newEventB.setBorderPainted(false);
+        newEventB.addActionListener(this::newEventB_actionPerformed);
 
         editEventB.setBorderPainted(false);
         editEventB.setFocusable(false);
-        editEventB.addActionListener(this::editEventB_actionPerformed);
         editEventB.setPreferredSize(new Dimension(24, 24));
         editEventB.setRequestFocusEnabled(false);
         editEventB.setToolTipText(Local.getString("Edit event"));
@@ -101,10 +88,10 @@ public class EventsPanel extends JPanel {
         editEventB.setEnabled(true);
         editEventB.setIcon(
                 new ImageIcon(net.sf.memoranda.ui.AppFrame.class.getResource("resources/icons/event_edit.png")));
+        editEventB.addActionListener(this::editEventB_actionPerformed);
 
         removeEventB.setBorderPainted(false);
         removeEventB.setFocusable(false);
-        removeEventB.addActionListener(this::removeEventB_actionPerformed);
         removeEventB.setPreferredSize(new Dimension(24, 24));
         removeEventB.setRequestFocusEnabled(false);
         removeEventB.setToolTipText(Local.getString("Remove event"));
@@ -112,29 +99,34 @@ public class EventsPanel extends JPanel {
         removeEventB.setMaximumSize(new Dimension(24, 24));
         removeEventB.setIcon(
                 new ImageIcon(net.sf.memoranda.ui.AppFrame.class.getResource("resources/icons/event_remove.png")));
+        removeEventB.addActionListener(this::removeEventB_actionPerformed);
 
         this.setLayout(borderLayout1);
         scrollPane.getViewport().setBackground(Color.white);
         eventsTable.setMaximumSize(new Dimension(32767, 32767));
         eventsTable.setRowHeight(24);
         eventPPMenu.setFont(new java.awt.Font("Dialog", Font.BOLD, 10));
+
         ppEditEvent.setFont(new java.awt.Font("Dialog", Font.BOLD, 11));
         ppEditEvent.setText(Local.getString("Edit event") + "...");
         ppEditEvent.addActionListener(this::ppEditEvent_actionPerformed);
         ppEditEvent.setEnabled(false);
         ppEditEvent.setIcon(
                 new ImageIcon(net.sf.memoranda.ui.AppFrame.class.getResource("resources/icons/event_edit.png")));
+
         ppRemoveEvent.setFont(new java.awt.Font("Dialog", Font.BOLD, 11));
         ppRemoveEvent.setText(Local.getString("Remove event"));
         ppRemoveEvent.addActionListener(this::ppRemoveEvent_actionPerformed);
         ppRemoveEvent.setIcon(
                 new ImageIcon(net.sf.memoranda.ui.AppFrame.class.getResource("resources/icons/event_remove.png")));
         ppRemoveEvent.setEnabled(false);
+
         ppNewEvent.setFont(new java.awt.Font("Dialog", Font.BOLD, 11));
         ppNewEvent.setText(Local.getString("New event") + "...");
         ppNewEvent.addActionListener(this::ppNewEvent_actionPerformed);
         ppNewEvent.setIcon(
                 new ImageIcon(net.sf.memoranda.ui.AppFrame.class.getResource("resources/icons/event_new.png")));
+
         scrollPane.getViewport().add(eventsTable, null);
         this.add(scrollPane, BorderLayout.CENTER);
         eventsToolBar.add(historyBackB, null);
@@ -193,7 +185,7 @@ public class EventsPanel extends JPanel {
         });
     }
 
-    void editEventB_actionPerformed(ActionEvent e) {
+    private void editEventB_actionPerformed(ActionEvent e) {
         EventDialog dlg = new EventDialog(App.getFrame(), Local.getString("Event"));
         net.sf.memoranda.Event ev =
                 (net.sf.memoranda.Event) eventsTable.getModel().getValueAt(
@@ -208,11 +200,11 @@ public class EventsPanel extends JPanel {
             dlg.startDate.getModel().setValue(ev.getStartDate().getDate());
             if (rep == EventsManager.REPEAT_DAILY) {
                 dlg.dailyRepeatRB.setSelected(true);
-                dlg.dailyRepeatRB_actionPerformed(null);
+                dlg.dailyRepeatRB_actionPerformed();
                 dlg.daySpin.setValue(ev.getPeriod());
             } else if (rep == EventsManager.REPEAT_WEEKLY) {
                 dlg.weeklyRepeatRB.setSelected(true);
-                dlg.weeklyRepeatRB_actionPerformed(null);
+                dlg.weeklyRepeatRB_actionPerformed();
                 int d = ev.getPeriod() - 1;
                 if (Configuration.get("FIRST_DAY_OF_WEEK").equals("mon")) {
                     d--;
@@ -221,11 +213,11 @@ public class EventsPanel extends JPanel {
                 dlg.weekdaysCB.setSelectedIndex(d);
             } else if (rep == EventsManager.REPEAT_MONTHLY) {
                 dlg.monthlyRepeatRB.setSelected(true);
-                dlg.monthlyRepeatRB_actionPerformed(null);
+                dlg.monthlyRepeatRB_actionPerformed();
                 dlg.dayOfMonthSpin.setValue(ev.getPeriod());
             } else if (rep == EventsManager.REPEAT_YEARLY) {
                 dlg.yearlyRepeatRB.setSelected(true);
-                dlg.yearlyRepeatRB_actionPerformed(null);
+                dlg.yearlyRepeatRB_actionPerformed();
                 dlg.dayOfMonthSpin.setValue(ev.getPeriod());
             }
             if (ev.getEndDate() != null) {
@@ -270,16 +262,16 @@ public class EventsPanel extends JPanel {
         saveEvents();
     }
 
-    void newEventB_actionPerformed(ActionEvent e) {
+    private void newEventB_actionPerformed(ActionEvent e) {
         Calendar cdate = CurrentDate.get().getCalendar();
         // round down to hour
         cdate.set(Calendar.MINUTE, 0);
         Util.debug("Default time is " + cdate);
 
-        newEventB_actionPerformed(e, null, cdate.getTime(), cdate.getTime());
+        newEventB_actionPerformed(null, cdate.getTime(), cdate.getTime());
     }
 
-    void newEventB_actionPerformed(ActionEvent e, String tasktext, Date startDate, Date endDate) {
+    void newEventB_actionPerformed(String tasktext, Date startDate, Date endDate) {
         EventDialog dlg = new EventDialog(App.getFrame(), Local.getString("New event"));
         Dimension frmSize = App.getFrame().getSize();
         Point loc = App.getFrame().getLocation();
@@ -358,7 +350,7 @@ public class EventsPanel extends JPanel {
         EventsManager.createRepeatableEvent(rtype, sd, ed, period, hh, mm, text, dlg.workingDaysOnlyCB.isSelected());
     }
 
-    void removeEventB_actionPerformed(ActionEvent e) {
+    private void removeEventB_actionPerformed(ActionEvent e) {
         String msg;
         net.sf.memoranda.Event ev;
 
@@ -387,13 +379,19 @@ public class EventsPanel extends JPanel {
             EventsManager.removeEvent(ev);
         }
         eventsTable.getSelectionModel().clearSelection();
-/*        CurrentStorage.get().storeEventsManager();
-        eventsTable.refresh();
-        EventsScheduler.init();
-        parentPanel.calendar.jnCalendar.updateUI();
-        parentPanel.updateIndicators();
-*/
         saveEvents();
+    }
+
+    private void ppEditEvent_actionPerformed(ActionEvent e) {
+        editEventB_actionPerformed(e);
+    }
+
+    private void ppRemoveEvent_actionPerformed(ActionEvent e) {
+        removeEventB_actionPerformed(e);
+    }
+
+    private void ppNewEvent_actionPerformed(ActionEvent e) {
+        newEventB_actionPerformed(e);
     }
 
     class PopupListener extends MouseAdapter {
@@ -417,17 +415,5 @@ public class EventsPanel extends JPanel {
             }
         }
 
-    }
-
-    void ppEditEvent_actionPerformed(ActionEvent e) {
-        editEventB_actionPerformed(e);
-    }
-
-    void ppRemoveEvent_actionPerformed(ActionEvent e) {
-        removeEventB_actionPerformed(e);
-    }
-
-    void ppNewEvent_actionPerformed(ActionEvent e) {
-        newEventB_actionPerformed(e);
     }
 }

@@ -5,9 +5,10 @@
  *
  * @author Alex V. Alishevskikh, alex@openmechanics.net
  * Copyright (c) 2003 Memoranda Team. http://memoranda.sf.net
- *-----------------------------------------------------
+ * -----------------------------------------------------
  */
 package net.sf.memoranda;
+
 import net.sf.memoranda.date.CalendarDate;
 
 import java.util.Date;
@@ -21,9 +22,11 @@ public interface Event extends Comparable<Event> {
     String getId();
 
     int getStartHour();
+
     int getStartMinute();
 
     int getEndHour();
+
     int getEndMinute();
 
     /**
@@ -47,13 +50,17 @@ public interface Event extends Comparable<Event> {
     int getRepeat();
 
     CalendarDate getStartDate();
+
     CalendarDate getEndDate();
+
     int getPeriod();
+
     boolean isRepeatable();
 
     Date getTime();
+
     String getTimeString();
 
-	boolean getWorkingDays();
+    boolean getWorkingDays();
 
 }

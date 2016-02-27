@@ -21,15 +21,9 @@ import java.util.Date;
 /*$Id: CalendarDate.java,v 1.3 2004/01/30 12:17:41 alexeya Exp $*/
 public class CalendarDate {
 
-    private int _year;
-    private int _month;
-    private int _day;
-
-    public static Calendar dateToCalendar(Date date) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        return cal;
-    }
+    private final int _year;
+    private final int _month;
+    private final int _day;
 
     public CalendarDate() {
         this(Calendar.getInstance());
@@ -40,12 +34,13 @@ public class CalendarDate {
         _month = month;
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, _year);
-        cal.set(Calendar.MONTH, _month);cal.getTime();
+        cal.set(Calendar.MONTH, _month);
+        cal.getTime();
         int dmax = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
         if (day <= dmax)
-          _day = day;
+            _day = day;
         else
-          _day = dmax;
+            _day = dmax;
 
     }
 
@@ -67,6 +62,12 @@ public class CalendarDate {
 
     }
 
+    private static Calendar dateToCalendar(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return cal;
+    }
+
     public static CalendarDate today() {
         return new CalendarDate();
     }
@@ -77,7 +78,7 @@ public class CalendarDate {
         return new CalendarDate(cal);
     }
 
-    public static Calendar toCalendar(int day, int month, int year) {
+    private static Calendar toCalendar(int day, int month, int year) {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, year);
         cal.set(Calendar.MONTH, month);
@@ -86,7 +87,7 @@ public class CalendarDate {
         return cal;
     }
 
-    public static Date toDate(int day, int month, int year) {
+    private static Date toDate(int day, int month, int year) {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, year);
         cal.set(Calendar.MONTH, month);
@@ -118,12 +119,10 @@ public class CalendarDate {
         if (object instanceof CalendarDate) {
             CalendarDate d2 = (CalendarDate) object;
             return ((d2.getDay() == getDay()) && (d2.getMonth() == getMonth()) && (d2.getYear() == getYear()));
-        }
-        else if (object instanceof Calendar) {
+        } else if (object instanceof Calendar) {
             Calendar cal = (Calendar) object;
             return this.equals(new CalendarDate(cal));
-        }
-        else if (object instanceof Date) {
+        } else if (object instanceof Date) {
             Date d = (Date) object;
             return this.equals(new CalendarDate(d));
         }
@@ -150,20 +149,20 @@ public class CalendarDate {
 
     public String toString() {
         return Util.getDateStamp(this);
-    }  
-    
+    }
+
     public String getFullDateString() {
         return Local.getDateString(this, DateFormat.FULL);
     }
-    
+
     public String getMediumDateString() {
         return Local.getDateString(this, DateFormat.MEDIUM);
     }
-    
+
     public String getLongDateString() {
         return Local.getDateString(this, DateFormat.LONG);
     }
-    
+
     public String getShortDateString() {
         return Local.getDateString(this, DateFormat.SHORT);
     }

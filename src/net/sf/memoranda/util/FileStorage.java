@@ -8,36 +8,16 @@
  */
 package net.sf.memoranda.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.URL;
-
-import javax.swing.text.html.HTMLDocument;
-import javax.swing.text.html.HTMLEditorKit;
-
-import net.sf.memoranda.DefectList;
-import net.sf.memoranda.DefectListImpl;
-import net.sf.memoranda.EventsManager;
-import net.sf.memoranda.Note;
-import net.sf.memoranda.NoteList;
-import net.sf.memoranda.NoteListImpl;
-import net.sf.memoranda.Project;
-import net.sf.memoranda.ProjectManager;
-import net.sf.memoranda.ResourcesList;
-import net.sf.memoranda.ResourcesListImpl;
-import net.sf.memoranda.TaskList;
-import net.sf.memoranda.TaskListImpl;
-import net.sf.memoranda.date.CalendarDate;
+import net.sf.memoranda.*;
 import net.sf.memoranda.ui.ExceptionDialog;
 import net.sf.memoranda.ui.htmleditor.AltHTMLWriter;
 import nu.xom.Builder;
-import nu.xom.DocType;
 import nu.xom.Document;
+
+import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLEditorKit;
+import java.io.*;
+import java.net.URL;
 
 
 /**
@@ -47,7 +27,7 @@ import nu.xom.Document;
 public class FileStorage implements Storage {
 
     public static String JN_DOCPATH = Util.getEnvDir();
-    private HTMLEditorKit editorKit = new HTMLEditorKit();
+    private final HTMLEditorKit editorKit = new HTMLEditorKit();
 
     public FileStorage() {
         /*The 'MEMORANDA_HOME' key is an undocumented feature for 
@@ -81,7 +61,7 @@ public class FileStorage implements Storage {
         }
     }
 
-    public static Document openDocument(InputStream in) throws Exception {
+    private static Document openDocument(InputStream in) throws Exception {
         Builder builder = new Builder();
         return builder.build(new InputStreamReader(in, "UTF-8"));
     }
@@ -98,12 +78,11 @@ public class FileStorage implements Storage {
         return null;
     }
 
-    public static boolean documentExists(String filePath) {
+    private static boolean documentExists(String filePath) {
         return new File(filePath).exists();
     }
 
     /**
-     * @see net.sf.memoranda.util.Storage#storeNote(net.sf.memoranda.Note)
      */
     public void storeNote(Note note, javax.swing.text.Document doc) {
         String filename =
@@ -111,10 +90,8 @@ public class FileStorage implements Storage {
         doc.putProperty(
                 javax.swing.text.Document.TitleProperty,
                 note.getTitle());
-        CalendarDate d = note.getDate();
 
         filename += note.getId();
-        /*DEBUG*/
         System.out.println("[DEBUG] Save note: " + filename);
 
         try {
@@ -158,7 +135,7 @@ public class FileStorage implements Storage {
         return "file:" + JN_DOCPATH + note.getProject().getID() + "/" + note.getId();
     }
 
-    public String getNotePath(Note note) {
+    private String getNotePath(Note note) {
         String filename = JN_DOCPATH + note.getProject().getID() + File.separator;
         filename += note.getId();
         return filename;
@@ -187,7 +164,6 @@ public class FileStorage implements Storage {
     }
 
     /**
-     * @see net.sf.memoranda.util.Storage#storeProjectManager(nu.xom.Document)
      */
     public void storeProjectManager() {
         /*DEBUG*/
@@ -196,15 +172,13 @@ public class FileStorage implements Storage {
         saveDocument(ProjectManager._doc, JN_DOCPATH + ".projects");
     }
 
-    /**
-     * @see net.sf.memoranda.util.Storage#removeProject(net.sf.memoranda.Project)
-     */
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public void removeProjectStorage(Project prj) {
         String id = prj.getID();
         File f = new File(JN_DOCPATH + id);
         File[] files = f.listFiles();
-        for (int i = 0; i < files.length; i++)
-            files[i].delete();
+        if (files == null) return;
+        for (File file : files) file.delete();
         f.delete();
     }
 
@@ -290,7 +264,6 @@ public class FileStorage implements Storage {
     }
 
     /**
-     * @see net.sf.memoranda.util.Storage#openEventsList()
      */
     public void openEventsManager() {
         if (!new File(JN_DOCPATH + ".events").exists()) {
@@ -304,7 +277,6 @@ public class FileStorage implements Storage {
     }
 
     /**
-     * @see net.sf.memoranda.util.Storage#storeEventsList()
      */
     public void storeEventsManager() {
         /*DEBUG*/
@@ -420,9 +392,8 @@ public class FileStorage implements Storage {
         if (documentExists(files)) {
             Document defectDocument = openDocument(files);
             defectList = new DefectListImpl(defectDocument, project);
-        }
-        else{
-        	defectList = new DefectListImpl(project);
+        } else {
+            defectList = new DefectListImpl(project);
         }
         return defectList;
     }

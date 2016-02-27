@@ -34,14 +34,24 @@ public class EventImpl implements Event {
      * @see net.sf.memoranda.Event#getStartHour()
      */
     public int getStartHour() {
-        return new Integer(_elem.getAttribute("start_hour").getValue());
+        Attribute start_hour_attr = _elem.getAttribute("start_hour");
+        if (start_hour_attr != null) {
+            return new Integer(start_hour_attr.getValue());
+        } else {
+            return 0;
+        }
     }
 
     /**
      * @see net.sf.memoranda.Event#getStartMinute()
      */
     public int getStartMinute() {
-        return new Integer(_elem.getAttribute("start_min").getValue());
+        Attribute start_min_attr = _elem.getAttribute("start_min");
+        if (start_min_attr != null) {
+            return new Integer(start_min_attr.getValue());
+        } else {
+            return 0;
+        }
     }
 
     public int getEndHour() {
@@ -89,6 +99,7 @@ public class EventImpl implements Event {
 
     /**
      * Calculate the number of minutes in an EventImpl's duration.
+     *
      * @return Number of minutes in the duration.
      */
     public int getDurationMinutes() {
