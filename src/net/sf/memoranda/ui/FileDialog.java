@@ -5,7 +5,6 @@ import javax.swing.filechooser.FileSystemView;
 
 import net.sf.memoranda.util.Context;
 import net.sf.memoranda.util.Local;
-import net.sf.memoranda.util.ProjectPackager;
 import net.sf.memoranda.util.SingleRootFileSystemView;
 
 import java.awt.*;

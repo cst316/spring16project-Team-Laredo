@@ -7,9 +7,13 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
+import javax.swing.Action;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
@@ -32,6 +36,7 @@ import net.sf.memoranda.Project;
 import net.sf.memoranda.ProjectListener;
 import net.sf.memoranda.ProjectManager;
 import net.sf.memoranda.ResourcesList;
+import net.sf.memoranda.SummaryExport;
 import net.sf.memoranda.TaskList;
 import net.sf.memoranda.date.CalendarDate;
 import net.sf.memoranda.date.CurrentDate;
@@ -46,6 +51,7 @@ import nu.xom.Element;
 public class AgendaPanel extends JPanel {
     BorderLayout borderLayout1 = new BorderLayout();
     JButton historyBackB = new JButton();
+    JButton newEventB = new JButton();
     JToolBar toolBar = new JToolBar();
     JButton historyForwardB = new JButton();
     JEditorPane viewer = new JEditorPane("text/html", "");
@@ -240,6 +246,17 @@ public class AgendaPanel extends JPanel {
         historyForwardB.setMinimumSize(new Dimension(24, 24));
         historyForwardB.setMaximumSize(new Dimension(24, 24));
         historyForwardB.setText("");
+        
+        newEventB.addActionListener(this::newEventB_actionPerformed);
+        newEventB.setBorderPainted(false);
+        newEventB.setFocusable(false);
+        newEventB.setPreferredSize(new Dimension(24, 24));
+        newEventB.setRequestFocusEnabled(false);
+        newEventB.setToolTipText(Local.getString("Summary Export"));
+        newEventB.setMaximumSize(new Dimension(24, 24));
+        newEventB.setMinimumSize(new Dimension(24, 24));
+        newEventB.setIcon(
+                new ImageIcon(net.sf.memoranda.ui.AppFrame.class.getResource("resources/icons/export.png")));        
 
         this.setLayout(borderLayout1);
         scrollPane.getViewport().setBackground(Color.white);
@@ -248,6 +265,7 @@ public class AgendaPanel extends JPanel {
         this.add(scrollPane, BorderLayout.CENTER);
         toolBar.add(historyBackB, null);
         toolBar.add(historyForwardB, null);
+        toolBar.add(newEventB, null);
         toolBar.addSeparator(new Dimension(8, 24));
    
         this.add(toolBar, BorderLayout.NORTH);
@@ -314,49 +332,8 @@ public class AgendaPanel extends JPanel {
     public void setActive(boolean isa) {
         isActive = isa;
     }
+    void newEventB_actionPerformed(ActionEvent e) {
+        SummaryExport.toText(CurrentProject.get());
+    }
 
-    //	void toggleShowActiveOnly_actionPerformed(ActionEvent e) {
-    //		Context.put(
-    //			"SHOW_ACTIVE_TASKS_ONLY",
-    //			new Boolean(ppShowActiveOnlyChB.isSelected()));
-    //		/*if (taskTable.isShowActiveOnly()) {
-    //			// is true, toggle to false
-    //			taskTable.setShowActiveOnly(false);
-    //			//showActiveOnly.setToolTipText(Local.getString("Show Active Only"));
-    //		}
-    //		else {
-    //			// is false, toggle to true
-    //			taskTable.setShowActiveOnly(true);
-    //			showActiveOnly.setToolTipText(Local.getString("Show All"));
-    //		}*/
-    //		refresh(CurrentDate.get());
-    ////		parentPanel.updateIndicators();
-    //		//taskTable.updateUI();
-    //	}
-
-    //    class PopupListener extends MouseAdapter {
-    //
-    //        public void mouseClicked(MouseEvent e) {
-    //        	System.out.println("mouse clicked!");
-    ////			if ((e.getClickCount() == 2) && (taskTable.getSelectedRow() > -1))
-    ////				editTaskB_actionPerformed(null);
-    //		}
-    //
-    //		public void mousePressed(MouseEvent e) {
-    //        	System.out.println("mouse pressed!");
-    //			maybeShowPopup(e);
-    //		}
-    //
-    //		public void mouseReleased(MouseEvent e) {
-    //        	System.out.println("mouse released!");
-    //			maybeShowPopup(e);
-    //		}
-    //
-    //		private void maybeShowPopup(MouseEvent e) {
-    //			if (e.isPopupTrigger()) {
-    //				agendaPPMenu.show(e.getComponent(), e.getX(), e.getY());
-    //			}
-    //		}
-    //
-    //    }
 }
