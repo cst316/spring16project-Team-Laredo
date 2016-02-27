@@ -225,6 +225,58 @@ public class TaskTable extends JTable {
     }
 
     /**
+     * Stores expanded treepaths so that they
+     * can be restored after treeStructureChanged-method call
+     * which collapses everything
+     */
+    static class ExpansionHandler implements TreeExpansionListener { // {{{
+
+        private final java.util.Set<TreePath> expanded = new java.util.HashSet<>();
+
+        public void treeExpanded(TreeExpansionEvent e) {
+            expanded.add(e.getPath());
+        }
+
+        public void treeCollapsed(TreeExpansionEvent e) {
+            TreePath p = e.getPath();
+            int index = p.getPathCount() - 1;
+            Object collapsed = p.getLastPathComponent();
+
+            Object[] components = expanded.toArray();
+            for (Object component : components) {
+                TreePath epath = (TreePath) component;
+                if ((epath.getPathCount() > index) && (epath.getPathComponent(index).equals(collapsed))) {
+                    expanded.remove(epath);
+                }
+            }
+        }
+
+        /**
+         * Expands stored treepaths in JTree
+         * <p>
+         * If model has been changed (eg. project change) we
+         * still try to expand paths whick do not exist.
+         * We just assume that this is not causing problems,
+         * and as a side effect it preserved tree expansion status
+         * even after project has been changed to some other project
+         * and then back.
+         * </p>
+         * <p>
+         * It is possible that there will be memory leak
+         * if expanded paths have been removed from model, but
+         * effect of this is quite insignificant.
+         * </p>
+         */
+        public void expand(JTree tree) {
+            for (TreePath anExpanded : expanded) {
+                tree.expandPath(anExpanded);
+            }
+            System.out.println(expanded.size());
+        }
+
+    }
+
+    /**
      * A TreeCellRenderer that displays a JTree.
      */
     public class TreeTableCellRenderer extends JTree implements // {{{
@@ -450,59 +502,6 @@ public class TaskTable extends JTable {
                 updateSelectedPathsFromSelectedRows();
             }
         }
-    } // }}}
-
-
-    /**
-     * Stores expanded treepaths so that they
-     * can be restored after treeStructureChanged-method call
-     * which collapses everything
-     */
-    class ExpansionHandler implements TreeExpansionListener { // {{{
-
-        private final java.util.Set expanded = new java.util.HashSet();
-
-        public void treeExpanded(TreeExpansionEvent e) {
-            expanded.add(e.getPath());
-        }
-
-        public void treeCollapsed(TreeExpansionEvent e) {
-            TreePath p = e.getPath();
-            int index = p.getPathCount() - 1;
-            Object collapsed = p.getLastPathComponent();
-
-            Object[] components = expanded.toArray();
-            for (Object component : components) {
-                TreePath epath = (TreePath) component;
-                if ((epath.getPathCount() > index) && (epath.getPathComponent(index).equals(collapsed))) {
-                    expanded.remove(epath);
-                }
-            }
-        }
-
-        /**
-         * Expands stored treepaths in JTree
-         * <p>
-         * If model has been changed (eg. project change) we
-         * still try to expand paths whick do not exist.
-         * We just assume that this is not causing problems,
-         * and as a side effect it preserved tree expansion status
-         * even after project has been changed to some other project
-         * and then back.
-         * </p>
-         * <p>
-         * It is possible that there will be memory leak
-         * if expanded paths have been removed from model, but
-         * effect of this is quite insignificant.
-         * </p>
-         */
-        public void expand(JTree tree) {
-            for (Object anExpanded : expanded) {
-                tree.expandPath((TreePath) anExpanded);
-            }
-            System.out.println(expanded.size());
-        }
-
     } // }}}
 
 }

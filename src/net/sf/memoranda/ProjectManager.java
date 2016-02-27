@@ -25,14 +25,14 @@ import java.util.Vector;
 /*$Id: ProjectManager.java,v 1.9 2005/12/01 08:12:26 alexeya Exp $*/
 public class ProjectManager {
 
-    public static Document _doc = null;
+    private static Document _doc = null;
     private static Element _root = null;
 
     static {
         init();
     }
 
-    private static void init() {
+    private synchronized static void init() {
         CurrentStorage.get().openProjectManager();
         if (_doc == null) {
             _root = new Element("projects-list");
@@ -40,6 +40,14 @@ public class ProjectManager {
             createProject("__default", Local.getString("Default project"), CalendarDate.today(), null);
         } else
             _root = _doc.getRootElement();
+    }
+
+    public static synchronized Document getDoc() {
+        return _doc;
+    }
+
+    public static synchronized void setDoc(Document doc) {
+        _doc = doc;
     }
 
     public static Project getProject(String id) {

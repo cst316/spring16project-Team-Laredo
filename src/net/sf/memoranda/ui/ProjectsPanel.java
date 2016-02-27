@@ -37,7 +37,7 @@ public class ProjectsPanel extends JPanel implements ExpandablePanel {
     private final JPanel buttonsPanel = new JPanel();
     private final JButton toggleButton = new JButton();
     private final FlowLayout flowLayout1 = new FlowLayout();
-    private final Vector expListeners = new Vector();
+    private final Vector<ActionListener> expListeners = new Vector<ActionListener>();
     private final ImageIcon expIcon =
             new ImageIcon(
                     net.sf.memoranda.ui.AppFrame.class.getResource(
@@ -228,8 +228,8 @@ public class ProjectsPanel extends JPanel implements ExpandablePanel {
     }
 
     private void toggleButton_actionPerformed() {
-        for (Object expListener : expListeners)
-            ((ActionListener) expListener).actionPerformed(
+        for (ActionListener expListener : expListeners)
+            (expListener).actionPerformed(
                     new ActionEvent(this, 0, "Panel expanded (collapsed)"));
         if (expanded) {
             expanded = false;
@@ -240,7 +240,7 @@ public class ProjectsPanel extends JPanel implements ExpandablePanel {
         }
     }
 
-    public void AddExpandListener(ActionListener al) {
+    public void addExpandListener(ActionListener al) {
         expListeners.add(al);
     }
 
@@ -267,7 +267,7 @@ public class ProjectsPanel extends JPanel implements ExpandablePanel {
     private void ppDeleteProject_actionPerformed() {
         String msg;
         Project prj;
-        Vector toremove = new Vector();
+        Vector<String> toremove = new Vector<String>();
         if (prjTablePanel.projectsTable.getSelectedRows().length > 1)
             msg =
                     Local.getString("Delete")
@@ -308,8 +308,8 @@ public class ProjectsPanel extends JPanel implements ExpandablePanel {
                                     ProjectsTablePanel.PROJECT);
             toremove.add(prj.getID());
         }
-        for (Object aToremove : toremove) {
-            ProjectManager.removeProject((String) aToremove);
+        for (String aToremove : toremove) {
+            ProjectManager.removeProject(aToremove);
         }
         CurrentStorage.get().storeProjectManager();
         prjTablePanel.projectsTable.clearSelection();

@@ -24,13 +24,12 @@ public class Configuration {
     private static LoadableProperties config = new LoadableProperties();
 
     static {
-        try {
-            config.load(new FileInputStream(configPath));
+        try (FileInputStream fis = new FileInputStream(configPath)) {
+            config.load(fis);
             System.out.println("Loaded from " + configPath);
         } catch (Exception e) {
             File f = new File(configPath);
             new File(f.getParent()).mkdirs();
-      /*DEBUG*/
             System.out.println("New configuration created: " + configPath);
             try {
                 config.load(Configuration.class.getResourceAsStream("resources/memoranda.default.properties"));
@@ -64,11 +63,11 @@ public class Configuration {
     }
 
     public static Object get(String key) {
-        if ((config.get(key)) == null) {
-        /*DEBUG*///System.out.println("Configuration: Key '"+key+"' not found.");
+        Object val = config.get(key);
+        if (val == null) {
             return "";
         }
-        return config.get(key);
+        return val;
     }
 
     @SuppressWarnings("unchecked")

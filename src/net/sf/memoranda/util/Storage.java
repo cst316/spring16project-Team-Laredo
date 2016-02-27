@@ -42,7 +42,7 @@ public interface Storage {
 
     javax.swing.text.Document openNote(Note note);
 
-    void removeNote(Note note);
+    boolean removeNote(Note note);
 
     String getNoteURL(Note note);
 
@@ -58,9 +58,9 @@ public interface Storage {
 
     void storeMimeTypesList();
 
-    void createProjectStorage(Project prj);
+    boolean createProjectStorage(Project prj);
 
-    void removeProjectStorage(Project prj);
+    boolean removeProjectStorage(Project prj);
 
     ResourcesList openResourcesList(Project prj);
 

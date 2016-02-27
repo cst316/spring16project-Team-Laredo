@@ -39,11 +39,6 @@ public class EditorPanel extends JPanel {
     private final JToolBar titleBar = new JToolBar();
     private final JLabel titleLabel = new JLabel();
     private final JButton newB = new JButton();
-    /*
-     * public Action printAction = new AbstractAction( "Print", new
-	 * ImageIcon(net.sf.memoranda.ui.AppFrame.class.getResource("resources/icons/print.png"))) {
-	 * public void actionPerformed(ActionEvent e) { doPrint(); } };
-	 */
     private final JButton previewB = new JButton();
     public HTMLEditor editor = null;
     public final Action insertTimeAction = new AbstractAction(Local
@@ -245,7 +240,7 @@ public class EditorPanel extends JPanel {
         previewB.setText("");
 
 		/*
-		 * printB.setAction(printAction); printB.setMaximumSize(new
+         * printB.setAction(printAction); printB.setMaximumSize(new
 		 * Dimension(24, 24)); printB.setMinimumSize(new Dimension(24, 24));
 		 * printB.setPreferredSize(new Dimension(24, 24));
 		 * printB.setRequestFocusEnabled(false);
@@ -307,19 +302,20 @@ public class EditorPanel extends JPanel {
     }
 
     public void initCSS() {
-        BufferedReader br = new BufferedReader(new InputStreamReader(
+        StringBuilder cssBuild = new StringBuilder();
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(
                 net.sf.memoranda.ui.EditorPanel.class
-                        .getResourceAsStream("resources/css/default.css")));
-        String css = "";
-        try {
+                        .getResourceAsStream("resources/css/default.css")))) {
             String s = br.readLine();
             while (s != null) {
-                css = css + s + "\n";
+                cssBuild.append(s);
+                cssBuild.append('\n');
                 s = br.readLine();
             }
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+        String css = cssBuild.toString();
         String NORMAL_FONT = Configuration.get("NORMAL_FONT").toString();
         String HEADER_FONT = Configuration.get("HEADER_FONT").toString();
         String MONO_FONT = Configuration.get("MONO_FONT").toString();
@@ -431,11 +427,6 @@ public class EditorPanel extends JPanel {
             template = dlg.templF.getText();
             Context.put("EXPORT_TEMPLATE", template);
         }
-        /*
-		 * if (chooser.getFileFilter().getDescription().equals("Rich Text
-		 * Format")) new RTFFileExport(chooser.getSelectedFile(),
-		 * editor.document); else
-		 */
         int ei = dlg.encCB.getSelectedIndex();
         enc = null;
         if (ei == 1)

@@ -489,7 +489,7 @@ public class AppFrame extends JFrame {
         setEnabledEditorMenus(false);
 
 
-        projectsPanel.AddExpandListener(e -> {
+        projectsPanel.addExpandListener(e -> {
             if (prPanelExpanded) {
                 prPanelExpanded = false;
                 splitPane.setDividerLocation(28);

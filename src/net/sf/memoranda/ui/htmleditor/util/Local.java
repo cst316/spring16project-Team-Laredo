@@ -15,17 +15,23 @@ import java.util.Hashtable;
  */
 public class Local {
 
-    private static Hashtable messages = null;
+    private static Hashtable<String, String> messages = null;
 
-    public static void setMessages(Hashtable msgs) {
-        messages = msgs;
+    static {
+        messages = new Hashtable<>();
+    }
+
+    public static void setMessages(Hashtable<String, String> msgs) {
+        if (msgs != null) {
+            messages.putAll(msgs);
+        }
     }
 
     public static String getString(String key) {
         if (messages == null) {
             return key;
         }
-        String msg = (String) messages.get(key.trim().toUpperCase());
+        String msg = messages.get(key.trim().toUpperCase());
         if ((msg != null) && (msg.length() > 0)) {
             return msg;
         } else {

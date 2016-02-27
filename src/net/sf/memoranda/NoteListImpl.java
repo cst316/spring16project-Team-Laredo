@@ -190,54 +190,7 @@ public class NoteListImpl implements NoteList {
         return _doc;
     }
 
-    private class Year {
-        Element yearElement = null;
-
-        public Year(Element el) {
-            yearElement = el;
-        }
-
-        public int getValue() {
-            return new Integer(yearElement.getAttribute("year").getValue());
-        }
-
-        public Month getMonth(int m) {
-            Elements ms = yearElement.getChildElements("month");
-            String mm = Integer.toString(m);
-            for (int i = 0; i < ms.size(); i++)
-                if (ms.get(i).getAttribute("month").getValue().equals(mm))
-                    return new Month(ms.get(i));
-            //return createMonth(m);
-            return null;
-        }
-
-        private Month createMonth(int m) {
-            Element el = new Element("month");
-            el.addAttribute(new Attribute("month", Integer.toString(m)));
-            yearElement.appendChild(el);
-            return new Month(el);
-        }
-
-        public Vector<Month> getMonths() {
-            Vector<Month> v = new Vector<>();
-            Elements ms = yearElement.getChildElements("month");
-            for (int i = 0; i < ms.size(); i++)
-                v.add(new Month(ms.get(i)));
-            return v;
-        }
-
-        public Element getElement() {
-            return yearElement;
-        }
-
-    }
-
-	
-	/*
-     * private class Day
-	 */
-
-    private class Month {
+    private static class Month {
         Element mElement = null;
 
         public Month(Element el) {
@@ -245,7 +198,7 @@ public class NoteListImpl implements NoteList {
         }
 
         public int getValue() {
-            return new Integer(mElement.getAttribute("month").getValue());
+            return Integer.parseInt(mElement.getAttribute("month").getValue());
         }
 
         public Day getDay(int d) {
@@ -285,10 +238,10 @@ public class NoteListImpl implements NoteList {
 
 	
 	/*
-	 * private class Day
+     * private class Day
 	 */
 
-    private class Day {
+    private static class Day {
         Element dEl = null;
 
         public Day(Element el) {
@@ -309,7 +262,7 @@ public class NoteListImpl implements NoteList {
         }
 
         public int getValue() {
-            return new Integer(dEl.getAttribute("day").getValue());
+            return Integer.parseInt(dEl.getAttribute("day").getValue());
         }
 
         public NoteElement createNote() {
@@ -333,7 +286,12 @@ public class NoteListImpl implements NoteList {
         }
     }
 
-    private class NoteElement {
+	
+	/*
+     * private class Day
+	 */
+
+    private static class NoteElement {
         final Element nEl;
 
         public NoteElement(Element el) {
@@ -343,6 +301,47 @@ public class NoteListImpl implements NoteList {
         public Element getElement() {
             return nEl;
         }
+    }
+
+    private class Year {
+        Element yearElement = null;
+
+        public Year(Element el) {
+            yearElement = el;
+        }
+
+        public int getValue() {
+            return Integer.parseInt(yearElement.getAttribute("year").getValue());
+        }
+
+        public Month getMonth(int m) {
+            Elements ms = yearElement.getChildElements("month");
+            String mm = Integer.toString(m);
+            for (int i = 0; i < ms.size(); i++)
+                if (ms.get(i).getAttribute("month").getValue().equals(mm))
+                    return new Month(ms.get(i));
+            return null;
+        }
+
+        private Month createMonth(int m) {
+            Element el = new Element("month");
+            el.addAttribute(new Attribute("month", Integer.toString(m)));
+            yearElement.appendChild(el);
+            return new Month(el);
+        }
+
+        public Vector<Month> getMonths() {
+            Vector<Month> v = new Vector<>();
+            Elements ms = yearElement.getChildElements("month");
+            for (int i = 0; i < ms.size(); i++)
+                v.add(new Month(ms.get(i)));
+            return v;
+        }
+
+        public Element getElement() {
+            return yearElement;
+        }
+
     }
 
 

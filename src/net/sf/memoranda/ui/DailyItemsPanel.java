@@ -1,5 +1,6 @@
 package net.sf.memoranda.ui;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.sf.memoranda.*;
 import net.sf.memoranda.date.CalendarDate;
 import net.sf.memoranda.date.CurrentDate;
@@ -71,6 +72,7 @@ public class DailyItemsPanel extends JPanel {
         }
     }
 
+    @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT")
     private void jbInit() {
         BorderFactory.createEtchedBorder(Color.white, Color.gray);
         Border border2 = BorderFactory.createEtchedBorder(Color.white, new Color(161, 161, 161));

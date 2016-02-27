@@ -22,7 +22,7 @@ class ResourcesTable extends JTable {
 
     public static final int _RESOURCE = 100;
     private final ImageIcon inetIcon = new ImageIcon(net.sf.memoranda.ui.AppFrame.class.getResource("resources/icons/mimetypes/inetshortcut.png"));
-    private Vector files = null;
+    private Vector<Resource> files = null;
     private TableSorter sorter = null;
 
     public ResourcesTable() {
@@ -67,7 +67,7 @@ class ResourcesTable extends JTable {
 
     private void initTable() {
         Vector v = CurrentProject.getResourcesList().getAllResources();
-        files = new Vector();
+        files = new Vector<>();
         for (Object aV : v) {
             Resource r = (Resource) aV;
             if (!r.isInetShortcut()) {
@@ -128,7 +128,7 @@ class ResourcesTable extends JTable {
 
 
         public Object getValueAt(int row, int col) {
-            Resource r = (Resource) files.get(row);
+            Resource r = files.get(row);
             if (col == _RESOURCE)
                 return r;
             if (!r.isInetShortcut()) {
@@ -138,12 +138,10 @@ class ResourcesTable extends JTable {
                         return f.getName();
                     case 1:
                         MimeType mt = MimeTypesList.getMimeTypeForFile(f.getName());
-                        if (mt != null) return mt.getLabel();
-                        else return "unknown";
+                        return mt.getLabel();
                     case 2:
                         Date d = new Date(f.lastModified());
-                        return d;/*Local.getDateString(d, java.text.DateFormat.SHORT) +" "+
-                                   Local.getTimeString(d);*/
+                        return d;
                     case 3:
                         return f.getPath();
                 }

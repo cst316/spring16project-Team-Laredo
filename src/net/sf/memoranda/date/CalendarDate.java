@@ -8,6 +8,7 @@
  */
 package net.sf.memoranda.date;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.sf.memoranda.util.Local;
 import net.sf.memoranda.util.Util;
 
@@ -115,10 +116,12 @@ public class CalendarDate {
         return _year;
     }
 
+    // not sure why findbugs thinks this is so awful
+    @SuppressFBWarnings("EQ_CHECK_FOR_OPERAND_NOT_COMPATIBLE_WITH_THIS")
     public boolean equals(Object object) {
         if (object instanceof CalendarDate) {
             CalendarDate d2 = (CalendarDate) object;
-            return ((d2.getDay() == getDay()) && (d2.getMonth() == getMonth()) && (d2.getYear() == getYear()));
+            return hashCode() == d2.hashCode();
         } else if (object instanceof Calendar) {
             Calendar cal = (Calendar) object;
             return this.equals(new CalendarDate(cal));
@@ -129,18 +132,24 @@ public class CalendarDate {
         return super.equals(object);
     }
 
+    @Override
+    public int hashCode() {
+        int result = _year;
+        result = 31 * result + _month;
+        result = 31 * result + _day;
+        return result;
+    }
+
     public boolean equals(CalendarDate date) {
         return date != null && ((date.getDay() == getDay()) && (date.getMonth() == getMonth()) && (date.getYear() == getYear()));
     }
 
     public boolean before(CalendarDate date) {
-        if (date == null) return true;
-        return this.getCalendar().before(date.getCalendar());
+        return date == null || this.getCalendar().before(date.getCalendar());
     }
 
     public boolean after(CalendarDate date) {
-        if (date == null) return true;
-        return this.getCalendar().after(date.getCalendar());
+        return date == null || this.getCalendar().after(date.getCalendar());
     }
 
     public boolean inPeriod(CalendarDate startDate, CalendarDate endDate) {
@@ -166,5 +175,4 @@ public class CalendarDate {
     public String getShortDateString() {
         return Local.getDateString(this, DateFormat.SHORT);
     }
-
 }

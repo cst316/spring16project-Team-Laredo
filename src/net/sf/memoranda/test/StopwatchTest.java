@@ -1,7 +1,7 @@
 package net.sf.memoranda.test;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.sf.memoranda.Stopwatch;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,29 +15,18 @@ import static org.junit.Assert.assertTrue;
 public class StopwatchTest {
     private static Stopwatch emptyWatch = null;
     private static Stopwatch negativeWatch = null;
-    private static Stopwatch dayWatch = null;
     private static Stopwatch zeroWatch = null;
     private static Stopwatch oneWatch = null;
     private static Stopwatch manyWatch = null;
 
+    @SuppressFBWarnings("ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD")
     @Before
-    public void Setup() {
+    public void setUp() {
         emptyWatch = new Stopwatch();
         negativeWatch = new Stopwatch(-5, TimeUnit.HOURS);
         zeroWatch = new Stopwatch(0, TimeUnit.HOURS);
         oneWatch = new Stopwatch(1, TimeUnit.MINUTES);
         manyWatch = new Stopwatch(359945000, TimeUnit.MILLISECONDS); //Time == 99:59:05
-        dayWatch = new Stopwatch(1, TimeUnit.DAYS);
-    }
-
-    @After
-    public void Teardown() {
-        emptyWatch = null;
-        negativeWatch = null;
-        zeroWatch = null;
-        oneWatch = null;
-        manyWatch = null;
-        dayWatch = null;
     }
 
     @Test

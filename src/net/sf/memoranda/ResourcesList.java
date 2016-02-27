@@ -28,9 +28,7 @@ public interface ResourcesList {
 
     void addResource(String path);
 
-    //void addResource(String path, String taskId);
-
-    void removeResource(String path);
+    boolean removeResource(String path);
 
     int getAllResourcesCount();
 

@@ -158,6 +158,9 @@ public class Statistics {
                 case Defect.NON_TYPE:
                     numMiscDefects += 1;
                     break;
+                default:
+                    numMiscDefects += 1;
+                    break;
             }
 
         }

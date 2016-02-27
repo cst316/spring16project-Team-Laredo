@@ -2,6 +2,7 @@ package net.sf.memoranda.util;
 
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
+import java.io.IOException;
 
 /**
  * A FileSystemView class that limits the file selections to a single root.
@@ -26,9 +27,9 @@ public class SingleRootFileSystemView extends FileSystemView {
     }
 
     @Override
-    public File createNewFolder(File containingDir) {
+    public File createNewFolder(File containingDir) throws IOException {
         File folder = new File(containingDir, "New Folder");
-        folder.mkdir();
+        if (!folder.mkdir()) throw new IOException("Unable to create new folder");
         return folder;
     }
 
@@ -44,6 +45,6 @@ public class SingleRootFileSystemView extends FileSystemView {
 
     @Override
     public File[] getRoots() {
-        return roots;
+        return roots.clone();
     }
 }

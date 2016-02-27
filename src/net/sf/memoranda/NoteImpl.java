@@ -104,7 +104,6 @@ public class NoteImpl implements Note, Comparable {
         if (ma == null) {
             if (mark)
                 _el.addAttribute(new Attribute("bookmark", "yes"));
-            return;
         } else if (!mark)
             _el.removeAttribute(ma);
     }
@@ -122,4 +121,22 @@ public class NoteImpl implements Note, Comparable {
             return 0;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        NoteImpl note = (NoteImpl) o;
+
+        return _project != null ? _project.equals(note._project) : note._project == null &&
+                (_el != null ? _el.equals(note._el) : note._el == null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = _project != null ? _project.hashCode() : 0;
+        result = 31 * result + (_el != null ? _el.hashCode() : 0);
+        return result;
+    }
 }

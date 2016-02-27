@@ -27,8 +27,6 @@ import net.sf.memoranda.ui.treetable.TreeTableModel;
 import net.sf.memoranda.util.Context;
 import net.sf.memoranda.util.Local;
 
-import javax.swing.event.EventListenerList;
-
 /**
  * JAVADOC:
  * <h1>TaskTableModel</h1>
@@ -42,7 +40,6 @@ public class TaskTableModel extends AbstractTreeTableModel implements TreeTableM
             Local.getString("Start date"), Local.getString("End date"),
             Local.getString("Priority"), Local.getString("Status"),
             "% " + Local.getString("done")};
-    protected EventListenerList listenerList = new EventListenerList();
     private boolean activeOnly = check_activeOnly();
 
     /**

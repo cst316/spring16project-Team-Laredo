@@ -24,7 +24,6 @@ public class DefectListPullingFromFileTest {
     public static void setUpBeforeClass() throws Exception {
         today = CalendarDate.today();
         tomorrow = CalendarDate.tomorrow();
-        CalendarDate dayAfterTomorrow = CalendarDate.tomorrow();
 
         fileStorage = new FileStorage();
         Project pulledFirstProject = ProjectManager.getProject("FirstTestProject");

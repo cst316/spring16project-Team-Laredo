@@ -112,7 +112,6 @@ class TdDialog extends JDialog {
     private void jbInit() {
         Border border1 = BorderFactory.createEmptyBorder(5, 5, 5, 5);
         Border border2 = BorderFactory.createEtchedBorder(Color.white, new Color(142, 142, 142));
-        BorderFactory.createEmptyBorder(0, 0, 10, 0);
         Border border4 = BorderFactory.createEmptyBorder(0, 5, 0, 5);
         Component component1 = Box.createHorizontalStrut(8);
         Component component2 = Box.createHorizontalStrut(8);

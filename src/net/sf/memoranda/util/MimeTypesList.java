@@ -20,12 +20,20 @@ import java.util.Vector;
  */
 /*$Id: MimeTypesList.java,v 1.3 2004/01/30 12:17:42 alexeya Exp $*/
 public class MimeTypesList {
-    public static Document _doc = null;
+    private static Document _doc = null;
     private static Element _root = null;
 
     static {
         CurrentStorage.get().openMimeTypesList();
         _root = _doc.getRootElement();
+    }
+
+    public static synchronized Document getDoc() {
+        return _doc;
+    }
+
+    public static synchronized void setDoc(Document doc) {
+        _doc = doc;
     }
 
     public static Vector<MimeType> getAllMimeTypes() {

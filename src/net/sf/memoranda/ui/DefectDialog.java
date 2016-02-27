@@ -21,6 +21,8 @@ import java.util.Date;
  */
 @SuppressWarnings("serial")
 class DefectDialog extends JDialog {
+    private static final int CAL_FRAME_WIDTH = 200;
+    private static final int CAL_FRAME_HEIGHT = 200;
     final JTextArea descriptionTextArea = new JTextArea();
     final JSpinner dateFoundSpinner = new JSpinner();
     final JCheckBox dateRemovedCheckBox = new JCheckBox("");
@@ -34,8 +36,6 @@ class DefectDialog extends JDialog {
     private final String[] types = {"", "Documentation", "Syntax", "Build", "Assignment",
             "Interface", "Checking", "Data", "Function", "System", "Enviroment"};
     final JComboBox<String> typeOfDefect = new JComboBox<>(types);
-    private final int CAL_FRAME_WIDTH = 200;
-    private final int CAL_FRAME_HEIGHT = 200;
     private final JPanel southPanel = new JPanel();
     private final JPanel mainPanel = new JPanel();
     private final JPanel descriptionPanel = new JPanel();

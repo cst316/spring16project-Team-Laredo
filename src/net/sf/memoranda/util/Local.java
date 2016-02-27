@@ -42,11 +42,11 @@ public class Local {
             String fn = "messages_"
                     + currentLocale.getLanguage()
                     + ".properties";
-            if (Configuration.get("LOCALES_DIR") != "") {
+            if (!Configuration.get("LOCALES_DIR").equals("")) {
                 System.out.print("Look " + fn + " at: " + Configuration.get("LOCALES_DIR") + " ");
-                try {
-                    messages.load(new FileInputStream(
-                            Configuration.get("LOCALES_DIR") + File.separator + fn));
+                try (FileInputStream fis = new FileInputStream(
+                        Configuration.get("LOCALES_DIR") + File.separator + fn)) {
+                    messages.load(fis);
                     System.out.println(" - found");
                 } catch (IOException ex) {
                     // Do nothing ...

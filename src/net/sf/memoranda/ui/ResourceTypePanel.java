@@ -34,12 +34,11 @@ class ResourceTypePanel extends JPanel {
     }
 
     private void jbInit() {
-        Border border1 = BorderFactory.createLineBorder(SystemColor.controlText, 2);
+        BorderFactory.createLineBorder(SystemColor.controlText, 2);
         TitledBorder titledBorder1 = new TitledBorder(BorderFactory.createEmptyBorder(), Local.getString("Registered types"));
-        Border border2 = BorderFactory.createLineBorder(Color.gray, 1);
-        TitledBorder titledBorder2 = new TitledBorder(BorderFactory.createLineBorder(Color.gray, 1), Local.getString("Details"));
+        BorderFactory.createLineBorder(Color.gray, 1);
+        new TitledBorder(BorderFactory.createLineBorder(Color.gray, 1), Local.getString("Details"));
         Border border3 = BorderFactory.createEmptyBorder(0, 10, 0, 0);
-
 
         jPanel1.setBorder(titledBorder1);
         jPanel1.setLayout(borderLayout1);
@@ -164,9 +163,14 @@ class ResourceTypePanel extends JPanel {
         dlg.setLocation((frmSize.width - dlgSize.width) / 2 + loc.x, (frmSize.height - dlgSize.height) / 2 + loc.y);
         MimeType mt = (MimeType) typesList.getSelectedValue();
         String[] exts = mt.getExtensions();
-        String extss = "";
-        for (String ext1 : exts) extss += ext1 + " ";
-        dlg.extField.setText(extss);
+
+        StringBuilder extensionBuilder = new StringBuilder();
+        for (String ext1 : exts) {
+            extensionBuilder.append(ext1);
+            extensionBuilder.append(" ");
+        }
+        dlg.extField.setText(extensionBuilder.toString());
+
         dlg.descField.setText(mt.getLabel());
         dlg.iconLabel.setIcon(mt.getIcon());
         AppList appList = MimeTypesList.getAppList();
@@ -206,7 +210,7 @@ class ResourceTypePanel extends JPanel {
         this.deleteB.setEnabled(en);
     }
 
-    class TypesListRenderer extends JLabel implements ListCellRenderer {
+    static class TypesListRenderer extends JLabel implements ListCellRenderer {
 
         public TypesListRenderer() {
             super();
@@ -221,15 +225,19 @@ class ResourceTypePanel extends JPanel {
 
             MimeType mt = (MimeType) value;
             String[] exts = mt.getExtensions();
-            String extstr = "";
+
+            StringBuilder extstr = new StringBuilder(mt.getLabel());
+            extstr.append(" (");
             for (int j = 0; j < exts.length; j++) {
-                extstr += "*." + exts[j];
+                extstr.append("*.");
+                extstr.append(exts[j]);
                 if (j != exts.length - 1)
-                    extstr += ", ";
+                    extstr.append(", ");
             }
+            extstr.append(")");
 
             setOpaque(true);
-            setText(mt.getLabel() + " (" + extstr + ")");
+            setText(extstr.toString());
             setIcon(mt.getIcon());
             if (isSelected) {
                 setBackground(list.getSelectionBackground());

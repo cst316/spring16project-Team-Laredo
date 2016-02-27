@@ -27,26 +27,23 @@ public class HTMLFileImport {
      * Constructor for HTMLFileImport.
      */
     public HTMLFileImport(File f, HTMLEditor editor) {
-        String text = "";
-        BufferedReader in;
-        try {
-            //in = new BufferedReader(new InputStreamReader(new FileInputStream(f), "UTF-8"));
-            in = new BufferedReader(new InputStreamReader(new FileInputStream(f)));
+        StringBuilder builder = new StringBuilder();
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(f)))) {
             String line = in.readLine();
             while (line != null) {
-                text = text + line + "\n";
+                builder.append(line);
+                builder.append('\n');
                 line = in.readLine();
             }
-            in.close();
         } catch (Exception e) {
             new ExceptionDialog(e, "Failed to import " + f.getPath(), "");
             return;
         }
+        String text = builder.toString();
         text = Pattern.compile("<body(.*?)>", java.util.regex.Pattern.DOTALL + java.util.regex.Pattern.CASE_INSENSITIVE)
                 .split(text)[1];
         text = Pattern.compile("</body>", java.util.regex.Pattern.DOTALL + java.util.regex.Pattern.CASE_INSENSITIVE)
                 .split(text)[0];
-        //text = text.substring(p1, p2);
 
         editor.insertHTML(text, editor.editor.getCaretPosition());
 

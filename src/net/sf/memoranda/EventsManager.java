@@ -21,7 +21,7 @@ public class EventsManager {
     public static final int REPEAT_MONTHLY = 3;
     public static final int REPEAT_YEARLY = 4;
 
-    public static Document _doc = null;
+    private static Document _doc = null;
     private static Element _root = null;
 
     static {
@@ -32,6 +32,14 @@ public class EventsManager {
         } else
             _root = _doc.getRootElement();
 
+    }
+
+    public static synchronized Document getDoc() {
+        return _doc;
+    }
+
+    public static synchronized void setDoc(Document doc) {
+        _doc = doc;
     }
 
     public static void createSticker(String text, int prior) {
@@ -248,7 +256,7 @@ public class EventsManager {
         }
 
         public int getValue() {
-            return new Integer(yearElement.getAttribute("year").getValue());
+            return Integer.parseInt(yearElement.getAttribute("year").getValue());
         }
 
         public Month getMonth(int m) {
@@ -282,7 +290,7 @@ public class EventsManager {
         }
 
         public int getValue() {
-            return new Integer(mElement.getAttribute("month").getValue());
+            return Integer.parseInt(mElement.getAttribute("month").getValue());
         }
 
         public Day getDay(int d) {
@@ -305,7 +313,7 @@ public class EventsManager {
                             new CalendarDate(
                                     d,
                                     getValue(),
-                                    new Integer(
+                                    Integer.parseInt(
                                             ((Element) mElement.getParent())
                                                     .getAttribute("year")
                                                     .getValue()))
@@ -339,7 +347,7 @@ public class EventsManager {
         }
 
         public int getValue() {
-            return new Integer(dEl.getAttribute("day").getValue());
+            return Integer.parseInt(dEl.getAttribute("day").getValue());
         }
 
         public Element getElement() {

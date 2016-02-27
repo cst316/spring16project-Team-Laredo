@@ -25,12 +25,11 @@ class TaskProgressEditor extends JPanel implements TableCellEditor {
     public TaskProgressEditor() {
         addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent e) {
-                if (e instanceof MouseEvent) {
-                    if (e.getButton() != MouseEvent.BUTTON1) {
-                        stopEditing();
-                        return;
-                    }
+                if (e.getButton() != MouseEvent.BUTTON1) {
+                    stopEditing();
+                    return;
                 }
+
                 int w = getWidth() / 2;
                 if (e.getX() > w) {
                     current.setProgress(current.getProgress() + 5);

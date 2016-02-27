@@ -1,5 +1,6 @@
 package net.sf.memoranda.test;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.sf.memoranda.Event;
 import net.sf.memoranda.EventsManager;
 import net.sf.memoranda.date.CalendarDate;
@@ -9,6 +10,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by adam on 2/8/16.
  */
+@SuppressFBWarnings("ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD")
 public class EventImplTest {
     private static Event emptyDuration = null;
     private static Event negativeDuration = null;
@@ -23,15 +25,6 @@ public class EventImplTest {
         zeroDuration = EventsManager.createEvent(new CalendarDate(), 10, 0, 10, 0, "");
         oneDuration = EventsManager.createEvent(new CalendarDate(), 10, 0, 10, 1, "");
         manyDuration = EventsManager.createEvent(new CalendarDate(), 10, 0, 18, 33, "");
-    }
-
-    @org.junit.After
-    public void tearDown() throws Exception {
-        emptyDuration = null;
-        negativeDuration = null;
-        zeroDuration = null;
-        oneDuration = null;
-        manyDuration = null;
     }
 
     @org.junit.Test

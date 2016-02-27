@@ -9,6 +9,8 @@
  */
 package net.sf.memoranda.ui.htmleditor;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
 import javax.swing.event.ListSelectionEvent;
@@ -17,11 +19,8 @@ import javax.swing.text.*;
 import javax.swing.text.html.*;
 import java.awt.*;
 import java.io.IOException;
-import java.io.Serializable;
 import java.io.Writer;
 import java.util.*;
-
-import net.sf.memoranda.ui.htmleditor.AltHTMLWriter.Map;
 
 /**
  * This is an alternate writer for HTMLDocuments.
@@ -160,7 +159,7 @@ public class AltHTMLWriter extends AbstractWriter {
                     if (weightValue != null) {
                         int fweight;
                         try {
-                            fweight = new Integer(weightValue);
+                            fweight = Integer.parseInt(weightValue);
                         } catch (Exception ex) {
                             fweight = -1;
                         }
@@ -235,17 +234,21 @@ public class AltHTMLWriter extends AbstractWriter {
      */
     private static void convertToHTML40(AttributeSet from, MutableAttributeSet to) {
         Enumeration keys = from.getAttributeNames();
-        String value = "";
+        StringBuilder value = new StringBuilder();
         while (keys.hasMoreElements()) {
             Object key = keys.nextElement();
             if (key instanceof CSS.Attribute) {
-                value = value + " " + key + "=" + from.getAttribute(key) + ";";
+                value.append(" ");
+                value.append(key);
+                value.append("=");
+                value.append(from.getAttribute(key));
+                value.append(";");
             } else {
                 to.addAttribute(key, from.getAttribute(key));
             }
         }
         if (value.length() > 0) {
-            to.addAttribute(HTML.Attribute.STYLE, value);
+            to.addAttribute(HTML.Attribute.STYLE, value.toString());
         }
     }
 
@@ -465,8 +468,8 @@ public class AltHTMLWriter extends AbstractWriter {
                 indent();
             }
 
-            Object nameTag = (attr != null) ? attr.getAttribute(StyleConstants.NameAttribute) : null;
-            Object endTag = (attr != null) ? attr.getAttribute(HTML.Attribute.ENDTAG) : null;
+            Object nameTag = attr.getAttribute(StyleConstants.NameAttribute);
+            Object endTag = attr.getAttribute(HTML.Attribute.ENDTAG);
 
             boolean outputEndTag = false;
             // If an instance of an UNKNOWN Tag, or an instance of a
@@ -696,8 +699,8 @@ public class AltHTMLWriter extends AbstractWriter {
                 Option option = (Option) listModel.getElementAt(i);
                 writeOption(option);
             }
-        } else if (model instanceof OptionComboBoxModel) {
-            OptionComboBoxModel comboBoxModel = (OptionComboBoxModel) model;
+        } else if (model instanceof ComboBoxModel) {
+            ComboBoxModel comboBoxModel = (ComboBoxModel) model;
             int size = comboBoxModel.getSize();
             for (int i = 0; i < size; i++) {
                 Option option = (Option) comboBoxModel.getElementAt(i);
@@ -973,49 +976,6 @@ public class AltHTMLWriter extends AbstractWriter {
             }
         }
         return false;
-    }
-
-    /**
-     * Outputs the maps as elements. Maps are not stored as elements in
-     * the document, and as such this is used to output them.
-     */
-    void writeMaps(Enumeration<Map> maps) throws IOException {
-        if (maps != null) {
-            while (maps.hasMoreElements()) {
-                Map map = maps.nextElement();
-                String name = map.getName();
-
-                incrIndent();
-                indent();
-                write("<map");
-                if (name != null) {
-                    write(" name=\"");
-                    write(name);
-                    write("\">");
-                } else {
-                    write('>');
-                }
-                writeLineSeparator();
-                incrIndent();
-
-                // Output the areas
-                AttributeSet[] areas = map.getAreas();
-                if (areas != null) {
-                    for (AttributeSet area : areas) {
-                        indent();
-                        write("<area");
-                        writeAttributes(area);
-                        write("></area>");
-                        writeLineSeparator();
-                    }
-                }
-                decrIndent();
-                indent();
-                write("</map>");
-                writeLineSeparator();
-                decrIndent();
-            }
-        }
     }
 
     /**
@@ -1531,12 +1491,11 @@ public class AltHTMLWriter extends AbstractWriter {
      @version 1.9 12/03/01
      */
 
-    class OptionListModel extends DefaultListModel implements ListSelectionModel, Serializable {
+    static class OptionListModel extends DefaultListModel implements ListSelectionModel {
 
         private static final int MIN = -1;
         private static final int MAX = Integer.MAX_VALUE;
-        private final BitSet initialValue = new BitSet(32);
-        EventListenerList listenerList = new EventListenerList();
+        EventListenerList eventListenerList = new EventListenerList();
         boolean leadAnchorNotificationEnabled = true;
         private int selectionMode = SINGLE_SELECTION;
         private int minIndex = MAX;
@@ -1592,11 +1551,11 @@ public class AltHTMLWriter extends AbstractWriter {
         }
 
         public void addListSelectionListener(ListSelectionListener l) {
-            listenerList.add(ListSelectionListener.class, l);
+            eventListenerList.add(ListSelectionListener.class, l);
         }
 
         public void removeListSelectionListener(ListSelectionListener l) {
-            listenerList.remove(ListSelectionListener.class, l);
+            eventListenerList.remove(ListSelectionListener.class, l);
         }
 
         /**
@@ -1608,7 +1567,7 @@ public class AltHTMLWriter extends AbstractWriter {
          * @since 1.4
          */
         public ListSelectionListener[] getListSelectionListeners() {
-            return listenerList.getListeners(ListSelectionListener.class);
+            return eventListenerList.getListeners(ListSelectionListener.class);
         }
 
         /**
@@ -1633,7 +1592,7 @@ public class AltHTMLWriter extends AbstractWriter {
          * @see EventListenerList
          */
         void fireValueChanged(int firstIndex, int lastIndex, boolean isAdjusting) {
-            Object[] listeners = listenerList.getListenerList();
+            Object[] listeners = eventListenerList.getListenerList();
             ListSelectionEvent e = null;
 
             for (int i = listeners.length - 2; i >= 0; i -= 2) {
@@ -1738,30 +1697,6 @@ public class AltHTMLWriter extends AbstractWriter {
                 minIndex = MAX;
                 maxIndex = MIN;
             }
-        }
-
-        /**
-         * Returns the value of the leadAnchorNotificationEnabled flag.
-         * When leadAnchorNotificationEnabled is true the model
-         * generates notification events with bounds that cover all the changes to
-         * the selection plus the changes to the lead and anchor indices.
-         * Setting the flag to false causes a norrowing of the event's bounds to
-         * include only the elements that have been selected or deselected since
-         * the last change. Either way, the model continues to maintain the lead
-         * and anchor variables internally. The default is true.
-         * @return the value of the leadAnchorNotificationEnabled flag
-         * @see     #setLeadAnchorNotificationEnabled(boolean)
-         */
-        public boolean isLeadAnchorNotificationEnabled() {
-            return leadAnchorNotificationEnabled;
-        }
-
-        /**
-         * Sets the value of the leadAnchorNotificationEnabled flag.
-         * @see     #isLeadAnchorNotificationEnabled()
-         */
-        public void setLeadAnchorNotificationEnabled(boolean flag) {
-            leadAnchorNotificationEnabled = flag;
         }
 
         private void updateLeadAnchorIndices(int anchorIndex, int leadIndex) {
@@ -1947,10 +1882,11 @@ public class AltHTMLWriter extends AbstractWriter {
          *    both (a) implement the <code>Cloneable</code> interface
          *    and (b) define a <code>clone</code> method
          */
+        @SuppressFBWarnings("CN_IMPLEMENTS_CLONE_BUT_NOT_CLONEABLE")
         public Object clone() throws CloneNotSupportedException {
             OptionListModel clone = (OptionListModel) super.clone();
             clone.value = (BitSet) value.clone();
-            clone.listenerList = new EventListenerList();
+            clone.eventListenerList = new EventListenerList();
             return clone;
         }
 
@@ -2018,195 +1954,6 @@ public class AltHTMLWriter extends AbstractWriter {
             }
             this.anchorIndex = anchorIndex;
             this.leadIndex = leadIndex;
-        }
-
-        /**
-         * Fetches the BitSet that represents the initial
-         * set of selected items in the list.
-         */
-        public BitSet getInitialSelection() {
-            return initialValue;
-        }
-
-        /**
-         * This method is responsible for storing the state
-         * of the initial selection.  If the selectionMode
-         * is the default, i.e allowing only for SINGLE_SELECTION,
-         * then the very last OPTION that has the selected
-         * attribute set wins.
-         */
-        public void setInitialSelection(int i) {
-            if (initialValue.get(i)) {
-                return;
-            }
-            if (selectionMode == SINGLE_SELECTION) {
-                // reset to empty
-                initialValue.and(new BitSet());
-            }
-            initialValue.set(i);
-        }
-    }
-
-    class OptionComboBoxModel extends DefaultComboBoxModel implements Serializable {
-
-        private Option selectedOption = null;
-
-        /**
-         * Fetches the Option item that represents that was
-         * initially set to a selected state.
-         */
-        public Option getInitialSelection() {
-            return selectedOption;
-        }
-
-        /**
-         * Stores the Option that has been marked its
-         * selected attribute set.
-         */
-        public void setInitialSelection(Option option) {
-            selectedOption = option;
-        }
-    }
-
-    /**
-     * Map is used to represent a map element that is part of an HTML document.
-     * Once a Map has been created, and any number of areas have been added,
-     * you can test if a point falls inside the map via the contains method.
-     *
-     * @author Scott Violet
-     * @version 1.6 12/03/01
-     */
-    class Map {
-        /** Name of the Map. */
-        private String name;
-        /** An array of AttributeSets. */
-        private Vector<AttributeSet> areaAttributes;
-        /** An array of RegionContainments, will slowly grow to match the
-         * length of areaAttributes as needed. */
-        private Vector<RegionContainment> areas;
-
-        public Map() {
-        }
-
-        public Map(String name) {
-            this.name = name;
-        }
-
-        /**
-         * Returns the name of the Map.
-         */
-        public String getName() {
-            return name;
-        }
-
-        /**
-         * Defines a region of the Map, based on the passed in AttributeSet.
-         */
-        public void addArea(AttributeSet as) {
-            if (as == null) {
-                return;
-            }
-            if (areaAttributes == null) {
-                areaAttributes = new Vector<>(2);
-            }
-            areaAttributes.addElement(as.copyAttributes());
-        }
-
-        /**
-         * Removes the previously created area.
-         */
-        public void removeArea(AttributeSet as) {
-            if (as != null && areaAttributes != null) {
-                int numAreas = (areas != null) ? areas.size() : 0;
-                for (int counter = areaAttributes.size() - 1; counter >= 0; counter--) {
-                    if ((areaAttributes.elementAt(counter)).isEqual(as)) {
-                        areaAttributes.removeElementAt(counter);
-                        if (counter < numAreas) {
-                            areas.removeElementAt(counter);
-                        }
-                    }
-                }
-            }
-        }
-
-        /**
-         * Returns the AttributeSets representing the differet areas of the Map.
-         */
-        public AttributeSet[] getAreas() {
-            int numAttributes = (areaAttributes != null) ? areaAttributes.size() : 0;
-            if (numAttributes != 0) {
-                AttributeSet[] retValue = new AttributeSet[numAttributes];
-
-                areaAttributes.copyInto(retValue);
-                return retValue;
-            }
-            return null;
-        }
-
-        /**
-         * Returns the AttributeSet that contains the passed in location,
-         * <code>x</code>, <code>y</code>. <code>width</code>, <code>height</code>
-         * gives the size of the region the map is defined over. If a matching
-         * area is found, the AttribueSet for it is returned.
-         */
-        public AttributeSet getArea(int x, int y, int width, int height) {
-            int numAttributes = (areaAttributes != null) ? areaAttributes.size() : 0;
-
-            if (numAttributes > 0) {
-                int numAreas = (areas != null) ? areas.size() : 0;
-
-                if (areas == null) {
-                    areas = new Vector<>(numAttributes);
-                }
-                for (int counter = 0; counter < numAttributes; counter++) {
-                    if (counter >= numAreas) {
-                        areas.addElement(createRegionContainment(areaAttributes.elementAt(counter)));
-                    }
-                    RegionContainment rc = areas.elementAt(counter);
-                    if (rc != null && rc.contains(x, y, width, height)) {
-                        return areaAttributes.elementAt(counter);
-                    }
-                }
-            }
-            return null;
-        }
-
-        /**
-         * Creates and returns an instance of RegionContainment that can be
-         * used to test if a particular point lies inside a region.
-         */
-        RegionContainment createRegionContainment(AttributeSet attributes) {
-            Object shape = attributes.getAttribute(HTML.Attribute.SHAPE);
-
-            if (shape == null) {
-                shape = "rect";
-            }
-            if (shape instanceof String) {
-                String shapeString = ((String) shape).toLowerCase();
-                RegionContainment rc = null;
-
-                try {
-                    switch (shapeString) {
-                        case "rect":
-                            rc = new RectangleRegionContainment(attributes);
-                            break;
-                        case "circle":
-                            rc = new CircleRegionContainment(attributes);
-                            break;
-                        case "poly":
-                            rc = new PolygonRegionContainment(attributes);
-                            break;
-                        case "default":
-                            rc = DefaultRegionContainment.sharedInstance();
-                            break;
-                    }
-                } catch (RuntimeException re) {
-                    // Something wrong with attributes.
-                    rc = null;
-                }
-                return rc;
-            }
-            return null;
         }
 
     }

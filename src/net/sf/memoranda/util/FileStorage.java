@@ -8,6 +8,7 @@
  */
 package net.sf.memoranda.util;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.sf.memoranda.*;
 import net.sf.memoranda.ui.ExceptionDialog;
 import net.sf.memoranda.ui.htmleditor.AltHTMLWriter;
@@ -26,13 +27,12 @@ import java.net.URL;
 /*$Id: FileStorage.java,v 1.15 2006/10/09 23:31:58 alexeya Exp $*/
 public class FileStorage implements Storage {
 
-    public static String JN_DOCPATH = Util.getEnvDir();
-    private final HTMLEditorKit editorKit = new HTMLEditorKit();
+    private static String JN_DOCPATH = Util.getEnvDir();
 
-    public FileStorage() {
-        /*The 'MEMORANDA_HOME' key is an undocumented feature for 
-          hacking the default location (Util.getEnvDir()) of the memoranda 
-          storage dir. Note that memoranda.config file is always placed at fixed 
+    static {
+        /*The 'MEMORANDA_HOME' key is an undocumented feature for
+          hacking the default location (Util.getEnvDir()) of the memoranda
+          storage dir. Note that memoranda.config file is always placed at fixed
           location (Util.getEnvDir()) anyway */
         String mHome = (String) Configuration.get("MEMORANDA_HOME");
         if (mHome.length() > 0) {
@@ -41,6 +41,11 @@ public class FileStorage implements Storage {
             System.out.println("[DEBUG]***Memoranda storage path has set to: " +
                     JN_DOCPATH);
         }
+    }
+
+    private final HTMLEditorKit editorKit = new HTMLEditorKit();
+
+    public FileStorage() {
     }
 
     public static void saveDocument(Document doc, String filePath) {
@@ -112,18 +117,17 @@ public class FileStorage implements Storage {
     /**
      * @see net.sf.memoranda.util.Storage#openNote(net.sf.memoranda.Note)
      */
+    // it's OK to ignore the exception, it's used for control flow. UGH.
+    @SuppressFBWarnings("DE_MIGHT_IGNORE")
     public javax.swing.text.Document openNote(Note note) {
 
         HTMLDocument doc = (HTMLDocument) editorKit.createDefaultDocument();
         if (note == null)
             return doc;
         String filename = getNotePath(note);
-        try {
+        try (InputStreamReader rdr = new InputStreamReader(new FileInputStream(filename), "UTF-8")) {
             doc.setBase(new URL(getNoteURL(note)));
-            editorKit.read(
-                    new InputStreamReader(new FileInputStream(filename), "UTF-8"),
-                    doc,
-                    0);
+            editorKit.read(rdr, doc, 0);
         } catch (Exception ex) {
             // Do nothing - we've got a new empty document!
         }
@@ -142,11 +146,11 @@ public class FileStorage implements Storage {
     }
 
 
-    public void removeNote(Note note) {
+    public boolean removeNote(Note note) {
         File f = new File(getNotePath(note));
         /*DEBUG*/
         System.out.println("[DEBUG] Remove note:" + getNotePath(note));
-        f.delete();
+        return f.delete();
     }
 
     /**
@@ -154,13 +158,13 @@ public class FileStorage implements Storage {
      */
     public void openProjectManager() {
         if (!new File(JN_DOCPATH + ".projects").exists()) {
-            ProjectManager._doc = null;
+            ProjectManager.setDoc(null);
             return;
         }
         /*DEBUG*/
         System.out.println(
                 "[DEBUG] Open project manager: " + JN_DOCPATH + ".projects");
-        ProjectManager._doc = openDocument(JN_DOCPATH + ".projects");
+        ProjectManager.setDoc(openDocument(JN_DOCPATH + ".projects"));
     }
 
     /**
@@ -169,17 +173,24 @@ public class FileStorage implements Storage {
         /*DEBUG*/
         System.out.println(
                 "[DEBUG] Save project manager: " + JN_DOCPATH + ".projects");
-        saveDocument(ProjectManager._doc, JN_DOCPATH + ".projects");
+        saveDocument(ProjectManager.getDoc(), JN_DOCPATH + ".projects");
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    public void removeProjectStorage(Project prj) {
+    public boolean removeProjectStorage(Project prj) {
         String id = prj.getID();
         File f = new File(JN_DOCPATH + id);
         File[] files = f.listFiles();
-        if (files == null) return;
-        for (File file : files) file.delete();
-        f.delete();
+        if (files == null) return false;
+        boolean result = true;
+        for (File file : files) {
+            if (!file.delete()) {
+                result = false;
+            }
+        }
+        if (!f.delete()) {
+            result = false;
+        }
+        return result;
     }
 
     public TaskList openTaskList(Project prj) {
@@ -218,12 +229,12 @@ public class FileStorage implements Storage {
     /**
      * @see net.sf.memoranda.util.Storage#createProjectStorage(net.sf.memoranda.Project)
      */
-    public void createProjectStorage(Project prj) {
+    public boolean createProjectStorage(Project prj) {
         /*DEBUG*/
         System.out.println(
                 "[DEBUG] Create project dir: " + JN_DOCPATH + prj.getID());
         File dir = new File(JN_DOCPATH + prj.getID());
-        dir.mkdirs();
+        return dir.mkdirs();
     }
 
     /**
@@ -267,13 +278,13 @@ public class FileStorage implements Storage {
      */
     public void openEventsManager() {
         if (!new File(JN_DOCPATH + ".events").exists()) {
-            EventsManager._doc = null;
+            EventsManager.setDoc(null);
             return;
         }
         /*DEBUG*/
         System.out.println(
                 "[DEBUG] Open events manager: " + JN_DOCPATH + ".events");
-        EventsManager._doc = openDocument(JN_DOCPATH + ".events");
+        EventsManager.setDoc(openDocument(JN_DOCPATH + ".events"));
     }
 
     /**
@@ -282,7 +293,7 @@ public class FileStorage implements Storage {
         /*DEBUG*/
         System.out.println(
                 "[DEBUG] Save events manager: " + JN_DOCPATH + ".events");
-        saveDocument(EventsManager._doc, JN_DOCPATH + ".events");
+        saveDocument(EventsManager.getDoc(), JN_DOCPATH + ".events");
     }
 
     /**
@@ -291,10 +302,9 @@ public class FileStorage implements Storage {
     public void openMimeTypesList() {
         if (!new File(JN_DOCPATH + ".mimetypes").exists()) {
             try {
-                MimeTypesList._doc =
-                        openDocument(
+                MimeTypesList.setDoc(openDocument(
                                 FileStorage.class.getResourceAsStream(
-                                        "resources/default.mimetypes"));
+                                        "resources/default.mimetypes")));
             } catch (Exception e) {
                 new ExceptionDialog(
                         e,
@@ -306,7 +316,7 @@ public class FileStorage implements Storage {
         /*DEBUG*/
         System.out.println(
                 "[DEBUG] Open mimetypes list: " + JN_DOCPATH + ".mimetypes");
-        MimeTypesList._doc = openDocument(JN_DOCPATH + ".mimetypes");
+        MimeTypesList.setDoc(openDocument(JN_DOCPATH + ".mimetypes"));
     }
 
     /**
@@ -316,7 +326,7 @@ public class FileStorage implements Storage {
         /*DEBUG*/
         System.out.println(
                 "[DEBUG] Save mimetypes list: " + JN_DOCPATH + ".mimetypes");
-        saveDocument(MimeTypesList._doc, JN_DOCPATH + ".mimetypes");
+        saveDocument(MimeTypesList.getDoc(), JN_DOCPATH + ".mimetypes");
     }
 
     /**
@@ -354,12 +364,14 @@ public class FileStorage implements Storage {
     /**
      * @see net.sf.memoranda.util.Storage#restoreContext()
      */
+    // it's fine for it to catch runtime exceptions. this is used here for control flow, as awful as that is.
+    @SuppressFBWarnings("REC_CATCH_EXCEPTION")
     public void restoreContext() {
-        try {
+        try (FileInputStream is = new FileInputStream(JN_DOCPATH + ".context")) {
             /*DEBUG*/
             System.out.println(
                     "[DEBUG] Open context: " + JN_DOCPATH + ".context");
-            Context.context.load(new FileInputStream(JN_DOCPATH + ".context"));
+            Context.context.load(is);
         } catch (Exception ex) {
             /*DEBUG*/
             System.out.println("Context created.");
@@ -370,11 +382,10 @@ public class FileStorage implements Storage {
      * @see net.sf.memoranda.util.Storage#storeContext()
      */
     public void storeContext() {
-        try {
-            /*DEBUG*/
+        try (OutputStream os = new FileOutputStream(JN_DOCPATH + ".context")) {
             System.out.println(
                     "[DEBUG] Save context: " + JN_DOCPATH + ".context");
-            Context.context.save(new FileOutputStream(JN_DOCPATH + ".context"));
+            Context.context.save(os);
         } catch (Exception ex) {
             new ExceptionDialog(
                     ex,

@@ -52,25 +52,50 @@ class AppFrame_AboutBox extends JDialog implements ActionListener {
 
     //Component initialization
     private void jbInit() {
-        String text = "<html>";
-        String product = "Version " + App.VERSION_INFO + " (Build " + App.BUILD_INFO + ")";
-        text += "<b>" + product + "</b><br><br>";
-        String url = App.WEBSITE_URL;
-        String copyright = "Copyright (c) 2003, 2004 Memoranda team";
-        text += copyright + "<br>" + url + "<br><br>";
-        text += "<b>" + developersHead + "</b><br>";
-        for (String developer : developers) text += developer + "<br>";
-        text += "<br><b>" + othersHead + "</b><br>";
-        for (String other : others) text += other + "<br>";
+        StringBuilder text = new StringBuilder("<html>");
 
-        text += "</html>";
+        // append product info
+        text.append("<b>");
+        text.append("Version ");
+        text.append(App.VERSION_INFO);
+        text.append(" (Build ");
+        text.append(App.BUILD_INFO);
+        text.append(")</b><br><br>");
+
+        //append copyright info
+        text.append("Copyright (c) 2003, 2004 Memoranda team<br>");
+
+        // append website info
+        text.append(App.WEBSITE_URL);
+        text.append("<br><br>");
+
+        // append list of developers
+        text.append("<b>");
+        text.append(developersHead);
+        text.append("</b><br>");
+
+        for (String developer : developers) {
+            text.append(developer);
+            text.append("<br>");
+        }
+
+        // append list of other credits
+        text.append("<br><b>");
+        text.append(othersHead);
+        text.append("</b><br>");
+        for (String other : others) {
+            text.append(other);
+            text.append("<br>");
+        }
+
+        text.append("</html>");
 
         ImageIcon image = new ImageIcon(AppFrame_AboutBox.class.getResource("resources/memoranda.png"));
         this.setTitle(Local.getString("About Memoranda"));
         setResizable(false);
         // Initialize Objects
         lblText.setFont(new java.awt.Font("Dialog", 0, 11));
-        lblText.setText(text);
+        lblText.setText(text.toString());
         lblText.setBounds(10, 55, 300, 400);
 
 
@@ -81,12 +106,11 @@ class AppFrame_AboutBox extends JDialog implements ActionListener {
         button1.setBackground(new Color(69, 125, 186));
         button1.setForeground(Color.white);
         JLayeredPane layeredPane = getLayeredPane();
-        //layeredPane.setPreferredSize(new Dimension(300, 300));
         JLabel imgLabel = new JLabel(image);
         imgLabel.setBounds(0, 0, image.getIconWidth(), image.getIconHeight());
-        layeredPane.add(imgLabel, new Integer(1));
-        layeredPane.add(lblText, new Integer(2));
-        layeredPane.add(button1, new Integer(2));
+        layeredPane.add(imgLabel, 1);
+        layeredPane.add(lblText, 2);
+        layeredPane.add(button1, 2);
         this.getContentPane().setBackground(new Color(251, 197, 63));
     }
 

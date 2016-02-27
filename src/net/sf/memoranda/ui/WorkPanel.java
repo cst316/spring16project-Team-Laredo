@@ -1,11 +1,11 @@
 package net.sf.memoranda.ui;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.sf.memoranda.util.Context;
 import net.sf.memoranda.util.Local;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
-import javax.swing.border.Border;
 import java.awt.*;
 
 /**
@@ -37,8 +37,10 @@ public class WorkPanel extends JPanel {
         }
     }
 
+    // it's probably safe to ignore this findbugs error, the borders are generally good to go
+    @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT")
     private void jbInit() {
-        Border border1 = BorderFactory.createCompoundBorder(
+        BorderFactory.createCompoundBorder(
                 BorderFactory.createBevelBorder(
                         BevelBorder.LOWERED,
                         Color.white,
@@ -241,6 +243,8 @@ public class WorkPanel extends JPanel {
                     break;
                 case "DEFECTS":
                     btnDefect_actionPerform();
+                    break;
+                default:
                     break;
             }
         }

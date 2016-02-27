@@ -92,17 +92,22 @@ public class ResourcesListImpl implements ResourcesList {
     /**
      * @see net.sf.memoranda.ResourcesList#removeResource(java.lang.String)
      */
-    public void removeResource(String path) {
+    public boolean removeResource(String path) {
         Elements rs = _root.getChildElements("resource");
-        for (int i = 0; i < rs.size(); i++)
+        boolean result = true;
+        for (int i = 0; i < rs.size(); i++) {
             if (rs.get(i).getAttribute("path").getValue().equals(path)) {
                 if (getResource(path).isProjectFile()) {
                     File f = new File(path);
                     System.out.println("[DEBUG] Removing file " + path);
-                    f.delete();
+                    if (!f.delete()) {
+                        result = false;
+                    }
                 }
                 _root.removeChild(rs.get(i));
             }
+        }
+        return result;
     }
 
 

@@ -1,6 +1,5 @@
 package net.sf.memoranda.ui;
 
-import net.sf.memoranda.Project;
 import net.sf.memoranda.ProjectManager;
 import net.sf.memoranda.date.CalendarDate;
 import net.sf.memoranda.util.CurrentStorage;
@@ -63,9 +62,7 @@ class ProjectDialog extends JDialog {
         CalendarDate endD = null;
         if (dlg.endDateChB.isSelected())
             endD = new CalendarDate((Date) dlg.endDate.getModel().getValue());
-        Project prj = ProjectManager.createProject(title, startD, endD);
-        /*if (dlg.freezeChB.isSelected())
-            prj.freeze();*/
+        ProjectManager.createProject(title, startD, endD);
         CurrentStorage.get().storeProjectManager();
     }
 
@@ -118,7 +115,7 @@ class ProjectDialog extends JDialog {
         startDate.setLocale(Local.getCurrentLocale());
         //Added by (jcscoobyrs) on 17-Nov-2003 at 14:24:43 PM
         //---------------------------------------------------
-        SimpleDateFormat sdf = new SimpleDateFormat();
+        SimpleDateFormat sdf;
         sdf = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT);
         startDate.setEditor(new JSpinner.DateEditor(startDate,
                 sdf.toPattern()));

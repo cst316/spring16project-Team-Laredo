@@ -153,14 +153,12 @@ public class History {
             if (canRollBack()) {
                 setEnabled(true);
 
-                SimpleDateFormat sdf = new SimpleDateFormat();
+                SimpleDateFormat sdf;
                 sdf = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT);
                 Date date = ((HistoryItem) prev).getDate().getDate();
                 putValue(
                         Action.SHORT_DESCRIPTION,
                         Local.getString("Back to") + " " + sdf.format(date));
-
-//                putValue(Action.SHORT_DESCRIPTION, Local.getString("Back to") + " " + ((HistoryItem) prev).getDate().toString());
             } else {
                 setEnabled(false);
                 putValue(Action.SHORT_DESCRIPTION, Local.getString("Back"));
@@ -183,15 +181,11 @@ public class History {
             historyBackAction.update();
         }
 
-        /*public boolean isEnabled() {
-            return canRollForward();
-        }*/
-
         void update() {
             if (canRollForward()) {
                 setEnabled(true);
 
-                SimpleDateFormat sdf = new SimpleDateFormat();
+                SimpleDateFormat sdf;
                 sdf = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT);
                 Date date = ((HistoryItem) next).getDate().getDate();
 
