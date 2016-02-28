@@ -24,6 +24,13 @@ import javax.swing.JTextField;
 
 import net.sf.memoranda.Task;
 
+/**
+ * Window where user can enter in lines of code information
+ * for a task.
+ * 
+ * @author Benjamin Paothatat
+ * @since 2/28/2016
+ */
 @SuppressWarnings("serial")
 public class LocDialog extends JDialog implements ItemListener{
 	Task task = null;
