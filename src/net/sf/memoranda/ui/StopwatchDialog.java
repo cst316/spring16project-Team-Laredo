@@ -1,7 +1,6 @@
 package net.sf.memoranda.ui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -112,9 +111,9 @@ public class StopwatchDialog extends JDialog
 		btnRestart.setToolTipText("Restart");
 		btnRestart.setIcon(new ImageIcon(StopwatchDialog.class.getResource("/net/sf/memoranda/ui/resources/icons/restart.png")));
 		btnRestart.setMargin(new Insets(2, 4, 2, 4));
-		btnRestart.addActionListener(new java.awt.event.ActionListener() {
+		btnRestart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				btnRestart_actionPerformed(e);
+				btnRestartActionPerformed(e);
 	        }
 	    });
 		buttonPanel.add(btnRestart);
@@ -122,9 +121,9 @@ public class StopwatchDialog extends JDialog
 		btnStartStop.setToolTipText("Start");
 		btnStartStop.setIcon(new ImageIcon(StopwatchDialog.class.getResource("/net/sf/memoranda/ui/resources/icons/play.png")));
 		btnStartStop.setMargin(new Insets(2, 4, 2, 4));
-		btnStartStop.addActionListener(new java.awt.event.ActionListener() {
+		btnStartStop.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				btnStartStop_actionPerformed(e);
+				btnStartStopActionPerformed(e);
 	        }
 	    });
 		buttonPanel.add(btnStartStop);
@@ -133,9 +132,9 @@ public class StopwatchDialog extends JDialog
 		btnAdd.setIcon(new ImageIcon(StopwatchDialog.class.getResource("/net/sf/memoranda/ui/resources/icons/add.png")));
 		btnAdd.setMargin(new Insets(2, 4, 2, 4));
 		buttonPanel.add(btnAdd);
-		btnAdd.addActionListener(new java.awt.event.ActionListener() {
+		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				btnAdd_actionPerformed(e);
+				btnAddActionPerformed(e);
 	        }
 	    });
 		
@@ -143,9 +142,9 @@ public class StopwatchDialog extends JDialog
 		btnRemove.setIcon(new ImageIcon(StopwatchDialog.class.getResource("/net/sf/memoranda/ui/resources/icons/remove.png")));
 		btnRemove.setMargin(new Insets(2, 4, 2, 4));
 		buttonPanel.add(btnRemove);
-		btnRemove.addActionListener(new java.awt.event.ActionListener() {
+		btnRemove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				btnRemove_actionPerformed(e);
+				btnRemoveActionPerformed(e);
 	        }
 	    });
 	}
@@ -156,7 +155,7 @@ public class StopwatchDialog extends JDialog
 	    }
 	});
 	
-	void btnStartStop_actionPerformed(ActionEvent e) {
+	void btnStartStopActionPerformed(ActionEvent e) {
 		if(isRunning) {
 			stopwatch.stopStopwatch();
 			updater.stop();
@@ -174,7 +173,7 @@ public class StopwatchDialog extends JDialog
 		}
 	}
 	
-	void btnRestart_actionPerformed(ActionEvent e) {
+	void btnRestartActionPerformed(ActionEvent e) {
 		if(isRunning) {
 			updater.stop();
 			btnStartStop.setToolTipText("Start");
@@ -185,13 +184,13 @@ public class StopwatchDialog extends JDialog
 		txtTime.setText(stopwatch.getTimeString());
 	}
 	
-	void btnAdd_actionPerformed(ActionEvent e) {
+	void btnAddActionPerformed(ActionEvent e) {
 		AddRemoveDialog dlg = new AddRemoveDialog();
 		Dimension frmSize = App.getFrame().getSize();
         Point loc = App.getFrame().getLocation();
         dlg.setLocation((frmSize.width - dlg.getSize().width) / 2 + loc.x, (frmSize.height - dlg.getSize().height) / 2 + loc.y);
 		dlg.setVisible(true);
-		dlg.btnConfirm.addActionListener(new java.awt.event.ActionListener() {
+		dlg.btnConfirm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(!dlg.txtValue.getText().equals("")) {
 					try {
@@ -208,13 +207,13 @@ public class StopwatchDialog extends JDialog
 		});
 	}
 	
-	void btnRemove_actionPerformed(ActionEvent e) {
+	void btnRemoveActionPerformed(ActionEvent e) {
 		AddRemoveDialog dlg = new AddRemoveDialog();
 		Dimension frmSize = App.getFrame().getSize();
         Point loc = App.getFrame().getLocation();
         dlg.setLocation((frmSize.width - dlg.getSize().width) / 2 + loc.x, (frmSize.height - dlg.getSize().height) / 2 + loc.y);
 		dlg.setVisible(true);
-		dlg.btnConfirm.addActionListener(new java.awt.event.ActionListener() {
+		dlg.btnConfirm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(!dlg.txtValue.getText().equals("")) {
 					try {

@@ -5,7 +5,6 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Insets;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 
 import javax.swing.BorderFactory;
@@ -54,7 +53,7 @@ public class WorkPanel extends JPanel {
 		}
 	}
 
-	void jbInit() throws Exception {
+	private final void jbInit() throws Exception {
 		border1 =
 			BorderFactory.createCompoundBorder(
 				BorderFactory.createBevelBorder(
@@ -77,7 +76,7 @@ public class WorkPanel extends JPanel {
 		agendaB.setMaximumSize(new Dimension(60, 80));
 		agendaB.setMinimumSize(new Dimension(30, 30));
 
-		agendaB.setFont(new java.awt.Font("Dialog", 1, 10));
+		agendaB.setFont(new Font("Dialog", 1, 10));
 		agendaB.setPreferredSize(new Dimension(50, 50));
 		agendaB.setBorderPainted(false);
 		agendaB.setContentAreaFilled(false);
@@ -88,7 +87,7 @@ public class WorkPanel extends JPanel {
 		agendaB.setVerticalTextPosition(SwingConstants.BOTTOM);
 		agendaB.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				agendaB_actionPerformed(e);
+				agendaBActionPerformed(e);
 			}
 		});
 		agendaB.setIcon(
@@ -103,7 +102,7 @@ public class WorkPanel extends JPanel {
 		eventsB.setMaximumSize(new Dimension(60, 80));
 		eventsB.setMinimumSize(new Dimension(30, 30));
 
-		eventsB.setFont(new java.awt.Font("Dialog", 1, 10));
+		eventsB.setFont(new Font("Dialog", 1, 10));
 		eventsB.setPreferredSize(new Dimension(50, 50));
 		eventsB.setBorderPainted(false);
 		eventsB.setContentAreaFilled(false);
@@ -114,7 +113,7 @@ public class WorkPanel extends JPanel {
 		eventsB.setVerticalTextPosition(SwingConstants.BOTTOM);
 		eventsB.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				eventsB_actionPerformed(e);
+				eventsBActionPerformed(e);
 			}
 		});
 		eventsB.setIcon(
@@ -126,7 +125,7 @@ public class WorkPanel extends JPanel {
 		//eventsB.setSelected(true);
 
 		tasksB.setSelected(true);
-		tasksB.setFont(new java.awt.Font("Dialog", 1, 10));
+		tasksB.setFont(new Font("Dialog", 1, 10));
 		tasksB.setMargin(new Insets(0, 0, 0, 0));
 		tasksB.setIcon(
 			new ImageIcon(
@@ -135,7 +134,7 @@ public class WorkPanel extends JPanel {
 		tasksB.setVerticalTextPosition(SwingConstants.BOTTOM);
 		tasksB.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				tasksB_actionPerformed(e);
+				tasksBActionPerformed(e);
 			}
 		});
 		tasksB.setVerticalAlignment(SwingConstants.TOP);
@@ -150,7 +149,7 @@ public class WorkPanel extends JPanel {
 		tasksB.setMaximumSize(new Dimension(60, 80));
 		tasksB.setBackground(Color.white);
 
-		notesB.setFont(new java.awt.Font("Dialog", 1, 10));
+		notesB.setFont(new Font("Dialog", 1, 10));
 		notesB.setBackground(Color.white);
 		notesB.setBorder(null);
 		notesB.setMaximumSize(new Dimension(60, 80));
@@ -166,7 +165,7 @@ public class WorkPanel extends JPanel {
 		notesB.setVerticalTextPosition(SwingConstants.BOTTOM);
 		notesB.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				notesB_actionPerformed(e);
+				notesBActionPerformed(e);
 			}
 		});
 		notesB.setIcon(
@@ -186,10 +185,10 @@ public class WorkPanel extends JPanel {
 		filesB.setVerticalTextPosition(SwingConstants.BOTTOM);
 		filesB.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				filesB_actionPerformed(e);
+				filesBActionPerformed(e);
 			}
 		});
-		filesB.setFont(new java.awt.Font("Dialog", 1, 10));
+		filesB.setFont(new Font("Dialog", 1, 10));
 		filesB.setVerticalAlignment(SwingConstants.TOP);
 		filesB.setText(Local.getString("Resources"));
 		filesB.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -234,7 +233,7 @@ public class WorkPanel extends JPanel {
 		btnStopwatch.setBackground(Color.WHITE);
 		btnStopwatch.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				btnStopwatch_actionPerformed(e);
+				btnStopwatchActionPerformed(e);
 			}
 		});
 		
@@ -249,50 +248,50 @@ public class WorkPanel extends JPanel {
 	public void selectPanel(String pan) {
 		if (pan != null) {
 			if (pan.equals("NOTES"))
-				notesB_actionPerformed(null);
+				notesBActionPerformed(null);
 			else if (pan.equals("TASKS"))
-				tasksB_actionPerformed(null);
+				tasksBActionPerformed(null);
 			else if (pan.equals("EVENTS"))
-				eventsB_actionPerformed(null);
+				eventsBActionPerformed(null);
 			else if (pan.equals("FILES"))
-				filesB_actionPerformed(null);
+				filesBActionPerformed(null);
 		}
 	}
 
-	public void agendaB_actionPerformed(ActionEvent e) {
+	public void agendaBActionPerformed(ActionEvent e) {
 		cardLayout1.show(panel, "DAILYITEMS");
 		dailyItemsPanel.selectPanel("AGENDA");
 		setCurrentButton(agendaB);
 		Context.put("CURRENT_PANEL", "AGENDA");
 	}
 
-	public void notesB_actionPerformed(ActionEvent e) {
+	public void notesBActionPerformed(ActionEvent e) {
 		cardLayout1.show(panel, "DAILYITEMS");
 		dailyItemsPanel.selectPanel("NOTES");
 		setCurrentButton(notesB);
 		Context.put("CURRENT_PANEL", "NOTES");
 	}
 
-	public void tasksB_actionPerformed(ActionEvent e) {
+	public void tasksBActionPerformed(ActionEvent e) {
 		cardLayout1.show(panel, "DAILYITEMS");
 		dailyItemsPanel.selectPanel("TASKS");
 		setCurrentButton(tasksB);
 		Context.put("CURRENT_PANEL", "TASKS");
 	}
 
-	public void eventsB_actionPerformed(ActionEvent e) {
+	public void eventsBActionPerformed(ActionEvent e) {
 		cardLayout1.show(panel, "DAILYITEMS");
 		dailyItemsPanel.selectPanel("EVENTS");
 		setCurrentButton(eventsB);
 		Context.put("CURRENT_PANEL", "EVENTS");
 	}
 
-	public void filesB_actionPerformed(ActionEvent e) {
+	public void filesBActionPerformed(ActionEvent e) {
 		cardLayout1.show(panel, "FILES");
 		setCurrentButton(filesB);
 		Context.put("CURRENT_PANEL", "FILES");
 	}
-	public void btnStopwatch_actionPerformed(ActionEvent e) {
+	public void btnStopwatchActionPerformed(ActionEvent e) {
 		if(CurrentProject.getTaskList().getAllTasks().isEmpty()) {
 			JOptionPane.showMessageDialog(null, "No tasks that need timing exist in project.", "Error", JOptionPane.ERROR_MESSAGE);
 		}
