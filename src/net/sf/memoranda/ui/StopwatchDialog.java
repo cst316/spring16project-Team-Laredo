@@ -54,7 +54,8 @@ public class StopwatchDialog extends JDialog
 	JButton btnAdd = new JButton("");
 	JButton btnRemove = new JButton("");
 	JPanel panDialogTitle = new JPanel();
-	public StopwatchDialog() {
+	public StopwatchDialog(Frame frame) {
+		super(frame, "Stopwatch");
 		getContentPane().setMaximumSize(new Dimension(315, 155));
 		getContentPane().setMinimumSize(new Dimension(315, 155));
 		setMaximumSize(new Dimension(315, 155));
@@ -148,31 +149,6 @@ public class StopwatchDialog extends JDialog
 	        }
 	    });
 	}
-	
-  	public StopwatchDialog(Frame frame, String title) {
-        super(frame, title, true);
-        setTitle("");
-        try {
-            jbInit();
-            
-            pack();
-        }
-        catch (Exception ex) {
-            new ExceptionDialog(ex);
-        }
-    }
-  	
-	public void jbInit() throws Exception {
-		setPreferredSize(new Dimension(450, 475));
-		setResizable(false);
-		getContentPane().setLayout(new BorderLayout(0, 0));
-		panDialogTitle.setBorder(new EmptyBorder(0, 5, 0, 5));
-		panDialogTitle.setBackground(Color.WHITE);
-		getContentPane().add(panDialogTitle, BorderLayout.NORTH);
-		panDialogTitle.setLayout(new BorderLayout(0, 0));
-		//updater.start();
-	}
-
 	
 	final Timer updater = new Timer(500, new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {

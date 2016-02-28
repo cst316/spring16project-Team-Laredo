@@ -296,11 +296,7 @@ public class WorkPanel extends JPanel {
 		if(CurrentProject.getTaskList().getAllTasks().isEmpty()) {
 			JOptionPane.showMessageDialog(null, "No tasks that need timing exist in project.", "Error", JOptionPane.ERROR_MESSAGE);
 		}
-		StopwatchDialog dlg = new StopwatchDialog();
-		Dimension frmSize = App.getFrame().getSize();
-        Point loc = App.getFrame().getLocation();
-        dlg.setLocation((frmSize.width - dlg.getSize().width) / 2 + loc.x, (frmSize.height - dlg.getSize().height) / 2 + loc.y);
-		dlg.setVisible(true);
+		StopwatchDialogSingleton.getStopwatch(App.frame);
 	}
 
 	void setCurrentButton(JButton cb) {
