@@ -91,6 +91,7 @@ public class LocDialog extends JDialog implements ItemListener{
     public LocDialog(Frame frame, Task task){
     	super(frame, task.getText() + ": Lines of Code", true);
     	this.task = task;
+    	task.registerObservers();
     	try{
     		init();
     	}
@@ -209,17 +210,17 @@ public class LocDialog extends JDialog implements ItemListener{
     	try{
     		String selectedValue = (String) comboBox.getSelectedItem();
     		if(selectedValue.equals("Base")){
-    			task.setLocBase(task.getLocBase() + positiveValue(addedBaseLocTextField)); 
+    			task.addLocBase(positiveValue(addedBaseLocTextField));
     		}else if(selectedValue.equals("Added")){
-    			task.setLocAdded(task.getLocAdded() + positiveValue(addedLocTextField));
+    			task.addLocAdded(positiveValue(addedLocTextField));
     		}else if(selectedValue.equals("Modified")){
-    			task.setLocModified(task.getLocModified() + positiveValue(modifiedLocTextField));
+    			task.addLocModified(positiveValue(modifiedLocTextField));
     		}else if(selectedValue.equals("Deleted")){
     			deleteLoc();
     		}else if(selectedValue.equals("Reused")){
-    			task.setLocReused(task.getLocReused() + positiveValue(reusedLocTextField));
+    			task.addLocReused(positiveValue(reusedLocTextField));
     		}else if(selectedValue.equals("New Reuse")){
-    			task.setLocNewReuse(task.getLocNewReuse() + positiveValue(newReuseLocTextField));
+    			task.addLocNewReuse(positiveValue(newReuseLocTextField));
     		}
     		update();
     	}
@@ -258,7 +259,7 @@ public class LocDialog extends JDialog implements ItemListener{
     void deleteLoc(){
     	int deletedLoc = Integer.parseInt(deletedLocTextField.getText());
     	if((task.getLocTotal() - deletedLoc) >= 0){
-    		task.setLocDeleted(task.getLocDeleted() + positiveValue(deletedLocTextField));
+    		task.addLocDeleted(positiveValue(deletedLocTextField));
     	}
     	else{
     		JOptionPane.showMessageDialog(null, "Unable to delete more lines of code than total lines of code.", "Error",
