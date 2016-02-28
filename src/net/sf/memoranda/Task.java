@@ -8,9 +8,9 @@
  */
 package net.sf.memoranda;
 
-import java.util.Collection;
-
 import net.sf.memoranda.date.CalendarDate;
+
+import java.util.Collection;
 
 /**
  *
@@ -75,17 +75,17 @@ public interface Task {
 
     Collection getSubTasks();
 
-    void setEstEffort(long effort);
-
     long getEstEffort();
 
-    void setActEffort(long effort);
+    void setEstEffort(long effort);
 
     long getActEffort();
 
-    void setDescription(String description);
+    void setActEffort(long effort);
 
     String getDescription();
+
+    void setDescription(String description);
 
     Task getParentTask();
 
@@ -101,33 +101,33 @@ public interface Task {
 
     int getLocBase();
 
-    int getLocAdded();
-
-    int getLocModified();
-
-    int getLocDeleted();
-
-    int getLocNewAndChanged();
-
-    int getLocReused();
-
-    int getLocNewReuse();
-
-    int getLocTotal();
-
     void setLocBase(int loc);
+
+    int getLocAdded();
 
     void setLocAdded(int loc);
 
+    int getLocModified();
+
     void setLocModified(int loc);
+
+    int getLocDeleted();
 
     void setLocDeleted(int loc);
 
+    int getLocNewAndChanged();
+
     void setLocNewAndChanged(int loc);
+
+    int getLocReused();
 
     void setLocReused(int loc);
 
+    int getLocNewReuse();
+
     void setLocNewReuse(int loc);
+
+    int getLocTotal();
 
     void setLocTotal(int loc);
 }

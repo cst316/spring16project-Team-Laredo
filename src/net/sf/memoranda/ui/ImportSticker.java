@@ -1,24 +1,18 @@
 package net.sf.memoranda.ui;
 
-import javax.swing.JOptionPane;
-
 import net.sf.memoranda.util.Local;
 
-public class ImportSticker {
+import javax.swing.*;
 
-String name;        
-        
-        public ImportSticker(String x) {
-                name = x;
-        }
+class ImportSticker {
 
-        public boolean import_file(){
+    public ImportSticker() {
+    }
+
+    public void import_file() {
                 /* We are working on this =)*/
-        		/* Translation: Error[404] Feature not found... -tjcole2*/
-                
-                JOptionPane.showMessageDialog(null,Local.getString("Document import failed."));
-                return true;
-        }
-        
-        
+                /* Translation: Error[404] Feature not found... -tjcole2*/
+
+        JOptionPane.showMessageDialog(null, Local.getString("Document import failed."));
+    }
 }

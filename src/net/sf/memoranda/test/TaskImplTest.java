@@ -1,5 +1,6 @@
 package net.sf.memoranda.test;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.sf.memoranda.Project;
 import net.sf.memoranda.ProjectManager;
 import net.sf.memoranda.Task;
@@ -10,13 +11,14 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
+@SuppressFBWarnings("ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD")
 public class TaskImplTest {
 
-    public static final String TEST_PROJECT_TITLE = "testProjectAAAAAAAAAAAAAAAAAA";
-    public static Project project = null;
-    public static TaskList tasks = null;
+    private static final String TEST_PROJECT_TITLE = "testProjectAAAAAAAAAAAAAAAAAA";
+    private static Project project = null;
+    private static TaskList tasks = null;
 
     @Before
     public void setUp() throws Exception {
@@ -27,9 +29,7 @@ public class TaskImplTest {
 
     @After
     public void tearDown() throws Exception {
-        tasks = null;
         ProjectManager.removeProject(TEST_PROJECT_TITLE);
-        project = null;
     }
 
     @Test

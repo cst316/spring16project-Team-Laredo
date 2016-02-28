@@ -4,46 +4,48 @@
  */
 package net.sf.memoranda.util;
 
-import net.sf.memoranda.*;
+import net.sf.memoranda.Note;
+import net.sf.memoranda.NoteList;
+import net.sf.memoranda.Project;
 import net.sf.memoranda.date.CalendarDate;
-import net.sf.memoranda.ui.*;
+import net.sf.memoranda.ui.App;
+import net.sf.memoranda.ui.ExceptionDialog;
 import net.sf.memoranda.ui.htmleditor.AltHTMLWriter;
 
-import java.io.*;
-import java.util.*;
-import java.util.regex.Pattern;
-import java.util.Collections;
-
 import javax.swing.text.html.HTMLDocument;
+import java.io.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Vector;
+import java.util.regex.Pattern;
 
 /**
- *  
+ *
  */
 /* $Id: ProjectExporter.java,v 1.7 2005/07/05 08:17:28 alexeya Exp $ */
 public class ProjectExporter {
 
-    static boolean _chunked = false;
-    static boolean _num = false;
-    static boolean _xhtml = false;
-    static boolean _copyImages = false;
-    static File output = null;
-    static String _charset = null;
-    static boolean _titlesAsHeaders = false;
-    static boolean _navigation = false;
-    
-    static String charsetString = "\n";
+    private static boolean _chunked = false;
+    private static boolean _num = false;
+    private static boolean _xhtml = false;
+    private static File output = null;
+    private static String _charset = null;
+    private static boolean _titlesAsHeaders = false;
+    private static boolean _navigation = false;
+
+    private static String charsetString = "\n";
 
     public static void export(Project prj, File f, String charset,
-            boolean xhtml, boolean chunked, boolean navigation, boolean num,
-            boolean titlesAsHeaders, boolean copyImages) {
+                              boolean xhtml, boolean chunked, boolean num,
+                              boolean titlesAsHeaders) {
 
         _num = num;
         _chunked = chunked;
         _charset = charset;
         _xhtml = xhtml;
         _titlesAsHeaders = titlesAsHeaders;
-        _copyImages = copyImages;
-        _navigation = navigation;
+        boolean _copyImages = false;
+        _navigation = true;
         if (f.isDirectory())
             output = new File(f.getPath() + "/index.html");
         else
@@ -55,25 +57,23 @@ public class ProjectExporter {
 
         Writer fw;
 
-        if (output.getName().indexOf(".htm") == -1) {
+        if (!output.getName().contains(".htm")) {
             String dir = output.getPath();
             String ext = ".html";
 
             String nfile = dir + ext;
 
             output = new File(nfile);
-        }        
+        }
         try {
             if (charset != null) {
                 fw = new OutputStreamWriter(new FileOutputStream(output),
                         charset);
                 charsetString = "<meta http-equiv=\"Content-Type\" content=\"text/html; charset="
                         + charset + "\" />";
-            }
-            else
+            } else
                 fw = new FileWriter(output);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             new ExceptionDialog(ex, "Failed to write to " + output, "");
             return;
         }
@@ -89,16 +89,15 @@ public class ProjectExporter {
         try {
             fw.flush();
             fw.close();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             new ExceptionDialog(ex, "Failed to write to " + output, "");
         }
     }
 
     private static void generateToc(Writer w, Vector notes) {
         write(w, "<div class=\"toc\"><ul>\n");
-        for (Iterator i = notes.iterator(); i.hasNext(); ) {
-            Note note = (Note) i.next();
+        for (Object note1 : notes) {
+            Note note = (Note) note1;
             String link = "";
             CalendarDate d = note.getDate();
             String id = note.getId();
@@ -123,8 +122,7 @@ public class ProjectExporter {
             writer.write();
             sw.flush();
             sw.close();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             new ExceptionDialog(ex);
         }
         text = sw.toString();
@@ -146,7 +144,7 @@ public class ProjectExporter {
         text = "<div class=\"note\">" + text + "</div>";
 
         if (_titlesAsHeaders)
-                        text = "\n\n<div class=\"date\">"
+            text = "\n\n<div class=\"date\">"
                     + note.getDate().getFullDateString()
                     + ":</div>\n<h1 class=\"title\">" + note.getTitle()
                     + "</h1>\n" + text;
@@ -155,23 +153,23 @@ public class ProjectExporter {
 
     private static String generateNav(Note prev, Note next) {
         String s = "<hr></hr><div class=\"navigation\"><table border=\"0\" width=\"100%\" cellpadding=\"2\"><tr><td width=\"33%\">";
-        if (prev != null)   
+        if (prev != null)
             s += "<div class=\"navitem\"><a href=\"" + prev.getId() + ".html\">"
                     + Local.getString("Previous") + "</a><br></br>"
                     + prev.getDate().getMediumDateString() + " "
                     + prev.getTitle() + "</div>";
-        
+
         else
             s += "&nbsp;";
-                s += "</td><td width=\"34%\" align=\"center\"><a href=\""
+        s += "</td><td width=\"34%\" align=\"center\"><a href=\""
                 + output.getName()
                 + "\">Up</a></td><td width=\"33%\" align=\"right\">";
-        if (next != null) 
+        if (next != null)
             s += "<div class=\"navitem\"><a href=\"" + next.getId() + ".html\">"
                     + Local.getString("Next") + "</a><br></br>"
                     + next.getDate().getMediumDateString() + " "
                     + next.getTitle() + "</div>";
-        
+
         else
             s += "&nbsp;";
         s += "</td></tr></table></div>\n";
@@ -194,7 +192,7 @@ public class ProjectExporter {
                                 _charset);
                     else
                         fw = new FileWriter(f);
-                    String s = "<html>\n<head>\n"+charsetString+"<title>" + note.getTitle()
+                    String s = "<html>\n<head>\n" + charsetString + "<title>" + note.getTitle()
                             + "</title>\n</head>\n<body>\n" + getNoteHTML(note);
                     if (_navigation) {
                         Note nprev = null;
@@ -209,21 +207,18 @@ public class ProjectExporter {
                     fw.write(s);
                     fw.flush();
                     fw.close();
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                     new ExceptionDialog(ex, "Failed to write to " + output, "");
                 }
-            }
-            else
-                                write(w, "<a name=\"" + note.getId() + "\">" + getNoteHTML(note) + "</a>\n");
+            } else
+                write(w, "<a name=\"" + note.getId() + "\">" + getNoteHTML(note) + "</a>\n");
         }
     }
 
     private static void write(Writer w, String s) {
         try {
             w.write(s);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             new ExceptionDialog(ex, "Failed to write to " + output, "");
         }
     }
