@@ -475,10 +475,10 @@ public class DailyItemsPanel extends JPanel {
 		return CurrentPanel;
 	}
     void taskB_actionPerformed(ActionEvent e) {
-        parentPanel.tasksB_actionPerformed(null);
+        parentPanel.tasksBActionPerformed(null);
     }
 
     void alarmB_actionPerformed(ActionEvent e) {
-        parentPanel.eventsB_actionPerformed(null);
+        parentPanel.eventsBActionPerformed(null);
     }
 }
