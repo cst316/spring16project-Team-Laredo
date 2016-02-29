@@ -10,10 +10,7 @@ import net.sf.memoranda.util.Util;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.Date;
 import java.util.Vector;
 
@@ -41,6 +38,7 @@ class TaskPanel extends JPanel {
     private final JButton editTaskB = new JButton();
     private final JButton removeTaskB = new JButton();
     private final JButton completeTaskB = new JButton();
+    private final JButton editTaskLocB = new JButton();
     private final JCheckBoxMenuItem ppShowActiveOnlyChB = new JCheckBoxMenuItem();
     private final JScrollPane scrollPane = new JScrollPane();
     private final JMenuItem ppEditTask = new JMenuItem();
@@ -50,6 +48,8 @@ class TaskPanel extends JPanel {
     private final JMenuItem ppCompleteTask = new JMenuItem();
     private final JMenuItem ppAddSubTask = new JMenuItem();
     private final JMenuItem ppCalcTask = new JMenuItem();
+    ImageIcon locTaskImage = new ImageIcon(AppFrame.class.getResource(
+            "resources/icons/LOC.png"));
     private DailyItemsPanel parentPanel = null;
 
     public TaskPanel(DailyItemsPanel _parentPanel) {
@@ -124,6 +124,10 @@ class TaskPanel extends JPanel {
         menuItemInitialization(ppCalcTask, Local.getString("Calculate task data"), completeTaskImage);
         ppCalcTask.addActionListener(e -> ppCalcTask_actionPerformed());
 
+        buttonInitialization(editTaskLocB, "LOC");
+        editTaskLocB.setIcon(locTaskImage);
+        editTaskLocB.addActionListener(this::editLoc_actionPerformed);
+
 
         scrollPane.getViewport().add(taskTable, null);
         this.add(scrollPane, BorderLayout.CENTER);
@@ -137,6 +141,8 @@ class TaskPanel extends JPanel {
         tasksToolBar.addSeparator(new Dimension(8, 24));
         tasksToolBar.add(editTaskB, null);
         tasksToolBar.add(completeTaskB, null);
+        tasksToolBar.addSeparator(new Dimension(8, 24));
+        tasksToolBar.add(editTaskLocB);
 
         this.add(tasksToolBar, BorderLayout.NORTH);
 
@@ -233,6 +239,22 @@ class TaskPanel extends JPanel {
             }
         });
 
+    }
+
+    protected void editLoc_actionPerformed(ActionEvent e) {
+        try {
+            Task t = CurrentProject.getTaskList().getTask(taskTable.getModel().getValueAt(
+                    taskTable.getSelectedRow(), TaskTable.TASK_ID).toString());
+            LocDialog locDialog = new LocDialog(App.getFrame(), t);
+            Dimension frmSize = App.getFrame().getSize();
+            Point loc = App.getFrame().getLocation();
+            locDialog.setLocation((frmSize.width - locDialog.getSize().width) / 2 + loc.x,
+                    (frmSize.height - locDialog.getSize().height) / 2 + loc.y);
+            locDialog.setVisible(true);
+        } catch (NullPointerException npe) {
+            npe.printStackTrace();
+            System.out.println("Problem opening SLOC dialog. Probably no task selected.");
+        }
     }
 
     private void editTaskB_actionPerformed() {

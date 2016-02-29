@@ -15,15 +15,13 @@ import nu.xom.Element;
 import nu.xom.Elements;
 import nu.xom.Node;
 
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Vector;
+import java.util.*;
 
 /**
  *
  */
 /*$Id: TaskImpl.java,v 1.15 2005/12/01 08:12:26 alexeya Exp $*/
-public class TaskImpl implements Task, Comparable {
+public class TaskImpl extends Observable implements Task, Comparable {
 
     // declaring XML name strings as class constants
     private static final String LOC_BASE_ATTR = "loc_base";
@@ -47,6 +45,8 @@ public class TaskImpl implements Task, Comparable {
     private static final String TEXT_CHILD = "text";
     private static final String ID_ATTR = "id";
     private static final String DESCRIPTION = "description";
+
+    private List<Observer> observers = new ArrayList<>();
 
     private Element _element = null;
     private TaskList _tl = null;
@@ -74,6 +74,14 @@ public class TaskImpl implements Task, Comparable {
     }
 
     @Override
+    public void addLocBase(int loc) {
+        int total = getLocBase() + loc;
+        setLocBase(total);
+        LocToUpdate updateItem = new LocToUpdate("Base", loc);
+        notifyObservers(updateItem);
+    }
+
+    @Override
     public int getLocAdded() {
         return getAttributeValueInt(LOC_ADDED_ATTR);
     }
@@ -81,6 +89,14 @@ public class TaskImpl implements Task, Comparable {
     @Override
     public void setLocAdded(int loc) {
         setAttribute(LOC_ADDED_ATTR, Integer.toString(loc));
+    }
+
+    @Override
+    public void addLocAdded(int loc) {
+        int total = getLocAdded() + loc;
+        setLocAdded(total);
+        LocToUpdate updateItem = new LocToUpdate("Added", loc);
+        notifyObservers(updateItem);
     }
 
     @Override
@@ -94,6 +110,14 @@ public class TaskImpl implements Task, Comparable {
     }
 
     @Override
+    public void addLocModified(int loc) {
+        int total = getLocModified() + loc;
+        setLocModified(total);
+        LocToUpdate updateItem = new LocToUpdate("Modified", loc);
+        notifyObservers(updateItem);
+    }
+
+    @Override
     public int getLocDeleted() {
         return getAttributeValueInt(LOC_DELETED_ATTR);
     }
@@ -101,6 +125,14 @@ public class TaskImpl implements Task, Comparable {
     @Override
     public void setLocDeleted(int loc) {
         setAttribute(LOC_DELETED_ATTR, Integer.toString(loc));
+    }
+
+    @Override
+    public void addLocDeleted(int loc) {
+        int total = getLocDeleted() + loc;
+        setLocDeleted(total);
+        LocToUpdate updateItem = new LocToUpdate("Deleted", loc);
+        notifyObservers(updateItem);
     }
 
     @Override
@@ -124,6 +156,14 @@ public class TaskImpl implements Task, Comparable {
     }
 
     @Override
+    public void addLocReused(int loc) {
+        int total = getLocReused() + loc;
+        setLocReused(total);
+        LocToUpdate updateItem = new LocToUpdate("Reused", loc);
+        notifyObservers(updateItem);
+    }
+
+    @Override
     public int getLocNewReuse() {
         return getAttributeValueInt(LOC_NEW_REUSE_ATTR);
     }
@@ -131,6 +171,14 @@ public class TaskImpl implements Task, Comparable {
     @Override
     public void setLocNewReuse(int loc) {
         setAttribute(LOC_NEW_REUSE_ATTR, Integer.toString(loc));
+    }
+
+    @Override
+    public void addLocNewReuse(int loc) {
+        int total = getLocNewReuse() + loc;
+        setLocNewReuse(total);
+        LocToUpdate updateItem = new LocToUpdate("NewReuse", loc);
+        notifyObservers(updateItem);
     }
 
     @Override
@@ -451,6 +499,56 @@ public class TaskImpl implements Task, Comparable {
             v.add(t);
         }
         return v;
+    }
+
+    public void registerObservers() {
+        Task current = this.getParentTask();
+        while (current != null) {
+            observers.add(current);
+            current = current.getParentTask();
+        }
+
+    }
+
+    public void notifyObservers(LocToUpdate message) {
+        for (Observer observer : observers) {
+            observer.update(this, message);
+        }
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        LocToUpdate update = (LocToUpdate) arg;
+        switch (update.typeOfLoc) {
+            case "Base":
+                addLocBase(update.loc);
+                break;
+            case "Added":
+                addLocAdded(update.loc);
+                break;
+            case "Modified":
+                addLocModified(update.loc);
+                break;
+            case "Deleted":
+                addLocDeleted(update.loc);
+                break;
+            case "Reused":
+                addLocReused(update.loc);
+                break;
+            case "NewReuse":
+                addLocNewReuse(update.loc);
+                break;
+        }
+    }
+
+    class LocToUpdate {
+        String typeOfLoc;
+        int loc;
+
+        public LocToUpdate(String typeOfLoc, int loc) {
+            this.typeOfLoc = typeOfLoc;
+            this.loc = loc;
+        }
     }
 
 }

@@ -11,12 +11,13 @@ package net.sf.memoranda;
 import net.sf.memoranda.date.CalendarDate;
 
 import java.util.Collection;
+import java.util.Observer;
 
 /**
  *
  */
 /*$Id: Task.java,v 1.9 2005/06/16 04:21:32 alexeya Exp $*/
-public interface Task {
+public interface Task extends Observer {
 
     //Status
     int SCHEDULED = 0;
@@ -103,17 +104,25 @@ public interface Task {
 
     void setLocBase(int loc);
 
+    void addLocBase(int loc);
+
     int getLocAdded();
 
     void setLocAdded(int loc);
+
+    void addLocAdded(int loc);
 
     int getLocModified();
 
     void setLocModified(int loc);
 
+    void addLocModified(int loc);
+
     int getLocDeleted();
 
     void setLocDeleted(int loc);
+
+    void addLocDeleted(int loc);
 
     int getLocNewAndChanged();
 
@@ -123,11 +132,17 @@ public interface Task {
 
     void setLocReused(int loc);
 
+    void addLocReused(int loc);
+
     int getLocNewReuse();
 
     void setLocNewReuse(int loc);
 
+    void addLocNewReuse(int loc);
+
     int getLocTotal();
 
     void setLocTotal(int loc);
+
+    void registerObservers();
 }
