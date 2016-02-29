@@ -1,5 +1,6 @@
 package net.sf.memoranda.test;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.sf.memoranda.*;
 import net.sf.memoranda.date.CalendarDate;
 import org.junit.After;
@@ -9,12 +10,13 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 
+@SuppressFBWarnings("ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD")
 public class StatisticsTest {
 
-    public static Project project = null;
-    public static TaskList tasks = null;
-    public static DefectList defects = null;
-    public static Statistics statistics = null;
+    private static Project project = null;
+    private static TaskList tasks = null;
+    private static DefectList defects = null;
+    private static Statistics statistics = null;
 
     @Before
     public void setUp() throws Exception {

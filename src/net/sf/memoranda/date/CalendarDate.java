@@ -8,6 +8,7 @@
  */
 package net.sf.memoranda.date;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.sf.memoranda.util.Local;
 import net.sf.memoranda.util.Util;
 
@@ -21,15 +22,9 @@ import java.util.Date;
 /*$Id: CalendarDate.java,v 1.3 2004/01/30 12:17:41 alexeya Exp $*/
 public class CalendarDate {
 
-    private int _year;
-    private int _month;
-    private int _day;
-
-    public static Calendar dateToCalendar(Date date) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        return cal;
-    }
+    private final int _year;
+    private final int _month;
+    private final int _day;
 
     public CalendarDate() {
         this(Calendar.getInstance());
@@ -40,12 +35,13 @@ public class CalendarDate {
         _month = month;
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, _year);
-        cal.set(Calendar.MONTH, _month);cal.getTime();
+        cal.set(Calendar.MONTH, _month);
+        cal.getTime();
         int dmax = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
         if (day <= dmax)
-          _day = day;
+            _day = day;
         else
-          _day = dmax;
+            _day = dmax;
 
     }
 
@@ -67,6 +63,12 @@ public class CalendarDate {
 
     }
 
+    private static Calendar dateToCalendar(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return cal;
+    }
+
     public static CalendarDate today() {
         return new CalendarDate();
     }
@@ -77,7 +79,7 @@ public class CalendarDate {
         return new CalendarDate(cal);
     }
 
-    public static Calendar toCalendar(int day, int month, int year) {
+    private static Calendar toCalendar(int day, int month, int year) {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, year);
         cal.set(Calendar.MONTH, month);
@@ -86,7 +88,7 @@ public class CalendarDate {
         return cal;
     }
 
-    public static Date toDate(int day, int month, int year) {
+    private static Date toDate(int day, int month, int year) {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, year);
         cal.set(Calendar.MONTH, month);
@@ -114,20 +116,28 @@ public class CalendarDate {
         return _year;
     }
 
+    // not sure why findbugs thinks this is so awful
+    @SuppressFBWarnings("EQ_CHECK_FOR_OPERAND_NOT_COMPATIBLE_WITH_THIS")
     public boolean equals(Object object) {
         if (object instanceof CalendarDate) {
             CalendarDate d2 = (CalendarDate) object;
-            return ((d2.getDay() == getDay()) && (d2.getMonth() == getMonth()) && (d2.getYear() == getYear()));
-        }
-        else if (object instanceof Calendar) {
+            return hashCode() == d2.hashCode();
+        } else if (object instanceof Calendar) {
             Calendar cal = (Calendar) object;
             return this.equals(new CalendarDate(cal));
-        }
-        else if (object instanceof Date) {
+        } else if (object instanceof Date) {
             Date d = (Date) object;
             return this.equals(new CalendarDate(d));
         }
         return super.equals(object);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = _year;
+        result = 31 * result + _month;
+        result = 31 * result + _day;
+        return result;
     }
 
     public boolean equals(CalendarDate date) {
@@ -135,13 +145,11 @@ public class CalendarDate {
     }
 
     public boolean before(CalendarDate date) {
-        if (date == null) return true;
-        return this.getCalendar().before(date.getCalendar());
+        return date == null || this.getCalendar().before(date.getCalendar());
     }
 
     public boolean after(CalendarDate date) {
-        if (date == null) return true;
-        return this.getCalendar().after(date.getCalendar());
+        return date == null || this.getCalendar().after(date.getCalendar());
     }
 
     public boolean inPeriod(CalendarDate startDate, CalendarDate endDate) {
@@ -150,22 +158,21 @@ public class CalendarDate {
 
     public String toString() {
         return Util.getDateStamp(this);
-    }  
-    
+    }
+
     public String getFullDateString() {
         return Local.getDateString(this, DateFormat.FULL);
     }
-    
+
     public String getMediumDateString() {
         return Local.getDateString(this, DateFormat.MEDIUM);
     }
-    
+
     public String getLongDateString() {
         return Local.getDateString(this, DateFormat.LONG);
     }
-    
+
     public String getShortDateString() {
         return Local.getDateString(this, DateFormat.SHORT);
     }
-
 }

@@ -12,7 +12,10 @@ import net.sf.memoranda.date.CalendarDate;
 import net.sf.memoranda.util.Util;
 import nu.xom.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Hashtable;
+import java.util.Vector;
 import java.util.stream.Collectors;
 
 /**
@@ -21,15 +24,14 @@ import java.util.stream.Collectors;
 /*$Id: TaskListImpl.java,v 1.14 2006/07/03 11:59:19 alexeya Exp $*/
 public class TaskListImpl implements TaskList {
 
-    private Project _project = null;
-    private Document _doc = null;
-    private Element _root = null;
-
     /*
      * Hastable of "task" XOM elements for quick searching them by ID's
      * (ID => element)
      */
-    private Hashtable<String, Element> elements = new Hashtable<>();
+    private final Hashtable<String, Element> elements = new Hashtable<>();
+    private Project _project = null;
+    private Document _doc = null;
+    private Element _root = null;
 
     /**
      * Constructor for TaskListImpl.
@@ -165,11 +167,7 @@ public class TaskListImpl implements TaskList {
     public boolean hasSubTasks(String id) {
         Element task = getTaskElement(id);
         if (task == null) return false;
-        if (task.getChildElements("task").size() > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return task.getChildElements("task").size() > 0;
     }
 
     public Task getTask(String id) {
@@ -183,11 +181,7 @@ public class TaskListImpl implements TaskList {
         Node parentNode = t.getParent();
         if (parentNode instanceof Element) {
             Element parent = (Element) parentNode;
-            if (parent.getLocalName().equalsIgnoreCase("task")) {
-                return true;
-            } else {
-                return false;
-            }
+            return parent.getLocalName().equalsIgnoreCase("task");
         } else {
             return false;
         }
@@ -302,8 +296,7 @@ public class TaskListImpl implements TaskList {
         long totalEffort = 0; // milliseconds
         if (hasSubTasks(t.getID())) {
             Collection<Task> subTasks = getAllSubTasks(t.getID());
-            for (Iterator<Task> iter = subTasks.iterator(); iter.hasNext(); ) {
-                Task e = iter.next();
+            for (Task e : subTasks) {
                 long[] subTaskCompletion = calculateCompletionFromSubTasks(e);
                 expendedEffort = expendedEffort + subTaskCompletion[0];
                 totalEffort = totalEffort + subTaskCompletion[1];

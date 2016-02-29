@@ -1,37 +1,24 @@
 package net.sf.memoranda.ui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.border.Border;
-import javax.swing.border.TitledBorder;
-
 import net.sf.memoranda.util.Local;
 
-/*$Id: ResourceTypeDialog.java,v 1.11 2004/07/01 14:44:10 pbielen Exp $*/
-public class ResourceTypeDialog extends JDialog {
-    JButton cancelB = new JButton();
-    JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-    JLabel header = new JLabel();
-    JPanel dialogTitlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    JButton okB = new JButton();
-    ResourceTypePanel areaPanel = new ResourceTypePanel();
-    //JPanel mPanel = new JPanel(new BorderLayout());
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
 
+/*$Id: ResourceTypeDialog.java,v 1.11 2004/07/01 14:44:10 pbielen Exp $*/
+class ResourceTypeDialog extends JDialog {
+    private final JButton cancelB = new JButton();
+    private final JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+    private final JLabel header = new JLabel();
+    private final JPanel dialogTitlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    private final JButton okB = new JButton();
+    //JPanel mPanel = new JPanel(new BorderLayout());
+    private final ResourceTypePanel areaPanel = new ResourceTypePanel();
+    public String ext = "";
     Border border2;
     TitledBorder titledBorder2;
-    public String ext = "";
     boolean CANCELLED = true;
 
     public ResourceTypeDialog(JFrame frame, String title) {
@@ -39,68 +26,58 @@ public class ResourceTypeDialog extends JDialog {
         try {
             jbInit();
             pack();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             new ExceptionDialog(ex);
         }
     }
 
-    void jbInit() throws Exception {
-	this.setResizable(false);
+    private void jbInit() throws Exception {
+        this.setResizable(false);
         dialogTitlePanel.setBackground(Color.WHITE);
         dialogTitlePanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
         header.setFont(new java.awt.Font("Dialog", 0, 20));
         header.setForeground(new Color(0, 0, 124));
         header.setText(Local.getString("Resource type"));
         header.setIcon(new ImageIcon(net.sf.memoranda.ui.ResourceTypeDialog.class.getResource(
-            "resources/icons/resource48.png")));        
+                "resources/icons/resource48.png")));
         dialogTitlePanel.add(header);
         this.getContentPane().add(dialogTitlePanel, BorderLayout.NORTH);
-        
+
         //mPanel.add(areaPanel, BorderLayout.CENTER);
         this.getContentPane().add(areaPanel, BorderLayout.CENTER);
-        
-        cancelB.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                cancelB_actionPerformed(e);
-            }
-        });
+
+        cancelB.addActionListener(e -> cancelB_actionPerformed());
         cancelB.setText(Local.getString("Cancel"));
         cancelB.setPreferredSize(new Dimension(100, 26));
         cancelB.setMinimumSize(new Dimension(100, 26));
         cancelB.setMaximumSize(new Dimension(100, 26));
 
-        
+
         okB.setMaximumSize(new Dimension(100, 26));
         okB.setMinimumSize(new Dimension(100, 26));
         okB.setPreferredSize(new Dimension(100, 26));
         okB.setText(Local.getString("Ok"));
-        okB.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                okB_actionPerformed(e);
-            }
-        });
+        okB.addActionListener(e -> okB_actionPerformed());
         this.getRootPane().setDefaultButton(okB);
         buttonsPanel.add(okB, null);
         buttonsPanel.add(cancelB, null);
-        
+
         this.getContentPane().add(buttonsPanel, BorderLayout.SOUTH);
     }
 
 
-
-    void cancelB_actionPerformed(ActionEvent e) {
+    private void cancelB_actionPerformed() {
         this.dispose();
     }
-    void okB_actionPerformed(ActionEvent e) {
+
+    private void okB_actionPerformed() {
         CANCELLED = false;
         this.dispose();
     }
 
     public JList getTypesList() {
-      return areaPanel.typesList;
+        return areaPanel.typesList;
     }
-
 
 
 }

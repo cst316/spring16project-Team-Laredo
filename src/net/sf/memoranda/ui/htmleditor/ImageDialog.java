@@ -1,92 +1,70 @@
 package net.sf.memoranda.ui.htmleditor;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Frame;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Image;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.io.File;
+import net.sf.memoranda.ui.htmleditor.util.Local;
+import net.sf.memoranda.util.SingleRootFileSystemView;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.filechooser.FileSystemView;
-
-import net.sf.memoranda.ui.htmleditor.util.Local;
-import net.sf.memoranda.util.SingleRootFileSystemView;
+import java.awt.*;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.io.File;
 
 /**
  * <p>Title: </p>
  * <p>Description: </p>
  * <p>Copyright: Copyright (c) 2002</p>
  * <p>Company: </p>
+ *
  * @author unascribed
  * @version 1.0
  */
-public class ImageDialog extends JDialog implements WindowListener {
-    JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    JLabel header = new JLabel();
-    JPanel areaPanel = new JPanel(new GridBagLayout());
-    GridBagConstraints gbc;
-    JLabel jLabel1 = new JLabel();
-    public JTextField fileField = new JTextField();
-    JButton browseB = new JButton();
-    JLabel jLabel2 = new JLabel();
-    public JTextField altField = new JTextField();
-    JLabel jLabel3 = new JLabel();
-    public JTextField widthField = new JTextField();
-    JLabel jLabel4 = new JLabel();
-    public JTextField heightField = new JTextField();
-    JLabel jLabel5 = new JLabel();
-    public JTextField hspaceField = new JTextField();
-    JLabel jLabel6 = new JLabel();
-    public JTextField vspaceField = new JTextField();
-    JLabel jLabel7 = new JLabel();
-    public JTextField borderField = new JTextField();
-    JLabel jLabel8 = new JLabel();
-    String[] aligns = {"left", "right", "top", "middle", "bottom", "absmiddle",
-        "texttop", "baseline"}; 
-    // Note: align values are not localized because they are HTML keywords 
-    public JComboBox alignCB = new JComboBox(aligns);
-    JLabel jLabel9 = new JLabel();
-    public JTextField urlField = new JTextField();
-    JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
-    JButton okB = new JButton();
-    JButton cancelB = new JButton();
+class ImageDialog extends JDialog implements WindowListener {
+    public final JTextField fileField = new JTextField();
+    public final JTextField altField = new JTextField();
+    public final JTextField widthField = new JTextField();
+    public final JTextField heightField = new JTextField();
+    public final JTextField hspaceField = new JTextField();
+    public final JTextField vspaceField = new JTextField();
+    public final JTextField borderField = new JTextField();
+    public final JTextField urlField = new JTextField();
+    // Note: align values are not localized because they are HTML keywords
+    public final JComboBox<? extends String> alignCB;
+    private final JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    private final JLabel header = new JLabel();
+    private final JPanel areaPanel = new JPanel(new GridBagLayout());
+    private final JLabel jLabel1 = new JLabel();
+    private final JButton browseB = new JButton();
+    private final JLabel jLabel2 = new JLabel();
+    private final JLabel jLabel3 = new JLabel();
+    private final JLabel jLabel4 = new JLabel();
+    private final JLabel jLabel5 = new JLabel();
+    private final JLabel jLabel6 = new JLabel();
+    private final JLabel jLabel7 = new JLabel();
+    private final JLabel jLabel8 = new JLabel();
+    private final String[] aligns = {"left", "right", "top", "middle", "bottom", "absmiddle",
+            "texttop", "baseline"};
+    private final JLabel jLabel9 = new JLabel();
+    private final JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
+    private final JButton okB = new JButton();
+    private final JButton cancelB = new JButton();
     public boolean CANCELLED = false;
 
-    public ImageDialog(Frame frame) {
-        super(frame, Local.getString("Image"), true);
+    public ImageDialog() {
+        super((Frame) null, Local.getString("Image"), true);
         try {
             jbInit();
             pack();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         super.addWindowListener(this);
+        alignCB = new JComboBox<>(aligns);
     }
 
-    public ImageDialog() {
-        this(null);
-    }
-
-    void jbInit() throws Exception {
+    private void jbInit() {
         this.setResizable(false);
         // three Panels, so used BorderLayout for this dialog.
         headerPanel.setBorder(new EmptyBorder(new Insets(0, 5, 0, 5)));
@@ -103,7 +81,7 @@ public class ImageDialog extends JDialog implements WindowListener {
         areaPanel.setBorder(new EtchedBorder(Color.white, new Color(142, 142,
                 142)));
         jLabel1.setText(Local.getString("Image file"));
-        gbc = new GridBagConstraints();
+        GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.insets = new Insets(10, 10, 5, 5);
@@ -124,11 +102,7 @@ public class ImageDialog extends JDialog implements WindowListener {
         browseB.setIcon(new ImageIcon(
                 net.sf.memoranda.ui.htmleditor.ImageDialog.class.getResource(
                         "resources/icons/fileopen16.png")));
-        browseB.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                browseB_actionPerformed(e);
-            }
-        });
+        browseB.addActionListener(e -> browseB_actionPerformed());
         gbc = new GridBagConstraints();
         gbc.gridx = 6;
         gbc.gridy = 0;
@@ -271,31 +245,23 @@ public class ImageDialog extends JDialog implements WindowListener {
         okB.setMinimumSize(new Dimension(100, 26));
         okB.setPreferredSize(new Dimension(100, 26));
         okB.setText(Local.getString("Ok"));
-        okB.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                okB_actionPerformed(e);
-            }
-        });
+        okB.addActionListener(e -> okB_actionPerformed());
         this.getRootPane().setDefaultButton(okB);
         cancelB.setMaximumSize(new Dimension(100, 26));
         cancelB.setMinimumSize(new Dimension(100, 26));
         cancelB.setPreferredSize(new Dimension(100, 26));
         cancelB.setText(Local.getString("Cancel"));
-        cancelB.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                cancelB_actionPerformed(e);
-            }
-        });
+        cancelB.addActionListener(e -> cancelB_actionPerformed());
         buttonsPanel.add(okB, null);
         buttonsPanel.add(cancelB, null);
         this.getContentPane().add(buttonsPanel, BorderLayout.SOUTH);
     }
 
-    void okB_actionPerformed(ActionEvent e) {
+    private void okB_actionPerformed() {
         this.dispose();
     }
 
-    void cancelB_actionPerformed(ActionEvent e) {
+    private void cancelB_actionPerformed() {
         CANCELLED = true;
         this.dispose();
     }
@@ -305,16 +271,14 @@ public class ImageDialog extends JDialog implements WindowListener {
         ImageIcon thmb = null;
         if (tmpIcon.getIconHeight() > 48) {
             thmb = new ImageIcon(tmpIcon.getImage()
-                    .getScaledInstance( -1, 48, Image.SCALE_DEFAULT));
-        }
-        else {
+                    .getScaledInstance(-1, 48, Image.SCALE_DEFAULT));
+        } else {
             thmb = tmpIcon;
         }
         if (thmb.getIconWidth() > 350) {
             return new ImageIcon(thmb.getImage()
                     .getScaledInstance(350, -1, Image.SCALE_DEFAULT));
-        }
-        else {
+        } else {
             return thmb;
         }
     }
@@ -322,33 +286,38 @@ public class ImageDialog extends JDialog implements WindowListener {
     //java.io.File selectedFile = null;
     public void updatePreview() {
         try {
-            if (new java.net.URL(fileField.getText()).getPath() != "")
+            if (new java.net.URL(fileField.getText()).getPath().equals(""))
                 header.setIcon(getPreviewIcon(new java.io.File(
                         new java.net.URL(fileField.getText()).getPath())));
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
     public void windowOpened(WindowEvent e) {
     }
+
     public void windowClosing(WindowEvent e) {
         CANCELLED = true;
         this.dispose();
     }
+
     public void windowClosed(WindowEvent e) {
     }
+
     public void windowIconified(WindowEvent e) {
     }
+
     public void windowDeiconified(WindowEvent e) {
     }
+
     public void windowActivated(WindowEvent e) {
     }
+
     public void windowDeactivated(WindowEvent e) {
     }
 
-    void browseB_actionPerformed(ActionEvent e) {
+    private void browseB_actionPerformed() {
         // Fix until Sun's JVM supports more locales...
         UIManager.put("FileChooser.lookInLabelText", Local
                 .getString("Look in:"));
@@ -391,23 +360,21 @@ public class ImageDialog extends JDialog implements WindowListener {
             chooser.setCurrentDirectory(lastSel);
         if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             try {
-                fileField.setText(chooser.getSelectedFile().toURL().toString());
+                fileField.setText(chooser.getSelectedFile().toURI().toURL().toString());
                 header.setIcon(getPreviewIcon(chooser.getSelectedFile()));
                 Context
                         .put("LAST_SELECTED_IMG_FILE", chooser
                                 .getSelectedFile());
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 fileField.setText(chooser.getSelectedFile().getPath());
             }
             try {
                 ImageIcon img = new ImageIcon(chooser.getSelectedFile()
                         .getPath());
-                widthField.setText(new Integer(img.getIconWidth()).toString());
+                widthField.setText(Integer.toString(img.getIconWidth()));
                 heightField
-                        .setText(new Integer(img.getIconHeight()).toString());
-            }
-            catch (Exception ex) {
+                        .setText(Integer.toString(img.getIconHeight()));
+            } catch (Exception ex) {
                 ex.printStackTrace();
             }
         }

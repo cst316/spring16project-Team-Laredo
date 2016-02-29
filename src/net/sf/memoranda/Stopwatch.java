@@ -7,7 +7,6 @@ import java.util.concurrent.TimeUnit;
  * Created by tyler on 2/10/16.
  */
 public class Stopwatch {
-
 	private long m_elapsed;
 	private long m_startTime;
 	private boolean m_isRunning = false;
@@ -213,5 +212,4 @@ public class Stopwatch {
 			return 0;
 		}
 	}
-	
 }

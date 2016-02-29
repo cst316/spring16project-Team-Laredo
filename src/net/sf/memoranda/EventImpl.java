@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 /*$Id: EventImpl.java,v 1.9 2004/10/06 16:00:11 ivanrise Exp $*/
-public class EventImpl implements Event {
+public class EventImpl implements Event, Comparable<Event> {
 
     private Element _elem = null;
 
@@ -34,19 +34,29 @@ public class EventImpl implements Event {
      * @see net.sf.memoranda.Event#getStartHour()
      */
     public int getStartHour() {
-        return new Integer(_elem.getAttribute("start_hour").getValue());
+        Attribute start_hour_attr = _elem.getAttribute("start_hour");
+        if (start_hour_attr != null) {
+            return Integer.parseInt(start_hour_attr.getValue());
+        } else {
+            return 0;
+        }
     }
 
     /**
      * @see net.sf.memoranda.Event#getStartMinute()
      */
     public int getStartMinute() {
-        return new Integer(_elem.getAttribute("start_min").getValue());
+        Attribute start_min_attr = _elem.getAttribute("start_min");
+        if (start_min_attr != null) {
+            return Integer.parseInt(start_min_attr.getValue());
+        } else {
+            return 0;
+        }
     }
 
     public int getEndHour() {
         try {
-            return new Integer(_elem.getAttribute("end_hour").getValue());
+            return Integer.parseInt(_elem.getAttribute("end_hour").getValue());
         } catch (NumberFormatException e) {
             return 0;
         } catch (NullPointerException npe) {
@@ -56,7 +66,7 @@ public class EventImpl implements Event {
 
     public int getEndMinute() {
         try {
-            return new Integer(_elem.getAttribute("end_minute").getValue());
+            return Integer.parseInt(_elem.getAttribute("end_minute").getValue());
         } catch (NumberFormatException e) {
             return 0;
         } catch (NullPointerException npe) {
@@ -89,6 +99,7 @@ public class EventImpl implements Event {
 
     /**
      * Calculate the number of minutes in an EventImpl's duration.
+     *
      * @return Number of minutes in the duration.
      */
     public int getDurationMinutes() {
@@ -171,7 +182,7 @@ public class EventImpl implements Event {
      */
     public int getPeriod() {
         Attribute a = _elem.getAttribute("period");
-        if (a != null) return new Integer(a.getValue());
+        if (a != null) return Integer.parseInt(a.getValue());
         return 0;
     }
 
@@ -189,7 +200,7 @@ public class EventImpl implements Event {
      */
     public int getRepeat() {
         Attribute a = _elem.getAttribute("repeat-type");
-        if (a != null) return new Integer(a.getValue());
+        if (a != null) return Integer.parseInt(a.getValue());
         return 0;
     }
 

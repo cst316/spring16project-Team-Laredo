@@ -1,26 +1,28 @@
 package net.sf.memoranda.test;
 
-import static org.junit.Assert.*;
-
-import java.util.concurrent.TimeUnit;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import net.sf.memoranda.Stopwatch;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import net.sf.memoranda.Stopwatch;
+import java.util.concurrent.TimeUnit;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by tyler on 2/12/16.
  */
 public class StopwatchTest {
-	private static Stopwatch emptyWatch = null;
+    private static Stopwatch emptyWatch = null;
     private static Stopwatch negativeWatch = null;
     private static Stopwatch dayWatch = null;
     private static Stopwatch zeroWatch = null;
     private static Stopwatch oneWatch = null;
     private static Stopwatch manyWatch = null;
-	
+
+    @SuppressFBWarnings("ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD")
     @Before
 	public void Setup() {
     	emptyWatch = new Stopwatch();
@@ -164,5 +166,4 @@ public class StopwatchTest {
 			assertTrue(true);
 		}
 	}
-
 }

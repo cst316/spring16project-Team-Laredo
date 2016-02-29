@@ -1,77 +1,50 @@
 package net.sf.memoranda.ui;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.io.File;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.UIManager;
-import javax.swing.border.Border;
-import javax.swing.border.TitledBorder;
-import javax.swing.event.CaretEvent;
-import javax.swing.filechooser.FileSystemView;
-
 import net.sf.memoranda.util.Local;
 import net.sf.memoranda.util.SingleRootFileSystemView;
 
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
+import javax.swing.filechooser.FileSystemView;
+import java.awt.*;
+import java.io.File;
+
 /*$Id: SetApplicationPanel.java,v 1.6 2004/04/05 10:05:44 alexeya Exp $*/
 public class SetApplicationPanel extends JPanel {
-    BorderLayout borderLayout1 = new BorderLayout();
-    public JTextField applicationField = new JTextField();
-    BorderLayout borderLayout5 = new BorderLayout();
-    JButton selectAppBrowseB = new JButton();
-    JPanel jPanel3 = new JPanel();
-    Border border1;
-    TitledBorder titledBorder1;
-    public JTextField argumentsField = new JTextField();
-    BorderLayout borderLayout6 = new BorderLayout();
-    JPanel jPanel4 = new JPanel();
-    Border border2;
-    TitledBorder titledBorder2;
-    JLabel argHelpLabel = new JLabel();
+    public final JTextField applicationField = new JTextField();
+    public final JTextField argumentsField = new JTextField();
+    private final BorderLayout borderLayout1 = new BorderLayout();
+    private final BorderLayout borderLayout5 = new BorderLayout();
+    private final JButton selectAppBrowseB = new JButton();
+    private final JPanel jPanel3 = new JPanel();
+    private final BorderLayout borderLayout6 = new BorderLayout();
+    private final JPanel jPanel4 = new JPanel();
+    private final JLabel argHelpLabel = new JLabel();
     public File d = null;
-    
+
     public SetApplicationPanel() {
         try {
             jbInit();
-        }
-        catch(Exception ex) {
+        } catch (Exception ex) {
             new ExceptionDialog(ex);
         }
     }
-    void jbInit() throws Exception {
-        border1 = BorderFactory.createEmptyBorder();
-        titledBorder1 = new TitledBorder(BorderFactory.createEmptyBorder(),Local.getString("Path to executable"));
-        border2 = BorderFactory.createEmptyBorder();
-        titledBorder2 = new TitledBorder(border2, Local.getString("Arguments"));
+
+    private void jbInit() throws Exception {
+        Border border1 = BorderFactory.createEmptyBorder();
+        TitledBorder titledBorder1 = new TitledBorder(BorderFactory.createEmptyBorder(), Local.getString("Path to executable"));
+        Border border2 = BorderFactory.createEmptyBorder();
+        TitledBorder titledBorder2 = new TitledBorder(border2, Local.getString("Arguments"));
         jPanel3.setLayout(borderLayout5);
-        selectAppBrowseB.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                selectAppBrowseB_actionPerformed(e);
-            }
-        });
+        selectAppBrowseB.addActionListener(e -> selectAppBrowseB_actionPerformed());
         selectAppBrowseB.setText(Local.getString("Browse"));
-        applicationField.addCaretListener(new javax.swing.event.CaretListener() {
-            public void caretUpdate(CaretEvent e) {
-                applicationField_caretUpdate(e);
-            }
-        });
+        applicationField.addCaretListener(e -> applicationField_caretUpdate());
         applicationField.setPreferredSize(new Dimension(300, 24));
         applicationField.setMinimumSize(new Dimension(4, 24));
         this.setLayout(borderLayout1);
         jPanel3.setBorder(titledBorder1);
-        argumentsField.addCaretListener(new javax.swing.event.CaretListener() {
-            public void caretUpdate(CaretEvent e) {
-                argumentsField_caretUpdate(e);
-            }
-        });
+        argumentsField.addCaretListener(e -> argumentsField_caretUpdate());
         argumentsField.setPreferredSize(new Dimension(300, 24));
         argumentsField.setText("$1");
         argumentsField.setMinimumSize(new Dimension(4, 24));
@@ -82,17 +55,17 @@ public class SetApplicationPanel extends JPanel {
         argHelpLabel.setText(Local.getString("Use $1 as an alias of the file to open"));
         jPanel3.add(applicationField, BorderLayout.CENTER);
         jPanel3.add(selectAppBrowseB, BorderLayout.EAST);
-        this.add(jPanel4,  BorderLayout.SOUTH);
+        this.add(jPanel4, BorderLayout.SOUTH);
         jPanel4.add(argumentsField, BorderLayout.CENTER);
-        jPanel4.add(argHelpLabel,  BorderLayout.SOUTH);
-        this.add(jPanel3,  BorderLayout.NORTH);
+        jPanel4.add(argHelpLabel, BorderLayout.SOUTH);
+        this.add(jPanel3, BorderLayout.NORTH);
     }
-    
-    void applicationField_caretUpdate(CaretEvent e) {
-        
+
+    private void applicationField_caretUpdate() {
+
     }
-    
-    void selectAppBrowseB_actionPerformed(ActionEvent e) {
+
+    private void selectAppBrowseB_actionPerformed() {
         // Fix until Sun's JVM supports more locales...
         UIManager.put("FileChooser.lookInLabelText", Local.getString("Look in:"));
         UIManager.put("FileChooser.upFolderToolTipText", Local.getString("Up One Level"));
@@ -106,7 +79,7 @@ public class SetApplicationPanel extends JPanel {
         UIManager.put("FileChooser.cancelButtonText", Local.getString("Cancel"));
         UIManager.put("FileChooser.cancelButtonToolTipText", Local.getString("Cancel"));
         UIManager.put("FileChooser.acceptAllFileFilterText", Local.getString("All Files") + " (*.*)");
-        
+
         File root = new File(System.getProperty("user.home"));
         FileSystemView fsv = new SingleRootFileSystemView(root);
         JFileChooser chooser = new JFileChooser(fsv);
@@ -126,9 +99,9 @@ public class SetApplicationPanel extends JPanel {
         */
         if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
             applicationField.setText(chooser.getSelectedFile().getPath());
-        }
-        
-        void argumentsField_caretUpdate(CaretEvent e) {
-            
-        }
+    }
+
+    private void argumentsField_caretUpdate() {
+
+    }
 }

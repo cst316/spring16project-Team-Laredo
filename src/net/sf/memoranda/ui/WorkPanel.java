@@ -295,7 +295,7 @@ public class WorkPanel extends JPanel {
 		if(CurrentProject.getTaskList().getAllTasks().isEmpty()) {
 			JOptionPane.showMessageDialog(null, "No tasks that need timing exist in project.", "Error", JOptionPane.ERROR_MESSAGE);
 		}
-		StopwatchDialogSingleton.getStopwatch(App.frame);
+		StopwatchDialogSingleton.getStopwatch(App.getFrame());
 	}
 
 	void setCurrentButton(JButton cb) {

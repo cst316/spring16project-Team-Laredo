@@ -1,69 +1,37 @@
 package net.sf.memoranda.ui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-
-import javax.swing.JButton;
-import javax.swing.JEditorPane;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JToolBar;
-import javax.swing.SwingUtilities;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.JOptionPane;
-
-import net.sf.memoranda.CurrentProject;
-import net.sf.memoranda.Defect;
-import net.sf.memoranda.DefectList;
-import net.sf.memoranda.EventNotificationListener;
-import net.sf.memoranda.EventsManager;
-import net.sf.memoranda.EventsScheduler;
-import net.sf.memoranda.History;
-import net.sf.memoranda.NoteList;
-import net.sf.memoranda.Project;
-import net.sf.memoranda.ProjectListener;
-import net.sf.memoranda.ProjectManager;
-import net.sf.memoranda.ResourcesList;
-import net.sf.memoranda.TaskList;
+import net.sf.memoranda.*;
 import net.sf.memoranda.date.CalendarDate;
 import net.sf.memoranda.date.CurrentDate;
 import net.sf.memoranda.util.AgendaGenerator;
 import net.sf.memoranda.util.CurrentStorage;
-import net.sf.memoranda.util.FileStorage;
 import net.sf.memoranda.util.Local;
 import net.sf.memoranda.util.Util;
 import nu.xom.Element;
 
+import javax.swing.*;
+import javax.swing.event.HyperlinkEvent;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collection;
+
 /*$Id: AgendaPanel.java,v 1.11 2005/02/15 16:58:02 rawsushi Exp $*/
-public class AgendaPanel extends JPanel {
-    BorderLayout borderLayout1 = new BorderLayout();
-    JButton historyBackB = new JButton();
-    JToolBar toolBar = new JToolBar();
-    JButton historyForwardB = new JButton();
-    JButton defects = new JButton("defects");
-    JEditorPane viewer = new JEditorPane("text/html", "");
-    JScrollPane scrollPane = new JScrollPane();
-	JButton export = new JButton();
-	String[] priorities = {"Very High", "High", "Medium", "Low", "Very Low"};
+class AgendaPanel extends JPanel {
+    private final BorderLayout borderLayout1 = new BorderLayout();
+    private final JButton historyBackB = new JButton();
+    private final JToolBar toolBar = new JToolBar();
+    private final JButton historyForwardB = new JButton();
+    private final JEditorPane viewer = new JEditorPane("text/html", "");
+    private final JScrollPane scrollPane = new JScrollPane();
+    private final String[] priorities = {"Very High", "High", "Medium", "Low", "Very Low"};
 
 
-    DailyItemsPanel parentPanel = null;
+    private DailyItemsPanel parentPanel = null;
 
-    //	JPopupMenu agendaPPMenu = new JPopupMenu();
-    //	JCheckBoxMenuItem ppShowActiveOnlyChB = new JCheckBoxMenuItem();
+    private Collection<String> expandedTasks;
+    private String gotoTask = null;
 
-    Collection<String> expandedTasks;
-    String gotoTask = null;
-
-    boolean isActive = true;
+    private boolean isActive = true;
 
     public AgendaPanel(DailyItemsPanel _parentPanel) {
         try {
@@ -74,8 +42,8 @@ public class AgendaPanel extends JPanel {
             ex.printStackTrace();
         }
     }
-    
-    void jbInit() throws Exception {
+
+    private void jbInit() {
         expandedTasks = new ArrayList<>();
         toolBar.setFloatable(false);
         viewer.setEditable(false);
@@ -193,32 +161,30 @@ public class AgendaPanel extends JPanel {
                     }
                     refresh(CurrentDate.get());
                 } else if (d.startsWith("memoranda:exportstickerst")) {
-					 //  You need to add the export sticker meanwhile ..
-					 final JFrame parent = new JFrame();
-					 String name = JOptionPane.showInputDialog(parent,Local.getString("Enter filename to export"),null);
-					 if(name == null){
-				         JOptionPane.showMessageDialog(null,Local.getString("Sticker export cancelled"));
-					 }
-					 else{
-						 new ExportSticker(name).export("txt");
-						 //JOptionPane.showMessageDialog(null,name); 
-					 }
-					 //JOptionPane.showMessageDialog(null,name);
-				}else if (d.startsWith("memoranda:exportstickersh")) {
-					 //  You need to add the export sticker meanwhile ..
-					 final JFrame parent = new JFrame();
-					 String name = JOptionPane.showInputDialog(parent,Local.getString("Enter file name to export"),null);
-					 if(name == null){
-				         JOptionPane.showMessageDialog(null,Local.getString("Sticker export cancelled"));
-					 }
-					 else{
-				         new ExportSticker(name).export("html");
-				         //JOptionPane.showMessageDialog(null,name);
-					 }
-				}else if (d.startsWith("memoranda:importstickers")) {
-					final JFrame parent = new JFrame();
-					String name = JOptionPane.showInputDialog(parent,Local.getString("Enter name of file to import"),null);
-					new ImportSticker(name).import_file();
+                    //  You need to add the export sticker meanwhile ..
+                    final JFrame parent = new JFrame();
+                    String name = JOptionPane.showInputDialog(parent, Local.getString("Enter filename to export"), null);
+                    if (name == null) {
+                        JOptionPane.showMessageDialog(null, Local.getString("Sticker export cancelled"));
+                    } else {
+                        new ExportSticker(name).export("txt");
+                        //JOptionPane.showMessageDialog(null,name);
+                    }
+                    //JOptionPane.showMessageDialog(null,name);
+                } else if (d.startsWith("memoranda:exportstickersh")) {
+                    //  You need to add the export sticker meanwhile ..
+                    final JFrame parent = new JFrame();
+                    String name = JOptionPane.showInputDialog(parent, Local.getString("Enter file name to export"), null);
+                    if (name == null) {
+                        JOptionPane.showMessageDialog(null, Local.getString("Sticker export cancelled"));
+                    } else {
+                        new ExportSticker(name).export("html");
+                        //JOptionPane.showMessageDialog(null,name);
+                    }
+                } else if (d.startsWith("memoranda:importstickers")) {
+                    final JFrame parent = new JFrame();
+                    String name = JOptionPane.showInputDialog(parent, Local.getString("Enter name of file to import"), null);
+                    new ImportSticker().import_file();
                 }
             }
         });
@@ -249,41 +215,7 @@ public class AgendaPanel extends JPanel {
         toolBar.add(historyBackB, null);
         toolBar.add(historyForwardB, null);
         toolBar.addSeparator(new Dimension(8, 24));
-        defects.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent arg0) {
-				DefectDialog dd = new DefectDialog(App.getFrame(), "New Defect");
-				Dimension frameSize = App.getFrame().getSize();
-				Point loc = App.getFrame().getLocation();
-				dd.setLocation((frameSize.width - dd.getSize().width)/2 + loc.x,
-						(frameSize.height - dd.getSize().height)/2 + loc.y);
-				dd.setVisible(true);
-				
-				if(dd.CANCELLED){
-					return;
-				}
-				CalendarDate rd;
-                if(dd.dateRemovedCheckBox.isSelected()){
-                	if(((Date)dd.dateRemovedSpinner.getModel().getValue()).before((Date)dd.dateFoundSpinner.getModel().getValue())){
-        				rd = new CalendarDate((Date) dd.dateFoundSpinner.getModel().getValue());
-        			}
-                	else{
-                	    rd = new CalendarDate((Date) dd.dateRemovedSpinner.getModel().getValue());
-                	}
-				}
-				else{
-					rd = null;
-				}
-				CalendarDate fd = new CalendarDate((Date) dd.dateFoundSpinner.getModel().getValue());
-				int injection = convertPhasesToInt((String)dd.injectionPhaseComboBox.getSelectedItem());
-				int removal = convertPhasesToInt((String)dd.removalPhaseComboBox.getSelectedItem());
-				int type = convertTypeToInt((String)dd.typeOfDefect.getSelectedItem());
-				String description = dd.descriptionTextArea.getText();
-				CurrentProject.getDefectList().addDefect(fd, rd, injection, removal, type, description);
-                CurrentStorage.get().storeDefectList(CurrentProject.getDefectList(), CurrentProject.get());
-			}
-        	
-        });
-        toolBar.add(defects);
+
         this.add(toolBar, BorderLayout.NORTH);
 
         CurrentDate.addDateListener(d -> {
@@ -291,9 +223,8 @@ public class AgendaPanel extends JPanel {
                 refresh(d);
         });
         CurrentProject.addProjectListener(new ProjectListener() {
-        	public void projectChange(Project prj, NoteList nl, TaskList tl, 
-					DefectList d1, ResourcesList rl) {	
-			}
+            public void projectChange() {
+            }
 
             public void projectWasChanged() {
                 if (isActive)
@@ -393,48 +324,4 @@ public class AgendaPanel extends JPanel {
     //		}
     //
     //    }
-	private int convertPhasesToInt(String phase){
-		int intPhase = 6;
-		if(phase.equals("Planning")){
-			intPhase = 0;
-		}else if(phase.equals("Design")){
-			intPhase = 1;
-		}else if(phase.equals("Code")){
-			intPhase = 2;
-		}else if(phase.equals("Review")){
-	        intPhase = 3;
-		}else if(phase.equals("Compile")){
-			intPhase = 4;
-		}else if(phase.equals("Testing")){
-			intPhase = 5;
-		}
-		return intPhase;
-	}
-	
-	private int convertTypeToInt(String type){
-		int intPhase = 10;
-		if(type.equals("Documentation")){
-			intPhase = 0;
-		}else if(type.equals("Syntax")){
-			intPhase = 1;
-		}else if(type.equals("Build")){
-			intPhase = 2;
-		}else if(type.equals("Assignment")){
-	        intPhase = 3;
-		}else if(type.equals("Interface")){
-			intPhase = 4;
-		}else if(type.equals("Checking")){
-			intPhase = 5;
-		}else if(type.equals("Data")){
-			intPhase = 6;
-		}else if(type.equals("Function")){
-			intPhase = 7;
-		}else if(type.equals("System")){
-			intPhase = 8;
-		}else if(type.equals("Enviroment")){
-			intPhase = 9;
-		}
-	
-		return intPhase;
-	}
 }

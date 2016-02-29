@@ -5,7 +5,6 @@
  *
  * @author Alex V. Alishevskikh, alex@openmechanics.net
  * Copyright (c) 2003 Memoranda Team. http://memoranda.sf.net
- *
  */
 package net.sf.memoranda;
 
@@ -22,20 +21,19 @@ import java.util.Vector;
 /*$Id: CurrentProject.java,v 1.6 2005/12/01 08:12:26 alexeya Exp $*/
 public class CurrentProject {
 
+    private static final Vector<ProjectListener> projectListeners = new Vector<>();
     private static Project _project = null;
     private static TaskList _tasklist = null;
     private static NoteList _notelist = null;
     private static DefectList m_defectList = null;
     private static ResourcesList _resources = null;
-    private static Vector<ProjectListener> projectListeners = new Vector<>();
 
-        
     static {
         init();
     }
 
     private static void init() {
-        String prjId = (String)Context.get("LAST_OPENED_PROJECT_ID");
+        String prjId = (String) Context.get("LAST_OPENED_PROJECT_ID");
         if (prjId == null) {
             prjId = "__default";
             Context.put("LAST_OPENED_PROJECT_ID", prjId);
@@ -48,7 +46,7 @@ public class CurrentProject {
             // references to missing project
             _project = ProjectManager.getProject("__default");
             if (_project == null)
-                _project = (Project)ProjectManager.getActiveProjects().get(0);
+                _project = (Project) ProjectManager.getActiveProjects().get(0);
             Context.put("LAST_OPENED_PROJECT_ID", _project.getID());
 
         }
@@ -59,7 +57,7 @@ public class CurrentProject {
         m_defectList = CurrentStorage.get().openDefectList(_project);
         AppFrame.addExitListener(e -> save());
     }
-        
+
 
     public static Project get() {
         return _project;
@@ -72,12 +70,14 @@ public class CurrentProject {
     public static NoteList getNoteList() {
         return _notelist;
     }
-    
+
     public static ResourcesList getResourcesList() {
         return _resources;
     }
 
-    public static DefectList getDefectList() { return m_defectList; }
+    public static DefectList getDefectList() {
+        return m_defectList;
+    }
 
     public static void set(Project project) {
         if (project.getID().equals(_project.getID())) return;
@@ -85,7 +85,7 @@ public class CurrentProject {
         NoteList newnotelist = CurrentStorage.get().openNoteList(project);
         DefectList newDefectList = CurrentStorage.get().openDefectList(project);
         ResourcesList newresources = CurrentStorage.get().openResourcesList(project);
-        notifyListenersBefore(project, newnotelist,  newtasklist, newDefectList, newresources);
+        notifyListenersBefore();
         _project = project;
         _tasklist = newtasklist;
         _notelist = newnotelist;
@@ -104,12 +104,12 @@ public class CurrentProject {
     }
 
 
-    private static void notifyListenersBefore(Project project, NoteList nl, TaskList tl, DefectList dl, ResourcesList rl) {
+    private static void notifyListenersBefore() {
         for (Object projectListener : projectListeners) {
-            ((ProjectListener) projectListener).projectChange(project, nl, tl, dl, rl);
+            ((ProjectListener) projectListener).projectChange();
         }
     }
-    
+
     private static void notifyListenersAfter() {
         for (Object projectListener : projectListeners) {
             ((ProjectListener) projectListener).projectWasChanged();
@@ -120,7 +120,7 @@ public class CurrentProject {
         Storage storage = CurrentStorage.get();
 
         storage.storeNoteList(_notelist, _project);
-        storage.storeTaskList(_tasklist, _project); 
+        storage.storeTaskList(_tasklist, _project);
         storage.storeDefectList(m_defectList, _project);
         storage.storeResourcesList(_resources, _project);
         storage.storeProjectManager();
