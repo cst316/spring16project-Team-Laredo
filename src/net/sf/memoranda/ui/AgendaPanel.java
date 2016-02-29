@@ -52,11 +52,11 @@ class AgendaPanel extends JPanel {
             if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
                 String d = e.getDescription();
                 if (d.equalsIgnoreCase("memoranda:events"))
-                    parentPanel.alarmB_actionPerformed();
+                    parentPanel.alarmB_actionPerformed(null);
                 else if (d.startsWith("memoranda:tasks")) {
                     String id = d.split("#")[1];
                     CurrentProject.set(ProjectManager.getProject(id));
-                    parentPanel.taskB_actionPerformed();
+                    parentPanel.taskB_actionPerformed(null);
                 } else if (d.startsWith("memoranda:project")) {
                     String id = d.split("#")[1];
                     CurrentProject.set(ProjectManager.getProject(id));

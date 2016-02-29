@@ -91,6 +91,7 @@ public class TaskListImpl implements TaskList {
         Collection<Task> allTasks = new ArrayList<>();
 
         for (Task t : rootTasks) {
+        	allTasks.add(t);
             allTasks.addAll(getAllSubTasksRecursive(t));
         }
 
@@ -126,6 +127,7 @@ public class TaskListImpl implements TaskList {
         el.addAttribute(new Attribute("id", id));
         el.addAttribute(new Attribute("progress", "0"));
         el.addAttribute(new Attribute("estEffort", String.valueOf(estEffort)));
+        el.addAttribute(new Attribute("actEffort", "0"));
         el.addAttribute(new Attribute("priority", String.valueOf(priority)));
         el.addAttribute(new Attribute("phase", String.valueOf(phase)));
 

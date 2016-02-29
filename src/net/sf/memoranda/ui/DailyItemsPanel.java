@@ -11,6 +11,7 @@ import net.sf.memoranda.util.Util;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
 /**
  * Copyright (c) 2003 Memoranda Team. http://memoranda.sf.net
@@ -125,12 +126,12 @@ public class DailyItemsPanel extends JPanel {
         alarmB.setToolTipText(Local.getString("Active events"));
         alarmB.setBorderPainted(false);
         alarmB.setMargin(new Insets(0, 0, 0, 0));
-        alarmB.addActionListener(e -> alarmB_actionPerformed());
+        alarmB.addActionListener(e -> alarmB_actionPerformed(e));
         alarmB.setIcon(new ImageIcon(net.sf.memoranda.ui.AppFrame.class.getResource("resources/icons/alarm.png")));
         flowLayout1.setAlignment(FlowLayout.RIGHT);
         flowLayout1.setVgap(0);
         taskB.setMargin(new Insets(0, 0, 0, 0));
-        taskB.addActionListener(e -> taskB_actionPerformed());
+        taskB.addActionListener(e -> taskB_actionPerformed(e));
         taskB.setPreferredSize(new Dimension(24, 24));
         taskB.setToolTipText(Local.getString("Active to-do tasks"));
         taskB.setBorderPainted(false);
@@ -365,11 +366,11 @@ public class DailyItemsPanel extends JPanel {
         return CurrentPanel;
     }
 
-    void taskB_actionPerformed() {
-        parentPanel.tasksB_actionPerformed();
+    void taskB_actionPerformed(ActionEvent e) {
+        parentPanel.tasksBActionPerformed(null);
     }
 
-    void alarmB_actionPerformed() {
-        parentPanel.eventsB_actionPerformed();
+    void alarmB_actionPerformed(ActionEvent e) {
+        parentPanel.eventsBActionPerformed(null);
     }
 }
