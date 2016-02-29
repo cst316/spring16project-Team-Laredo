@@ -29,21 +29,20 @@ import java.awt.Font;
 
 /*$Id: WorkPanel.java,v 1.9 2004/04/05 10:05:44 alexeya Exp $*/
 public class WorkPanel extends JPanel {
-	BorderLayout borderLayout1 = new BorderLayout();
-	JToolBar toolBar = new JToolBar();
-	JPanel panel = new JPanel();
-	CardLayout cardLayout1 = new CardLayout();
-
-	public JButton notesB = new JButton();
-	public DailyItemsPanel dailyItemsPanel = new DailyItemsPanel(this);
-	public ResourcesPanel filesPanel = new ResourcesPanel();
-	public JButton agendaB = new JButton();
-	public JButton tasksB = new JButton();
-	public JButton eventsB = new JButton();
-	public JButton filesB = new JButton();
-	JButton currentB = null;
-	Border border1;
-	private final JButton btnStopwatch = new JButton();
+	public final JButton notesB = new JButton();
+    public final DailyItemsPanel dailyItemsPanel = new DailyItemsPanel(this);
+    public final JButton agendaB = new JButton();
+    public final JButton tasksB = new JButton();
+    public final JButton eventsB = new JButton();
+    public final JButton filesB = new JButton();
+    private final JButton btnStopwatch = new JButton();
+    private final ResourcesPanel filesPanel = new ResourcesPanel();
+    private final BorderLayout borderLayout1 = new BorderLayout();
+    private final JToolBar toolBar = new JToolBar();
+    private final JPanel panel = new JPanel();
+    private final CardLayout cardLayout1 = new CardLayout();
+    private final JButton defectsButton = new JButton();
+    private JButton currentB = null;
 
 	public WorkPanel() {
 		try {
@@ -54,15 +53,14 @@ public class WorkPanel extends JPanel {
 	}
 
 	private final void jbInit() throws Exception {
-		border1 =
-			BorderFactory.createCompoundBorder(
-				BorderFactory.createBevelBorder(
-					BevelBorder.LOWERED,
-					Color.white,
-					Color.white,
-					new Color(124, 124, 124),
-					new Color(178, 178, 178)),
-				BorderFactory.createEmptyBorder(0, 2, 0, 0));
+		BorderFactory.createCompoundBorder(
+	            BorderFactory.createBevelBorder(
+	                    BevelBorder.LOWERED,
+	                    Color.white,
+	                    Color.white,
+	                    new Color(124, 124, 124),
+	                    new Color(178, 178, 178)),
+	            BorderFactory.createEmptyBorder(0, 2, 0, 0));
 
 		this.setLayout(borderLayout1);
 		toolBar.setOrientation(JToolBar.VERTICAL);
@@ -236,9 +234,28 @@ public class WorkPanel extends JPanel {
 				btnStopwatchActionPerformed(e);
 			}
 		});
-		
-		
 		toolBar.add(btnStopwatch);
+		
+		//Image created by Tyler Cole
+        //Instantiates defect button and defect button layout
+        defectsButton.setIcon(new ImageIcon(WorkPanel.class.getResource("/net/sf/memoranda/ui/resources/icons/defects.png")));
+        defectsButton.setVerticalTextPosition(SwingConstants.BOTTOM);
+        defectsButton.setVerticalAlignment(SwingConstants.TOP);
+        defectsButton.setText("Defects");
+        defectsButton.setSelected(true);
+        defectsButton.setPreferredSize(new Dimension(50, 50));
+        defectsButton.setMaximumSize(new Dimension(60, 80));
+        defectsButton.setMinimumSize(new Dimension(30, 30));
+        defectsButton.setMargin(new Insets(0, 0, 0, 0));
+        defectsButton.setHorizontalTextPosition(SwingConstants.CENTER);
+        defectsButton.setFont(new Font("Dialog", Font.BOLD, 10));
+        defectsButton.setFocusPainted(false);
+        defectsButton.setContentAreaFilled(false);
+        defectsButton.setBorderPainted(false);
+        defectsButton.setBackground(Color.WHITE);
+        defectsButton.addActionListener(e -> btnDefectActionPerform());
+        toolBar.add(defectsButton, null);
+		
 		panel.setBorder(null);
 		dailyItemsPanel.setBorder(null);
 		filesPanel.setBorder(null);
@@ -257,6 +274,13 @@ public class WorkPanel extends JPanel {
 				filesBActionPerformed(null);
 		}
 	}
+
+    private void btnDefectActionPerform() {
+        cardLayout1.show(panel, "DAILYITEMS");
+        setCurrentButton(defectsButton);
+        dailyItemsPanel.selectPanel("DEFECTS");
+        Context.put("CURRENT_PANEL", "DEFECTS");
+    }
 
 	public void agendaBActionPerformed(ActionEvent e) {
 		cardLayout1.show(panel, "DAILYITEMS");
